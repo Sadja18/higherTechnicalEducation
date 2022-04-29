@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import './which_user.dart';
+import './home_screen.dart';
 
 class NoDataExists extends StatefulWidget {
   static const routeName = "common-screen-nodatafound";
@@ -38,7 +38,7 @@ class _NoDataExistsState extends State<NoDataExists> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).popAndPushNamed(WhichUser.routeName);
+              Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
             },
             icon: const Icon(Icons.home),
           ),

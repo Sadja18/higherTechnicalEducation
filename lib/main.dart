@@ -1,8 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import './screens/common/which_user.dart';
 import './screens/common/no_data_screen.dart';
 import './services/database/common/tests.dart';
 import './screens/common/test_home.dart';
+import './screens/common/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
                 return const NoDataExists();
               } else {
                 if (snapshot.data[0] == 1) {
-                  return const WhichUser();
+                  return HomeScreen();
                 } else {
                   return const TestScreen();
                 }
@@ -42,13 +44,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HTE',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.purpleAccent,
+        fontFamily: 'Poppins',
+        backgroundColor: Colors.blue,
+        textTheme: Theme.of(context).textTheme.apply(
+              fontSizeFactor: 1.20,
+              fontSizeDelta: 0.5,
+              fontFamily: 'Poppins',
+            ),
       ),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => const WhichUser(),
+        '/': (ctx) => myWidget(ctx),
         NoDataExists.routeName: (ctx) => const NoDataExists(),
         TestScreen.routenName: (ctx) => const TestScreen(),
+        HomeScreen.routeName: (ctx) => HomeScreen(),
       },
     );
   }
