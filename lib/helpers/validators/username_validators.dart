@@ -19,11 +19,21 @@ int checkIfUserNameIsPhone(String enteredUserName) {
   }
 }
 
-/// return value == 1 means that the entered user name is a valif email Id
+/// return value == 1 means that the entered user name is a valid email Id
 int checkIfUserNameIsEmail(String enteredUserName) {
   if (emailRegex.hasMatch(enteredUserName)) {
     return 1;
   } else {
     return 0;
+  }
+}
+
+///  return value == 1 means that the entered user name is a student userName
+int checkIfUserNameIsStudentUserName(String enteredUserName) {
+  if (emailRegex.hasMatch(enteredUserName) ||
+      phoneRegex.hasMatch(enteredUserName)) {
+    return 0;
+  } else {
+    return 1;
   }
 }
