@@ -1,0 +1,3 @@
+Will contain
+login screen
+dashboard screen (with widget view handler)
