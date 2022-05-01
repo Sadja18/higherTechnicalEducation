@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../helpers/validators/username_validators.dart';
+import '../../helpers/validators/login_field_validators.dart';
 
 class UserLoginWidget extends StatefulWidget {
   final String userType;
@@ -17,6 +19,121 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
   final FocusNode _userNameFocusNode = FocusNode();
   final FocusNode _userPasswordFocusNode = FocusNode();
   bool _obscurePassword = true;
+  late String userType;
+
+  void showAlertBox(String message) async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext ctx) {
+          return AlertDialog(
+            title: const SizedBox(
+              height: 0,
+            ),
+            titlePadding: const EdgeInsets.all(0),
+            content: Container(
+              decoration: BoxDecoration(),
+              width: MediaQuery.of(context).size.width * 0.80,
+              height: MediaQuery.of(context).size.height * 0.20,
+              alignment: Alignment.topCenter,
+              child: Text(message),
+            ),
+          );
+        });
+  }
+
+  String preRequestValidation(enteredUserName, enteredUserPassword) {
+    int validateState =
+        loginFieldValidator(enteredUserName, enteredUserPassword);
+    String message = "";
+    switch (validateState) {
+      case -1:
+        message = "Passsword Field cannot be empty";
+        break;
+      case 0:
+        message = "User Name Field cannot be empty";
+        break;
+      case 1:
+        message = "Valid values";
+        break;
+      default:
+        message = "";
+        break;
+    }
+    return message;
+  }
+
+  void _onClickSubmit() {
+    String enteredUserName = _userNameController.text;
+    String enteredUserPassword = _userPasswordController.text;
+
+    String alertMessage0 =
+        preRequestValidation(enteredUserName, enteredUserPassword);
+
+    if (alertMessage0 != "" &&
+        alertMessage0.isNotEmpty &&
+        alertMessage0 != 'Valid values') {
+      showAlertBox(alertMessage0);
+    } else {
+      var userNameValidation;
+      switch (userType) {
+        case "master":
+          userNameValidation = checkIfUserNameIsEmail(enteredUserName);
+          if (userNameValidation == 1) {
+          } else {
+            alertMessage0 = "User Name should be an email";
+          }
+          break;
+        case "head":
+          userNameValidation = checkIfUserNameIsEmail(enteredUserName);
+          if (userNameValidation == 1) {
+          } else {
+            alertMessage0 = "User Name should be an email";
+          }
+          break;
+        case "faculty":
+          userNameValidation = checkIfUserNameIsEmail(enteredUserName);
+          if (userNameValidation == 1) {
+          } else {
+            alertMessage0 = "User Name should be an email";
+          }
+          break;
+        case "ntStaff":
+          userNameValidation = checkIfUserNameIsEmail(enteredUserName);
+          if (userNameValidation == 1) {
+          } else {
+            alertMessage0 = "User Name should be an email";
+          }
+          break;
+        case "parent":
+          userNameValidation = checkIfUserNameIsPhone(enteredUserName);
+          if (userNameValidation == 1) {
+          } else {
+            alertMessage0 = "User Name should be a phone number";
+          }
+          break;
+        case "student":
+          userNameValidation =
+              checkIfUserNameIsStudentUserName(enteredUserName);
+          if (userNameValidation == 1) {
+          } else {
+            alertMessage0 = "User Name should be an student admission n";
+          }
+          break;
+        default:
+          if (kDebugMode) {
+            print(userType);
+          }
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      userType = widget.userType;
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,8 +186,10 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             width: MediaQuery.of(context).size.width,
+                            alignment: Alignment.center,
                             child: TextFormField(
                               // keyboardAppearance:,
+                              textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
@@ -132,6 +251,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
                             alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,
                             child: TextFormField(
+                              textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
@@ -176,13 +296,15 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           ),
           InkWell(
             onTap: () {
-              if (kDebugMode) {
-                log(widget.userType.toString());
-                log("userName");
-                log(_userNameController.text);
-                log('password');
-                log(_userPasswordController.text);
-              }
+              // if (kDebugMode) {
+              //   log(widget.userType.toString());
+              //   log("userName");
+              //   log(_userNameController.text);
+              //   log('password');
+              //   log(_userPasswordController.text);
+              // }
+
+              _onClickSubmit();
             },
             child: Container(
               margin: const EdgeInsets.symmetric(

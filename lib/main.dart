@@ -5,6 +5,7 @@ import './screens/common/no_data_screen.dart';
 import './services/database/common/tests.dart';
 import './screens/common/test_home.dart';
 import './screens/common/home_screen.dart';
+import 'screens/common/dashboard_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
                 return const NoDataExists();
               } else {
                 if (snapshot.data[0] == 1) {
-                  return HomeScreen();
+                  return DashboardScreen();
                 } else {
                   return const TestScreen();
                 }
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
         NoDataExists.routeName: (ctx) => const NoDataExists(),
         TestScreen.routenName: (ctx) => const TestScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
+        DashboardScreen.routeName: (ctx) => DashboardScreen(),
       },
     );
   }

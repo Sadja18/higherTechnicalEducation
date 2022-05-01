@@ -33,3 +33,29 @@ Future<dynamic> isLoggedInSession() async {
     }
   }
 }
+
+Future<void> endUserSession() async {
+  try {
+    await UserDBProvider.db.forceLogOutAllUsers();
+  } catch (e) {
+    if (kDebugMode) {
+      log(e.toString());
+    }
+  }
+}
+
+/// it will return user type
+Future<dynamic> whichUserLoggedIn() async {
+  try {
+    // return "master";
+    // return "head";
+    // return "faculty";
+    // return "ntStaff";
+    // return "parent";
+    return "student";
+  } catch (e) {
+    if (kDebugMode) {
+      log(e.toString());
+    }
+  }
+}
