@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../screens/common/leave_screen/student.dart';
 
 class StudentScreenNavigationButtons extends StatelessWidget {
   const StudentScreenNavigationButtons({Key? key}) : super(key: key);
@@ -18,6 +19,34 @@ class StudentScreenNavigationButtons extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
+          InkWell(
+            onTap: () {
+              if (kDebugMode) {
+                print("Navigate to Time Table screen");
+              }
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.60,
+              height: MediaQuery.of(context).size.height * 0.05,
+              margin: const EdgeInsets.symmetric(
+                vertical: 4.0,
+              ),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Colors.purpleAccent,
+                borderRadius: BorderRadius.circular(
+                  10.0,
+                ),
+              ),
+              child: const Text(
+                "Time Table",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           InkWell(
             onTap: () {
               if (kDebugMode) {
@@ -49,8 +78,9 @@ class StudentScreenNavigationButtons extends StatelessWidget {
           InkWell(
             onTap: () {
               if (kDebugMode) {
-                print("Navigate to Time Table screen");
+                print("Navigate to Leave screen");
               }
+              Navigator.of(context).pushNamed(StudentLeaveScreen.routeName);
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,
@@ -66,7 +96,7 @@ class StudentScreenNavigationButtons extends StatelessWidget {
                 ),
               ),
               child: const Text(
-                "Time Table",
+                "Leave",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@
     package="com.example.higher">
    <application
         android:label="higher"
+        android:requestLegacyExternalStorage="true"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

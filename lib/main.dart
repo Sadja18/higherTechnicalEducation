@@ -5,7 +5,8 @@ import './screens/common/no_data_screen.dart';
 import './services/database/common/tests.dart';
 import './screens/common/test_home.dart';
 import './screens/common/home_screen.dart';
-import 'screens/common/dashboard_screen.dart';
+import './screens/common/dashboard_screen.dart';
+import './screens/common/leave_screen/student.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         TestScreen.routenName: (ctx) => const TestScreen(),
         HomeScreen.routeName: (ctx) => HomeScreen(),
         DashboardScreen.routeName: (ctx) => DashboardScreen(),
+        StudentLeaveScreen.routeName: (ctx) => StudentLeaveScreen(),
       },
     );
   }
