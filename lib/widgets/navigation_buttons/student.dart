@@ -9,12 +9,6 @@ class StudentScreenNavigationButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.60,
-      // height: MediaQuery.of(context).size.height * 0.16,
-      // decoration: BoxDecoration(
-      //   border: Border.all(
-      //     color: Colors.white,
-      //   ),
-      // ),
       alignment: Alignment.topCenter,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
