@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../services/connection/fetch_leaves.dart';
+import '../../../widgets/leave/approvals/head.dart';
 
 class HeadLeaveScreen extends StatelessWidget {
   static const routeName = "/screen-head-leave";
@@ -24,7 +26,18 @@ class HeadLeaveScreen extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.center,
-        child: const Text("Approve Leave HoD mode"),
+        child: FutureBuilder(
+            future: getFacultyLeaveRequestsFromServerHeadMode(),
+            builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+              if (snapshot.hasError ||
+                  snapshot.hasData == false ||
+                  snapshot.data.isEmpty) {
+                return const Text("No Leave Requests");
+              } else {
+                var leaveRequests = snapshot.data;
+                return ApproveLeaveWidgetHead(leaveRequests: leaveRequests);
+              }
+            }),
       ),
     );
   }

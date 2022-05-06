@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import, unnecessary_null_comparison
-
 import 'dart:convert';
 import 'dart:developer';
 
@@ -8,13 +6,12 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:intl/intl.dart';
 
-class AttendancesDBProvider {
-  AttendancesDBProvider._();
-
-  static final attendanceDB = AttendancesDBProvider._();
+class DBProvider {
+  DBProvider._();
+  static final DBProvider db = DBProvider._();
   static const int version = 1;
   static late Database _database;
-  static const dbname = 'higher.db';
+  static const dbname = 'higherAttendance.db';
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -108,6 +105,108 @@ class AttendancesDBProvider {
         "collegeId INTEGER NOT NULL,"
         "collegeCode INTEGER NOT NULL,"
         'collegeName TEXT NOT NULL,'
+        "UNIQUE(userId)"
+        ");";
+  }
+
+  String _createStudentAttendanceTable() {
+    return "CREATE TABLE StudentAttendance("
+        "attendanceId INTEGER,"
+        "attendanceDate TEXT NOT NULL,"
+        "courseId TEXT NOT NULL,"
+        'collegeId INTEGER NOT NULL,'
+        'teacherId INTEGER NOT NULL,'
+        'numLectureHours TEXT,'
+        'submissionDate TEXT NOT NULL,'
+        "subjectId INTEGER NOT NULL,"
+        'yearId INTEGER NOT NULL,'
+        'semId INTEGER NOT NULL,'
+        'classId INTEGER,'
+        'deptId INTEGER,'
+        "absentStudentList TEXT,"
+        "UNIQUE(attendanceDate, courseId, collegeId, teacherId, yearId, semId)"
+        ");";
+  }
+
+  String _createFacultyAttendanceTable() {
+    return "CREATE TABLE FacultyAttendance("
+        "attendanceId INTEGER,"
+        "attendanceDate TEXT NOT NULL,"
+        "deptId INTEGER NOT NULL,"
+        "collegeId INTEGER NOT NULL,"
+        "absentFacultyList TEXT,"
+        "UNIQUE(attendanceDate, deptId, collegeId)"
+        ");";
+  }
+
+  String _createNtStaffAttendanceTable() {
+    return "CREATE TABLE NtStaffAttendance("
+        "attendanceId INTEGER,"
+        "attendanceDate TEXT NOT NULL,"
+        "deptId TEXT NOT NULL,"
+        "collegeId INTEGER NOT NULL,"
+        "absentStaffList TEXT,"
+        "UNIQUE(attendanceDate, deptId, collegeId)"
+        ");";
+  }
+
+  String _createStudentLeaveTable() {
+    return "CREATE TABLE StudentLeaveRequest("
+        "leaveId INTEGER,"
+        "leaveStudentId INTEGER NOT NULL,"
+        "leaveStudentUserId INTEGER NOT NULL,"
+        "leaveStudentCollegeId INTEGER NOT NULL,"
+        "leaveFromDate TEXT NOT NULL,"
+        "leaveToDate TEXT NOT NULL,"
+        "leaveDays TEXT NOT NULL,"
+        "leaveReason TEXT NOT NULL,"
+        "leaveAttachement TEXT,"
+        "leaveStatus TEXT DEFAULT 'draft',"
+        "UNIQUE(leaveStudentId, leaveFromDate, leaveToDate)"
+        ");";
+  }
+
+  String _createFacultyLeaveTable() {
+    return "CREATE TABLE FacultytLeaveRequest("
+        "leaveId INTEGER,"
+        "leaveFacultyId INTEGER NOT NULL,"
+        "leaveFacultyUserId INTEGER NOT NULL,"
+        "leaveFacultyCollegeId INTEGER NOT NULL,"
+        "leaveFromDate TEXT NOT NULL,"
+        "leaveToDate TEXT NOT NULL,"
+        "leaveDays TEXT NOT NULL,"
+        "leaveReason TEXT NOT NULL,"
+        "leaveAttachement TEXT,"
+        "leaveStatus TEXT DEFAULT 'toapprove',"
+        "UNIQUE(leaveFacultyId, leaveFromDate, leaveToDate)"
+        ");";
+  }
+
+  String _createNtStaffLeaveTable() {
+    return "CREATE TABLE NtStaffLeaveRequest("
+        "leaveId INTEGER,"
+        "leaveNtStaffId INTEGER NOT NULL,"
+        "leaveNtStaffUserId INTEGER NOT NULL,"
+        "leaveNtStaffCollegeId INTEGER NOT NULL,"
+        "leaveFromDate TEXT NOT NULL,"
+        "leaveToDate TEXT NOT NULL,"
+        "leaveDays TEXT NOT NULL,"
+        "leaveReason TEXT NOT NULL,"
+        "leaveAttachement TEXT,"
+        "leaveStatus TEXT DEFAULT 'toapprove',"
+        "UNIQUE(leaveNtStaffId, leaveFromDate, leaveToDate)"
+        ");";
+  }
+
+  String _createUserLoginSessionTable() {
+    return "CREATE TABLE UserLoginSession("
+        "userName TEXT NOT NULL,"
+        "userPassword TEXT NOT NULL,"
+        "userId TEXT NOT NULL,"
+        "userType INTEGER NOT NULL,"
+        "isOnline INTEGER DEFAULT 0,"
+        "loginStatus INTEGER DEFAULT 0,"
+        "UNIQUE (userId)"
         ");";
   }
 
@@ -121,6 +220,7 @@ class AttendancesDBProvider {
       }, onCreate: (Database db, int version) async {
         var dbBatch = db.batch();
         await db.execute('PRAGMA foreign_keys = ON');
+        dbBatch.execute(_createUserLoginSessionTable());
 
         dbBatch.execute(_createStudentProfile());
         dbBatch.execute(_createParentProfile());
@@ -128,6 +228,12 @@ class AttendancesDBProvider {
         dbBatch.execute(_createNtStaffProfile());
         dbBatch.execute(_createHeadProfile());
         dbBatch.execute(_createMasterProfile());
+        dbBatch.execute(_createStudentAttendanceTable());
+        dbBatch.execute(_createFacultyAttendanceTable());
+        dbBatch.execute(_createNtStaffAttendanceTable());
+        dbBatch.execute(_createStudentLeaveTable());
+        dbBatch.execute(_createFacultyLeaveTable());
+        dbBatch.execute(_createNtStaffLeaveTable());
         await dbBatch.commit(noResult: true);
       });
     } catch (e) {
@@ -138,7 +244,7 @@ class AttendancesDBProvider {
     }
   }
 
-  Future<dynamic> profileDynamicRead(String dbQuery, params) async {
+  Future<dynamic> dynamicRead(String dbQuery, params) async {
     try {
       final db = await initDB();
 
@@ -159,7 +265,7 @@ class AttendancesDBProvider {
     }
   }
 
-  Future<dynamic> profileDynamicInsert(
+  Future<dynamic> dynamicInsert(
       String tableName, Map<String, Object> dbEntry) async {
     try {
       if (dbEntry.isNotEmpty) {
@@ -175,6 +281,46 @@ class AttendancesDBProvider {
     } catch (e) {
       if (kDebugMode) {
         log('initDB error');
+        log(e.toString());
+      }
+    }
+  }
+
+  Future<dynamic> isSomeUserLoggedIn() async {
+    try {
+      final db = await initDB();
+
+      String query = "SELECT * FROM UserLoginSession WHERE loginStatus=1;";
+
+      var resultQuerySet = await db.rawQuery(query);
+
+      var resultList = resultQuerySet.toList();
+      return resultList;
+    } catch (e) {
+      if (kDebugMode) {
+        log("error checking user login session");
+        log(e.toString());
+      }
+    }
+  }
+
+  Future<void> forceLogOutAllUsers() async {
+    try {
+      final db = await initDB();
+      String query =
+          "UPDATE UserLoginSession SET loginStatus = 1, isOnline = 1;";
+
+      var result = await db.rawQuery(query);
+
+      if (kDebugMode) {
+        log("All user forced logout status");
+        log(result.toString());
+      }
+
+      if (kDebugMode) {}
+    } catch (e) {
+      if (kDebugMode) {
+        log("error checking user login session");
         log(e.toString());
       }
     }

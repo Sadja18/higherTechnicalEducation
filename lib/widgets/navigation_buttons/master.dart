@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/common/leave_screen/master.dart';
 
 class MasterScreenNavigationButtons extends StatelessWidget {
   const MasterScreenNavigationButtons({Key? key}) : super(key: key);
@@ -37,7 +38,10 @@ class MasterScreenNavigationButtons extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context)
+                  .pushNamed(MasterApproveFacultyLeaveScreen.routeName);
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,
               height: MediaQuery.of(context).size.height * 0.05,

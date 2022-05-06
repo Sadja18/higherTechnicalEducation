@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
-import '../../../services/database/users.dart';
+import '../../../services/database/handler.dart';
 
 /// return value 0 represents no logged in user
 /// return value -1 represents multiple user sessions [in which case logout all of the user];
 /// return value of 1 or a dictionary value of user data represents, a valid login session
 Future<dynamic> isLoggedInSession() async {
   try {
-    var resultList = await UserDBProvider.db.isSomeUserLoggedIn();
+    var resultList = await DBProvider.db.isSomeUserLoggedIn();
 
     if (resultList.length <= 0) {
       return 0;
@@ -36,7 +36,7 @@ Future<dynamic> isLoggedInSession() async {
 
 Future<void> endUserSession() async {
   try {
-    await UserDBProvider.db.forceLogOutAllUsers();
+    await DBProvider.db.forceLogOutAllUsers();
   } catch (e) {
     if (kDebugMode) {
       log(e.toString());
@@ -48,11 +48,11 @@ Future<void> endUserSession() async {
 Future<dynamic> whichUserLoggedIn() async {
   try {
     // return "master";
-    // return "head";
+    return "head";
     // return "faculty";
     // return "ntStaff";
     // return "parent";
-    return "student";
+    // return "student";
   } catch (e) {
     if (kDebugMode) {
       log(e.toString());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/common/leave_screen/head.dart';
 
 class HeadScreenNavigationButtons extends StatelessWidget {
   const HeadScreenNavigationButtons({Key? key}) : super(key: key);
@@ -37,7 +38,9 @@ class HeadScreenNavigationButtons extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).pushNamed(HeadLeaveScreen.routeName);
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,
               height: MediaQuery.of(context).size.height * 0.05,

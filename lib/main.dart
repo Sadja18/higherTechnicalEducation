@@ -7,6 +7,8 @@ import './screens/common/test_home.dart';
 import './screens/common/home_screen.dart';
 import './screens/common/dashboard_screen.dart';
 import './screens/common/leave_screen/student.dart';
+import './screens/common/leave_screen/master.dart';
+import './screens/common/leave_screen/head.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,6 +65,9 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (ctx) => HomeScreen(),
         DashboardScreen.routeName: (ctx) => DashboardScreen(),
         StudentLeaveScreen.routeName: (ctx) => StudentLeaveScreen(),
+        MasterApproveFacultyLeaveScreen.routeName: (ctx) =>
+            MasterApproveFacultyLeaveScreen(),
+        HeadLeaveScreen.routeName: (ctx) => HeadLeaveScreen(),
       },
     );
   }
