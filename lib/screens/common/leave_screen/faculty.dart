@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../widgets/leave/apply/form_widget.dart';
 
 class FacultyLeaveScreen extends StatelessWidget {
   static const routeName = "/screen-faculty-leave";
@@ -76,7 +77,7 @@ class FacultyLeaveScreen extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.center,
-              child: const Text("Apply for Leave Faculty"),
+              child: const ApplyForLeaveWidget(userType: 'faculty'),
             ),
             Container(
               alignment: Alignment.center,

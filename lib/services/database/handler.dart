@@ -59,6 +59,7 @@ class DBProvider {
         "teacherName TEXT,"
         "employeeId TEXT,"
         "teacherCode TEXT,"
+        "isHoD TEXT DEFAULT 'no',"
         "deptId INTEGER NOT NULL,"
         "deptName INTEGER NOT NULL,"
         "deptHeadId INTEGER NOT NULL,"

@@ -11,7 +11,7 @@ class HeadLeaveScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Leave'),
+        title: const Text('Approve Leave'),
         backgroundColor: Theme.of(context).primaryColor,
         flexibleSpace: Container(
           decoration: const BoxDecoration(

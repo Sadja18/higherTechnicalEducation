@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import '../../../widgets/leave/apply/form_widget.dart';
 
@@ -80,7 +82,9 @@ class _StudentLeaveScreenState extends State<StudentLeaveScreen> {
         ),
         body: TabBarView(
           children: [
-            ApplyForLeaveWidget(),
+            ApplyForLeaveWidget(
+              userType: 'student',
+            ),
             Container(
               alignment: Alignment.center,
               child: const Text("Calendar view"),

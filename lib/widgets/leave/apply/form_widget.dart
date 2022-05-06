@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ApplyForLeaveWidget extends StatefulWidget {
-  const ApplyForLeaveWidget({Key? key}) : super(key: key);
+  final String userType;
+  const ApplyForLeaveWidget({Key? key, required this.userType})
+      : super(key: key);
 
   @override
   State<ApplyForLeaveWidget> createState() => _ApplyForLeaveWidgetState();
@@ -135,6 +137,14 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
     );
   }
 
+  String textFieldName() {
+    if (widget.userType == 'student') {
+      return "Reason:";
+    } else {
+      return "Remark:";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var statusBarHeight = MediaQuery.of(context).padding.top;
@@ -165,7 +175,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
             ),
           ),
           tableViewField(
-              "Reason:",
+              textFieldName(),
               Container(
                 alignment: Alignment.centerLeft,
                 child: TextFormField(

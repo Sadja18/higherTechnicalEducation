@@ -1,4 +1,7 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import '../../../widgets/leave/apply/form_widget.dart';
 
 class NtStaffLeaveScreen extends StatelessWidget {
   static const routeName = "/screen-ntstaff-leave";
@@ -76,7 +79,7 @@ class NtStaffLeaveScreen extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.center,
-              child: const Text("Apply for Leave NtStaff"),
+              child: ApplyForLeaveWidget(userType: "ntStaff"),
             ),
             Container(
               alignment: Alignment.center,
