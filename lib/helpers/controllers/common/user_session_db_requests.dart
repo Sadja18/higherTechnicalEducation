@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 
-import '../../../services/database/common/users.dart';
+import '../../../services/database/users.dart';
 
 /// return value 0 represents no logged in user
 /// return value -1 represents multiple user sessions [in which case logout all of the user];

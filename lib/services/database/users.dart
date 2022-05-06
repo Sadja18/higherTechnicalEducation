@@ -57,10 +57,11 @@ class UserDBProvider {
         await db.execute('PRAGMA foreign_keys = ON');
 
         dbBatch.execute(_createUserLoginSessionTable());
+        await dbBatch.commit(noResult: true);
       });
     } catch (e) {
       if (kDebugMode) {
-        log('initDB error');
+        log('users initDB error');
         log(e.toString());
       }
     }
