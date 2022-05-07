@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../helpers/validators/username_validators.dart';
 import '../../helpers/validators/login_field_validators.dart';
+import '../../services/connection/base.dart';
 
 class UserLoginWidget extends StatefulWidget {
   final String userType;
@@ -31,7 +32,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
             ),
             titlePadding: const EdgeInsets.all(0),
             content: Container(
-              decoration: BoxDecoration(),
+              decoration: const BoxDecoration(),
               width: MediaQuery.of(context).size.width * 0.80,
               height: MediaQuery.of(context).size.height * 0.20,
               alignment: Alignment.topCenter,
@@ -65,6 +66,16 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
   void _onClickSubmit() {
     String enteredUserName = _userNameController.text;
     String enteredUserPassword = _userPasswordController.text;
+
+    if (kDebugMode) {
+      log('upass');
+      log(enteredUserPassword);
+      log('uname');
+      log(enteredUserName);
+      log("validation");
+      log(userType);
+      log("usertype");
+    }
 
     String alertMessage0 =
         preRequestValidation(enteredUserName, enteredUserPassword);
@@ -115,15 +126,28 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           userNameValidation =
               checkIfUserNameIsStudentUserName(enteredUserName);
           if (userNameValidation == 1) {
+            tryLogin(enteredUserName, enteredUserPassword);
           } else {
-            alertMessage0 = "User Name should be an student admission n";
+            alertMessage0 = "User Name should be an student admission id";
           }
           break;
         default:
           if (kDebugMode) {
-            print(userType);
+            log(userType);
           }
       }
+    }
+  }
+
+  void tryLogin(enteredUserName, enteredUserPassword) async {
+    // var response;
+
+    switch (userType) {
+      case "student":
+        await sendStudentLoginRequest(enteredUserName, enteredUserPassword);
+        break;
+      default:
+        break;
     }
   }
 
@@ -189,7 +213,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
                             alignment: Alignment.center,
                             child: TextFormField(
                               // keyboardAppearance:,
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,
@@ -198,7 +222,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
                                   height:
                                       MediaQuery.of(context).size.height * 0.09,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.80,
+                                      MediaQuery.of(context).size.width * 0.90,
                                 ),
                               ),
                               controller: _userNameController,
@@ -251,7 +275,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
                             alignment: Alignment.center,
                             width: MediaQuery.of(context).size.width,
                             child: TextFormField(
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 focusedBorder: InputBorder.none,
                                 enabledBorder: InputBorder.none,

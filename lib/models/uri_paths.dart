@@ -12,3 +12,9 @@ const masterUriStart = '/api/principal';
 const masterUriFetchLeave = '/fetchfacultyleave.php';
 const masterUriFetchFacultyProfile = '/fetchfaculty.php';
 const masterUriFetchDepartment = '/fetchdepartments.php';
+
+const studentUriLogin = '/login.php';
+const studentUriFetchLeave = '/fetchleaves.php';
+const studentUriFetchAttendance = '/fetchattendance.php';
+const studentUriFetchBase = '/getbase.php';
+const studentUriPushLeaveRequest = '/uploadleaverequest.php';

@@ -8,7 +8,7 @@ import '../handler.dart';
 
 Future<dynamic> testForUserHomeScreen() async {
   try {
-    return [1];
+    // return [1];
   } catch (e) {
     log('switch mywidget error');
     log(e.toString());

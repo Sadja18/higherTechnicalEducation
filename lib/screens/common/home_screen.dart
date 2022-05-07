@@ -75,7 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? const SizedBox(
                       height: 0,
                     )
-                  : UserLoginWidget(userType: userType),
+                  : UserLoginWidget(
+                      userType: userType,
+                      key: ObjectKey(userType),
+                    ),
             ],
           ),
         ),

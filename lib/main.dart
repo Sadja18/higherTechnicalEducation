@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         future: testForUserHomeScreen(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
-            return const NoDataExists();
+            return const HomeScreen();
           } else {
             if (snapshot.hasData) {
               if (snapshot.data == null || snapshot.data.isEmpty) {
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
                 }
               }
             } else {
-              return const NoDataExists();
+              return const HomeScreen();
             }
           }
         });
