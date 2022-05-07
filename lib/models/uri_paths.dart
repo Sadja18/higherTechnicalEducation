@@ -8,3 +8,7 @@ const ntStaffUriStart = '/api/staff';
 const facultyUriStart = '/api/faculty';
 const headUriStart = '/api/head';
 const masterUriStart = '/api/principal';
+
+const masterUriFetchLeave = '/fetchfacultyleave.php';
+const masterUriFetchFacultyProfile = '/fetchfaculty.php';
+const masterUriFetchDepartment = '/fetchdepartments.php';

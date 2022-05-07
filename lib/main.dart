@@ -6,9 +6,10 @@ import './services/database/common/tests.dart';
 import './screens/common/test_home.dart';
 import './screens/common/home_screen.dart';
 import './screens/common/dashboard_screen.dart';
-import './screens/common/leave_screen/student.dart';
-import './screens/common/leave_screen/master.dart';
-import './screens/common/leave_screen/head.dart';
+import './screens/leave_screen/student.dart';
+import './screens/leave_screen/master.dart';
+import './screens/leave_screen/head.dart';
+import './screens/attendance/master.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
                 return const NoDataExists();
               } else {
                 if (snapshot.data[0] == 1) {
-                  return DashboardScreen();
+                  return MasterStaffAttendanceScreen();
                 } else {
                   return const TestScreen();
                 }
@@ -68,6 +69,8 @@ class MyApp extends StatelessWidget {
         MasterApproveFacultyLeaveScreen.routeName: (ctx) =>
             MasterApproveFacultyLeaveScreen(),
         HeadLeaveScreen.routeName: (ctx) => HeadLeaveScreen(),
+        MasterStaffAttendanceScreen.routeName: (ctx) =>
+            MasterStaffAttendanceScreen(),
       },
     );
   }

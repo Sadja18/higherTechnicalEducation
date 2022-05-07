@@ -47,8 +47,8 @@ Future<void> endUserSession() async {
 /// it will return user type
 Future<dynamic> whichUserLoggedIn() async {
   try {
-    // return "master";
-    return "head";
+    return "master";
+    // return "head";
     // return "faculty";
     // return "ntStaff";
     // return "parent";

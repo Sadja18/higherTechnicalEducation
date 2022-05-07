@@ -1,5 +1,8 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../screens/common/leave_screen/master.dart';
+import '../../screens/leave_screen/master.dart';
 
 class MasterScreenNavigationButtons extends StatelessWidget {
   const MasterScreenNavigationButtons({Key? key}) : super(key: key);
@@ -14,7 +17,11 @@ class MasterScreenNavigationButtons extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              if (kDebugMode) {
+                log('master attendance navigation');
+              }
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,
               height: MediaQuery.of(context).size.height * 0.05,

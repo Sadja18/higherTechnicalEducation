@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../screens/common/leave_screen/head.dart';
+import '../../screens/leave_screen/head.dart';
 
 class HeadScreenNavigationButtons extends StatelessWidget {
   const HeadScreenNavigationButtons({Key? key}) : super(key: key);

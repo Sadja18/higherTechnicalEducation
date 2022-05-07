@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../screens/common/leave_screen/student.dart';
+import '../../screens/leave_screen/student.dart';
 
 class StudentScreenNavigationButtons extends StatelessWidget {
   const StudentScreenNavigationButtons({Key? key}) : super(key: key);
