@@ -9,6 +9,11 @@ import '../handler.dart';
 Future<dynamic> testForUserHomeScreen() async {
   try {
     // return [1];
+    var query = "SELECT userName FROM UserLoginSession WHERE loginStatus=1;";
+    var params = [];
+    var result = await DBProvider.db.dynamicRead(query, params);
+    var userName = result[0]['userName'];
+    return [userName];
   } catch (e) {
     log('switch mywidget error');
     log(e.toString());

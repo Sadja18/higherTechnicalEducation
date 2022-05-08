@@ -27,6 +27,53 @@ class DBProvider {
   /// 5. Parent (referenced as parent throughout the app)
   /// 6. Student (referenced as student throughout the app)
 
+  String _createCollegeTable() {
+    return "CREATE TABLE College("
+        "collegeId INTEGER PRIMARY KEY,"
+        "collegeName TEXT"
+        ");";
+  }
+
+  String _createCourseTable() {
+    return "CREATE TABLE Course("
+        "courseId INTEGER PRIMARY KEY,"
+        "courseName TEXT NOT NULL,"
+        "noDept TEXT NOT NULL"
+        ");";
+  }
+
+  String _createYearTable() {
+    return "CREATE TABLE Year("
+        "yearId INTEGER PRIMARY KEY,"
+        "yearName TEXT NOT NULL"
+        ");";
+  }
+
+  String _createSemesterTable() {
+    return "CREATE TABLE Semester("
+        "semId INTEGER NOT NULL,"
+        "semName TEXT NOT NULL,"
+        "yearId INTEGER NOT NULL"
+        ");";
+  }
+
+  String _createDeptTable() {
+    return "CREATE TABLE Dept("
+        "deptId INTEGER PRIMARY KEY,"
+        "deptName TEXT NOT NULL,"
+        "collegeId INTEGER NOT NULL"
+        ");";
+  }
+
+  String _createClassesTable() {
+    return "CREATE TABLE Classes("
+        "classId INTEGER NOT NULL,"
+        "className TEXT NOT NULL,"
+        "courseId INTEGER NOT NULL,"
+        "UNIQUE(classId, courseId)"
+        ");";
+  }
+
   String _createStudentProfile() {
     return "CREATE TABLE Student("
         "studentId INTEGER NOT NULL,"
@@ -37,7 +84,7 @@ class DBProvider {
         "courseId INTEGER NOT NULL,"
         "yearId INTEGER NOT NULL,"
         "semId INTEGER NOT NULL,"
-        "classId TEXT,"
+        "classId INTEGER,"
         "deptId TEXT,"
         "UNIQUE(studentId, collegeId)"
         ");";
@@ -222,6 +269,13 @@ class DBProvider {
         var dbBatch = db.batch();
         await db.execute('PRAGMA foreign_keys = ON');
         dbBatch.execute(_createUserLoginSessionTable());
+        dbBatch.execute(_createYearTable());
+        dbBatch.execute(_createSemesterTable());
+        dbBatch.execute(_createClassesTable());
+
+        dbBatch.execute(_createDeptTable());
+        dbBatch.execute(_createCourseTable());
+        dbBatch.execute(_createCollegeTable());
 
         dbBatch.execute(_createStudentProfile());
         dbBatch.execute(_createParentProfile());
@@ -309,7 +363,7 @@ class DBProvider {
     try {
       final db = await initDB();
       String query =
-          "UPDATE UserLoginSession SET loginStatus = 1, isOnline = 1;";
+          "UPDATE UserLoginSession SET loginStatus = 0, isOnline = 0;";
 
       var result = await db.rawQuery(query);
 
@@ -318,7 +372,7 @@ class DBProvider {
         log(result.toString());
       }
 
-      if (kDebugMode) {}
+      // if (kDebugMode) {}
     } catch (e) {
       if (kDebugMode) {
         log("error checking user login session");

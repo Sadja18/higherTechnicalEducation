@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TestScreen extends StatelessWidget {
-  static const routenName = "screen-common-test";
+  static const routeName = "screen-common-test";
   const TestScreen({Key? key}) : super(key: key);
 
   @override

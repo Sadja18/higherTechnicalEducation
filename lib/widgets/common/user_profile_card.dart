@@ -16,49 +16,49 @@ class UserProfileCard extends StatelessWidget {
           );
         } else {
           if (snapshot.hasData) {
-            return Card(
-              color: Colors.purpleAccent,
-              elevation: 8.0,
-              child: Container(
-                // height: MediaQuery.of(context).size.height * 0.15,
-                width: MediaQuery.of(context).size.width * 0.70,
-                alignment: Alignment.topCenter,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    10.0,
+            if (snapshot.data != null && snapshot.data.isNotEmpty) {
+              var userName = snapshot.data[0].toString();
+              return Card(
+                color: Colors.purpleAccent,
+                elevation: 8.0,
+                child: Container(
+                  // height: MediaQuery.of(context).size.height * 0.15,
+                  width: MediaQuery.of(context).size.width * 0.70,
+                  alignment: Alignment.topCenter,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      10.0,
+                    ),
+                    // color: Colors.purpleAccent,
                   ),
-                  // color: Colors.purpleAccent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        userName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        DateFormat('MMM dd, yyyy ').format(
+                          DateTime.now(),
+                        ),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "UserName",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const Text(
-                      "Name of the User",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      DateFormat('MMM dd, yyyy ').format(
-                        DateTime.now(),
-                      ),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+              );
+            } else {
+              return const SizedBox(
+                height: 0,
+              );
+            }
           } else {
             return SizedBox(
               height: MediaQuery.of(context).size.height * 0,

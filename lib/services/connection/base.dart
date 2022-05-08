@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../models/uri_paths.dart';
 import '../../services/database/handler.dart';
+import '../../helpers/controllers/name_foramtter.dart';
 
 const dbname = 'college';
 const String str = "1";
@@ -77,7 +78,12 @@ Future<dynamic> getDepartmentDataFromServerMasterMode() async {
 
 Future<dynamic> sendStudentLoginRequest(
     enteredUserName, enteredUserPassword) async {
+  int saveFlag = 1;
+
   try {
+    if (kDebugMode) {
+      log('sending login request');
+    }
     var requestBodyMap = {
       "userName": enteredUserName,
       "userPassword": enteredUserPassword,
@@ -92,6 +98,9 @@ Future<dynamic> sendStudentLoginRequest(
       },
       body: jsonEncode(requestBodyMap),
     );
+    if (kDebugMode) {
+      log('student login ${response.statusCode}');
+    }
 
     if (response.statusCode == 200) {
       var resp = response.body;
@@ -109,13 +118,136 @@ Future<dynamic> sendStudentLoginRequest(
         Map<String, Object> userTableEntry = {
           "userName": enteredUserName,
           "userPassword": enteredUserPassword,
-          "dbname": dbname,
           "userId": userId.toString(),
           "userType": userType!,
           "isOnline": 1,
           "loginStatus": 1
         };
-        // await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+        // saveFlag = 1;
+
+        var studentId = loginData['studentId'];
+        var fName = loginData['fName'];
+        var mName = (loginData['mName'] == false ||
+                loginData['mName'] == '' ||
+                loginData['mName'] == null)
+            ? ''
+            : loginData['mName'];
+        var lName = (loginData['lName'] == false ||
+                loginData['lName'] == '' ||
+                loginData['lName'] == null)
+            ? ''
+            : loginData['lName'];
+        var studentName = nameFormatter(fName, mName, lName);
+        String studentCode = loginData['studentCode'].toString();
+        var collegeId = loginData['collegeId'];
+        var collegeName = loginData['collegeName'];
+
+        await DBProvider.db.dynamicInsert(
+            "College", {"collegeId": collegeId, "collegeName": collegeName});
+        // saveFlag = 1;
+
+        Map<String, Object> studentProfileEntry = {"studentId": studentId};
+        studentProfileEntry['studentName'] = studentName;
+        studentProfileEntry['studentCode'] = studentCode;
+        studentProfileEntry['userId'] = userId;
+        studentProfileEntry['collegeId'] = collegeId;
+
+        var noDept = loginData['noDept'].toString();
+        var year = loginData['year'];
+        var semester = loginData['semester'];
+        var course = loginData['course'];
+        var department = loginData['department'];
+        var courseId = 0;
+        var courseName = "";
+
+        var yearId = 0;
+        var yearName = "";
+
+        var semId = 0;
+        var semName = "";
+
+        var deptId = 0;
+        var deptName = "";
+
+        if (course != null && course != false) {
+          courseId = course[0];
+          courseName = course[1];
+          studentProfileEntry['courseId'] = courseId;
+
+          await DBProvider.db.dynamicInsert("Course", {
+            "courseId": courseId,
+            "courseName": courseName,
+            "noDept": noDept
+          });
+          if (loginData['class'] != null && loginData['class'] != false) {
+            var classId = loginData['class'][0];
+            var className = loginData['class'][1];
+
+            studentProfileEntry['classId'] = classId;
+            await DBProvider.db.dynamicInsert("Classes", {
+              "className": className,
+              "classId": classId,
+              'courseId': courseId
+            });
+            // saveFlag = 1;
+          } else {
+            if (noDept == 'true') {
+              saveFlag = 0;
+            }
+          }
+        }
+        if (year != false && year != null) {
+          yearId = year[0];
+          yearName = year[1];
+          studentProfileEntry['yearId'] = yearId;
+          if (semester != false && semester != null) {
+            semId = semester[0];
+            semName = semester[1];
+            studentProfileEntry['semId'] = semId;
+            await DBProvider.db.dynamicInsert("Semester",
+                {"semId": semId, "semName": semName, "yearId": yearId});
+            // saveFlag = 1;
+          } else {
+            saveFlag = 0;
+          }
+          await DBProvider.db
+              .dynamicInsert("Year", {"yearId": yearId, "yearName": yearName});
+          // saveFlag = 1;
+        } else {
+          saveFlag = 0;
+        }
+
+        if (department != false && department != null) {
+          deptId = department[0];
+          deptName = department[1];
+          studentProfileEntry['deptId'] = deptId;
+          await DBProvider.db.dynamicInsert("Dept", {
+            "deptId": deptId,
+            "deptName": deptName,
+            'collegeId': collegeId,
+          });
+          // saveFlag = 1;
+        } else {
+          saveFlag = 0;
+        }
+
+        if (studentProfileEntry['yearId'] != null &&
+            studentProfileEntry['yearId'] != 0 &&
+            studentProfileEntry['courseId'] != null &&
+            studentProfileEntry['semId'] != 0 &&
+            studentProfileEntry['semId'] != null) {
+          await DBProvider.db.dynamicInsert("Student", studentProfileEntry);
+        } else {
+          saveFlag = 0;
+        }
+
+        if (kDebugMode) {
+          log('userData');
+          log(userTableEntry.toString());
+          log('student');
+          log(studentProfileEntry.toString());
+        }
       }
     }
   } catch (e) {
@@ -123,7 +255,9 @@ Future<dynamic> sendStudentLoginRequest(
       log('student login error');
       log(e.toString());
     }
+    saveFlag = 0;
   }
+  return saveFlag;
 }
 
 Future<dynamic> sendParentLoginRequest(

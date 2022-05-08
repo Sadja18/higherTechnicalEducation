@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../helpers/validators/username_validators.dart';
 import '../../helpers/validators/login_field_validators.dart';
 import '../../services/connection/base.dart';
+import '../../screens/common/dashboard_screen.dart';
 
 class UserLoginWidget extends StatefulWidget {
   final String userType;
@@ -63,10 +64,13 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
     return message;
   }
 
-  void _onClickSubmit() {
+  void _onClickSubmit() async {
+    var loginStatus = 0;
     String enteredUserName = _userNameController.text;
     String enteredUserPassword = _userPasswordController.text;
 
+    String alertMessage0 =
+        preRequestValidation(enteredUserName, enteredUserPassword);
     if (kDebugMode) {
       log('upass');
       log(enteredUserPassword);
@@ -75,10 +79,8 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
       log("validation");
       log(userType);
       log("usertype");
+      log(alertMessage0);
     }
-
-    String alertMessage0 =
-        preRequestValidation(enteredUserName, enteredUserPassword);
 
     if (alertMessage0 != "" &&
         alertMessage0.isNotEmpty &&
@@ -126,9 +128,16 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           userNameValidation =
               checkIfUserNameIsStudentUserName(enteredUserName);
           if (userNameValidation == 1) {
-            tryLogin(enteredUserName, enteredUserPassword);
+            loginStatus = await tryLogin(enteredUserName, enteredUserPassword);
+            if (loginStatus == 1) {
+              Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
+            } else {
+              showAlertBox(
+                  "Server Error occurred during login.Please retry later");
+            }
           } else {
             alertMessage0 = "User Name should be an student admission id";
+            showAlertBox(alertMessage0);
           }
           break;
         default:
@@ -139,16 +148,19 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
     }
   }
 
-  void tryLogin(enteredUserName, enteredUserPassword) async {
+  dynamic tryLogin(enteredUserName, enteredUserPassword) async {
     // var response;
+    var saveFlag = 0;
 
     switch (userType) {
       case "student":
-        await sendStudentLoginRequest(enteredUserName, enteredUserPassword);
+        saveFlag =
+            await sendStudentLoginRequest(enteredUserName, enteredUserPassword);
         break;
       default:
         break;
     }
+    return saveFlag;
   }
 
   @override

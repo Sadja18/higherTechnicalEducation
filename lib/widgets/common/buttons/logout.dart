@@ -16,14 +16,16 @@ class _LogoutButtonState extends State<LogoutButton> {
       await endUserSession();
       print("User Logged Out");
       print("Re-Direct to Login Screen");
-      Navigator.of(context).pushNamed(HomeScreen.routeName);
+      Navigator.of(context).popAndPushNamed(HomeScreen.routeName);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        logOutUser();
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(
           vertical: 8.0,

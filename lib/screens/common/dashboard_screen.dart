@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:higher/widgets/navigation_buttons/faculty.dart';
-import 'package:higher/widgets/navigation_buttons/head.dart';
-import 'package:higher/widgets/navigation_buttons/master.dart';
-import 'package:higher/widgets/navigation_buttons/nt_staff.dart';
-import 'package:higher/widgets/navigation_buttons/parent.dart';
 import '../../widgets/common/buttons/logout.dart';
+import '../../widgets/navigation_buttons/faculty.dart';
+import '../../widgets/navigation_buttons/head.dart';
+import '../../widgets/navigation_buttons/master.dart';
+import '../../widgets/navigation_buttons/nt_staff.dart';
+import '../../widgets/navigation_buttons/parent.dart';
 import '../../widgets/common/user_profile_card.dart';
 import '../../widgets/navigation_buttons/student.dart';
 import '../../helpers/controllers/common/user_session_db_requests.dart';
@@ -34,17 +35,17 @@ class DashboardScreen extends StatelessWidget {
               } else {
                 var data = snapshot.data;
                 switch (data) {
-                  case "student":
+                  case 6:
                     return const StudentScreenNavigationButtons();
-                  case "parent":
+                  case 5:
                     return const ParentScreenNavigationButtons();
-                  case "faculty":
+                  case 3:
                     return const FacultyScreenNavigationButtons();
-                  case "ntStaff":
+                  case 4:
                     return const NtStaffScreenNavigationButtons();
-                  case "head":
+                  case 2:
                     return const HeadScreenNavigationButtons();
-                  case "master":
+                  case 1:
                     return const MasterScreenNavigationButtons();
                   default:
                     return const SizedBox(
@@ -144,6 +145,28 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
+  Widget homeHeader() {
+    return FutureBuilder(
+        future: getLoggedInUserName(),
+        builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+          // if(kDebugMode){}
+          if (snapshot.hasError ||
+              snapshot.hasData == false ||
+              snapshot.data.isEmpty ||
+              snapshot.data == "") {
+            return const SizedBox(
+              height: 0,
+            );
+          } else {
+            var nameOfUser = snapshot.data;
+            return Text('Welcome $nameOfUser',
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ));
+          }
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var statusBarHeight = MediaQuery.of(context).padding.top;
@@ -185,7 +208,7 @@ class DashboardScreen extends StatelessWidget {
         decoration: const BoxDecoration(),
         child: Column(
           children: [
-            const Text("Welcome User"),
+            homeHeader(),
             OutlinedButton(
               onPressed: () {
                 readTablesInDB();
