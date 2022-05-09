@@ -6,6 +6,7 @@ import '../../helpers/validators/username_validators.dart';
 import '../../helpers/validators/login_field_validators.dart';
 import '../../services/connection/base.dart';
 import '../../screens/common/dashboard_screen.dart';
+import '../../services/database/handler.dart';
 
 class UserLoginWidget extends StatefulWidget {
   final String userType;
@@ -74,12 +75,12 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
     if (kDebugMode) {
       log('upass');
       log(enteredUserPassword);
-      log('uname');
+      // log('uname');
       log(enteredUserName);
-      log("validation");
-      log(userType);
-      log("usertype");
-      log(alertMessage0);
+      // log("validation");
+      // log(userType);
+      // log("usertype");
+      // log(alertMessage0);
     }
 
     if (alertMessage0 != "" &&
@@ -92,15 +93,25 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
         case "master":
           userNameValidation = checkIfUserNameIsEmail(enteredUserName);
           if (userNameValidation == 1) {
+            loginStatus = await tryLogin(enteredUserName, enteredUserPassword);
+            if (loginStatus == 1) {
+              Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
+            } else {
+              alertMessage0 = "Login failed.";
+              showAlertBox(alertMessage0);
+            }
           } else {
             alertMessage0 = "User Name should be an email";
+            showAlertBox(alertMessage0);
           }
+
           break;
         case "head":
           userNameValidation = checkIfUserNameIsEmail(enteredUserName);
           if (userNameValidation == 1) {
           } else {
             alertMessage0 = "User Name should be an email";
+            showAlertBox(alertMessage0);
           }
           break;
         case "faculty":
@@ -108,6 +119,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           if (userNameValidation == 1) {
           } else {
             alertMessage0 = "User Name should be an email";
+            showAlertBox(alertMessage0);
           }
           break;
         case "ntStaff":
@@ -115,6 +127,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           if (userNameValidation == 1) {
           } else {
             alertMessage0 = "User Name should be an email";
+            showAlertBox(alertMessage0);
           }
           break;
         case "parent":
@@ -122,6 +135,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           if (userNameValidation == 1) {
           } else {
             alertMessage0 = "User Name should be a phone number";
+            showAlertBox(alertMessage0);
           }
           break;
         case "student":
@@ -156,6 +170,10 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
       case "student":
         saveFlag =
             await sendStudentLoginRequest(enteredUserName, enteredUserPassword);
+        break;
+      case "master":
+        saveFlag =
+            await sendMasterLoginRequest(enteredUserName, enteredUserPassword);
         break;
       default:
         break;
@@ -332,13 +350,15 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           ),
           InkWell(
             onTap: () {
-              // if (kDebugMode) {
-              //   log(widget.userType.toString());
-              //   log("userName");
-              //   log(_userNameController.text);
-              //   log('password');
-              //   log(_userPasswordController.text);
-              // }
+              if (kDebugMode) {
+                log(widget.userType.toString());
+                // log("userName");
+                // log(_userNameController.text);
+                // log('password');
+                // log(_userPasswordController.text);
+              }
+              // DBProvider.db.dynamicRead(
+              //     "ALTER TABLE Master ADD masterId INTEGER PRIMARY KEY;", []);
 
               _onClickSubmit();
             },

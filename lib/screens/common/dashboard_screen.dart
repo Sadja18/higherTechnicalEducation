@@ -209,12 +209,12 @@ class DashboardScreen extends StatelessWidget {
         child: Column(
           children: [
             homeHeader(),
-            OutlinedButton(
-              onPressed: () {
-                readTablesInDB();
-              },
-              child: const Text("Test"),
-            ),
+            // OutlinedButton(
+            //   onPressed: () {
+            //     readTablesInDB();
+            //   },
+            //   child: const Text("Test"),
+            // ),
           ],
         ),
       ),

@@ -153,7 +153,7 @@ class DBProvider {
         "collegeId INTEGER NOT NULL,"
         "collegeCode INTEGER NOT NULL,"
         'collegeName TEXT NOT NULL,'
-        "UNIQUE(userId)"
+        'UNIQUE(userId, collegeId)'
         ");";
   }
 

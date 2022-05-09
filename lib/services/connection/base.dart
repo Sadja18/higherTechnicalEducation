@@ -269,4 +269,97 @@ Future<dynamic> sendNtStaffLoginRequest(
 Future<dynamic> sendHeadLoginRequest(
     enteredUserName, enteredUserPassword) async {}
 Future<dynamic> sendMasterLoginRequest(
-    enteredUserName, enteredUserPassword) async {}
+    enteredUserName, enteredUserPassword) async {
+  int saveFlag = 1;
+
+  try {
+    if (kDebugMode) {
+      log('sending master login request');
+    }
+    var requestBodyMap = {
+      "userName": enteredUserName,
+      "userPassword": enteredUserPassword,
+      "dbname": dbname,
+      "str": str,
+    };
+
+    if (kDebugMode) {
+      log(requestBodyMap.toString());
+    }
+
+    var response = await http.post(
+      Uri.parse('$baseUriLocal$masterUriStart$masterUriLogin'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
+    if (kDebugMode) {
+      log('master login ${response.statusCode}');
+    }
+    if (response.statusCode != 200) {
+      if (kDebugMode) {
+        print('here');
+      }
+      saveFlag = 0;
+    } else {
+      saveFlag = 0;
+      var resp = jsonDecode(response.body);
+      if (kDebugMode) {
+        // log(response.body);
+        log(resp.toString());
+      }
+
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        if (kDebugMode) {
+          log("here ${resp.toString()}");
+        }
+        var data = resp['data'][0];
+        if (kDebugMode) {
+          log('master login data');
+          log(data.toString());
+        }
+
+        Map<String, Object> userTableEntry = {};
+        Map<String, Object> masterTableEntry = {};
+
+        var userName = enteredUserName;
+        var userPassword = enteredUserPassword;
+
+        var userId = data['userId'];
+        var headName = data['head_name'];
+        var collegeName = data['com_name'];
+        var collegeId = data['id'];
+        var collegeCode = data['code'];
+
+        userTableEntry['userId'] = userId;
+        userTableEntry['userName'] = userName;
+        userTableEntry['userPassword'] = userPassword;
+        userTableEntry['userType'] = userTypes['master']!;
+        userTableEntry['isOnline'] = 1;
+        userTableEntry['loginStatus'] = 1;
+
+        masterTableEntry['headName'] = headName;
+        masterTableEntry['collegeName'] = collegeName;
+        masterTableEntry['collegeCode'] = collegeCode;
+        masterTableEntry['collegeId'] = collegeId;
+        masterTableEntry['userId'] = userId;
+        if (kDebugMode) {
+          log(userTableEntry.toString());
+          log(masterTableEntry.toString());
+        }
+
+        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+        await DBProvider.db.dynamicInsert("Master", masterTableEntry);
+        saveFlag = 1;
+      } else {
+        saveFlag = 0;
+      }
+    }
+  } catch (e) {
+    log('master login error');
+    log(e.toString());
+    saveFlag = 0;
+  }
+  return saveFlag;
+}
