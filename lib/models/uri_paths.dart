@@ -5,7 +5,9 @@ const baseURLA = "namanpwa.xyz";
 const parentUriStart = '/api/parent';
 const ntStaffUriStart = '/api/staff';
 const facultyUriStart = '/api/faculty';
+
 const headUriStart = '/api/head';
+const headUriLogin = '/login.php';
 
 const masterUriStart = '/api/principal';
 const masterUriLogin = '/login.php';

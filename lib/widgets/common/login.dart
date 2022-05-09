@@ -109,6 +109,13 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
         case "head":
           userNameValidation = checkIfUserNameIsEmail(enteredUserName);
           if (userNameValidation == 1) {
+            loginStatus = await tryLogin(enteredUserName, enteredUserPassword);
+            if (loginStatus == 1) {
+              Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
+            } else {
+              alertMessage0 = "Login Failed. Please try later";
+              showAlertBox(alertMessage0);
+            }
           } else {
             alertMessage0 = "User Name should be an email";
             showAlertBox(alertMessage0);
@@ -174,6 +181,11 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
       case "master":
         saveFlag =
             await sendMasterLoginRequest(enteredUserName, enteredUserPassword);
+        break;
+
+      case "head":
+        saveFlag =
+            await sendHeadLoginRequest(enteredUserName, enteredUserPassword);
         break;
       default:
         break;

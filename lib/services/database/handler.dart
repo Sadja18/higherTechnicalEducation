@@ -137,12 +137,11 @@ class DBProvider {
         "teacherId INTEGER NOT NULL,"
         "userId INTEGER NOT NULL,"
         "teacherName TEXT,"
-        "employeeId TEXT,"
-        "teacherCode TEXT,"
         "deptId INTEGER NOT NULL,"
         "deptName INTEGER NOT NULL,"
         "collegeId INTEGER NOT NULL,"
-        "UNIQUE(teacherId, collegeId)"
+        "collegeName TEXT,"
+        "UNIQUE(userId, deptId, collegeId)"
         ");";
   }
 

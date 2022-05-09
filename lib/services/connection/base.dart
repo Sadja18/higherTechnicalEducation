@@ -267,7 +267,89 @@ Future<dynamic> sendFacultyLoginRequest(
 Future<dynamic> sendNtStaffLoginRequest(
     enteredUserName, enteredUserPassword) async {}
 Future<dynamic> sendHeadLoginRequest(
-    enteredUserName, enteredUserPassword) async {}
+    enteredUserName, enteredUserPassword) async {
+  int saveFlag = 1;
+  try {
+    if (kDebugMode) {
+      log('sending head login');
+    }
+
+    var requestBodyMap = {
+      "userName": enteredUserName,
+      "userPassword": enteredUserPassword,
+      "dbname": dbname,
+      "str": str,
+    };
+    var response = await http.post(
+      Uri.parse('$baseUriLocal$headUriStart$headUriLogin'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
+    if (kDebugMode) {
+      log('master login ${response.statusCode}');
+    }
+    if (response.statusCode != 200) {
+      if (kDebugMode) {
+        print('here');
+      }
+      saveFlag = 0;
+    } else {
+      if (kDebugMode) {
+        log(response.body);
+      }
+
+      var resp = jsonDecode(response.body);
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var data = resp['data'];
+        var userId = data['userId'];
+        var userName = data['userName'];
+        var userPassword = data['userPassword'];
+        var loginStatus = 1;
+        var isOnline = 1;
+
+        var collegeId = data['collegeId'];
+        var collegeName = data['collegeName'];
+        var deptId = data['deptId'];
+        var deptName = data['deptName'];
+        var teacherId = data['facultyId'];
+        var teacherName = data['facultyName'];
+
+        Map<String, Object> userTableEntry = {
+          "userId": userId,
+          "userName": userName,
+          "userPassword": userPassword,
+          "loginStatus": loginStatus,
+          "isOnline": isOnline,
+          "userType": userTypes['head']!,
+        };
+
+        Map<String, Object> headTableEntry = {
+          "teacherId": teacherId,
+          "teacherName": teacherName,
+          "userId": userId,
+          "deptName": deptName,
+          "deptId": deptId,
+          "collegeId": collegeId,
+          "collegeName": collegeName,
+        };
+        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+        await DBProvider.db.dynamicInsert("Head", headTableEntry);
+        saveFlag = 1;
+      } else {
+        saveFlag = 0;
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log("head login error");
+      log(e.toString());
+    }
+  }
+  return saveFlag;
+}
+
 Future<dynamic> sendMasterLoginRequest(
     enteredUserName, enteredUserPassword) async {
   int saveFlag = 1;
@@ -351,6 +433,10 @@ Future<dynamic> sendMasterLoginRequest(
 
         await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
         await DBProvider.db.dynamicInsert("Master", masterTableEntry);
+        await DBProvider.db.dynamicInsert("College", <String, Object>{
+          "collegeId": collegeId,
+          "collegeName": collegeName
+        });
         saveFlag = 1;
       } else {
         saveFlag = 0;
