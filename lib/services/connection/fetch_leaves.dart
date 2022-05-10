@@ -15,6 +15,9 @@ Future<dynamic> getFacultyLeaveRequestsFromServerMasterMode() async {
     String dbname = 'college';
     String collegeId = '13';
     String str = '1';
+    if (kDebugMode) {
+      log("leave request fetch");
+    }
 
     var response = await http.post(
       Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchLeave'),

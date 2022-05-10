@@ -50,11 +50,13 @@ class _MasterLeaveApproveTableWidgetState
   void userInputHandler(
       int rowIndex, int staffId, Color bgColor, String leaveRequestStatus) {}
 
-  Widget dialogTitle() {
+  Widget dialogTitle(staffId) {
     return Container(
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width * 0.80,
-      child: Text('${(100 * 101) / leaveRequests.length}'),
+      child: Text(
+        leaveRequests[staffId]['leaveFacultyUserName'].toString(),
+      ),
     );
   }
 
@@ -107,9 +109,12 @@ class _MasterLeaveApproveTableWidgetState
             contentPadding: const EdgeInsets.all(
               2.0,
             ),
-            title: dialogTitle(),
+            title: dialogTitle(staffId),
             content: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
+              height: leaveRequests[staffId]['leaveAttachement'] != null &&
+                      leaveRequests[staffId]['leaveAttachement'] != ""
+                  ? MediaQuery.of(context).size.height * 0.30
+                  : MediaQuery.of(context).size.height * 0.25,
               width: MediaQuery.of(context).size.width * 0.95,
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
@@ -121,37 +126,72 @@ class _MasterLeaveApproveTableWidgetState
                       "From:",
                       Container(
                         alignment: Alignment.topLeft,
-                        child: const Text("From Date"),
+                        child: Text(
+                          dateFormatter(
+                              leaveRequests[staffId]['leaveFromDate']),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                     tableViewField(
                       "To:",
                       Container(
                         alignment: Alignment.topLeft,
-                        child: const Text("To Date"),
+                        child: Text(
+                          dateFormatter(leaveRequests[staffId]['leaveToDate']),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                     tableViewField(
                       "Remark:",
                       Container(
                         alignment: Alignment.topLeft,
-                        child: const Text("Remark"),
+                        child: Text(
+                          leaveRequests[staffId]['leaveReason'].toString(),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                    tableViewField(
-                      "Attachment:",
-                      Container(
-                        alignment: Alignment.topCenter,
-                        child: const Text("Attachment preview"),
-                      ),
-                    ),
+                    leaveRequests[staffId]['leaveAttachement'] != null &&
+                            leaveRequests[staffId]['leaveAttachement'] != ""
+                        ? tableViewField(
+                            "Attachment:",
+                            Container(
+                              alignment: Alignment.topCenter,
+                              child: TextButton(
+                                onPressed: () {
+                                  if (kDebugMode) {
+                                    print('show attachment preview');
+                                  }
+                                },
+                                child: const Text(
+                                  "Preview",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(
+                            height: 0,
+                          ),
                   ],
                 ),
               ),
             ),
             actions: [
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (kDebugMode) {
+                    print("Approve");
+                  }
+                  setState(() {
+                    currentRowIndex = staffId;
+                    leaveRequests[staffId]['leaveRequestStatus'] = 'approve';
+                  });
+                },
                 child: const Text(
                   "Approve",
                   style: TextStyle(
@@ -160,7 +200,15 @@ class _MasterLeaveApproveTableWidgetState
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (kDebugMode) {
+                    print("Reject");
+                  }
+                  setState(() {
+                    currentRowIndex = staffId;
+                    leaveRequests[staffId]['leaveRequestStatus'] = 'reject';
+                  });
+                },
                 child: const Text(
                   "Reject",
                   style: TextStyle(
@@ -483,9 +531,10 @@ class _MasterLeaveApproveTableWidgetState
       ),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.75,
-      decoration: BoxDecoration(
-        border: Border.all(),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(),
+      // ),
+      // key: ObjectKey(leaveRequests),
       child: StickyHeadersTable(
         initialScrollOffsetX: 0.0,
         initialScrollOffsetY: verticalRowScrollOffset(),
@@ -520,9 +569,35 @@ class _MasterLeaveApproveTableWidgetState
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height,
       decoration: const BoxDecoration(),
       alignment: Alignment.topCenter,
-      child: leaveStickyTable(),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            leaveStickyTable(),
+            InkWell(
+              onTap: () {},
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.purpleAccent,
+                ),
+                width: MediaQuery.of(context).size.width * 0.30,
+                height: MediaQuery.of(context).size.height * 0.05,
+                alignment: Alignment.center,
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
