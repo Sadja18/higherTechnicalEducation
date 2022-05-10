@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 
 class MasterLeaveApproveTableWidget extends StatefulWidget {
@@ -44,10 +45,6 @@ class _MasterLeaveApproveTableWidgetState
         border: Border.all(),
       ),
     );
-  }
-
-  Color getBgColor() {
-    return Colors.blue;
   }
 
   void userInputHandler(
@@ -176,6 +173,25 @@ class _MasterLeaveApproveTableWidgetState
         });
   }
 
+  String dateFormatter(fullYmmDD) {
+    String formatted =
+        DateFormat('MMM dd, yy').format(DateTime.parse(fullYmmDD));
+    return formatted;
+  }
+
+  Color getRowBgColor(rowIndex) {
+    switch (leaveRequests[rowIndex]['leaveRequestStatus']) {
+      case "toapprovep":
+        return Colors.blue;
+      case "approve":
+        return Colors.green;
+      case "reject":
+        return Colors.red;
+      default:
+        return Colors.blue;
+    }
+  }
+
   Widget rowsTitleBuilder(int rowIndex) {
     return InkWell(
       onTap: () {
@@ -185,25 +201,256 @@ class _MasterLeaveApproveTableWidgetState
         showUserInputDialog(rowIndex);
       },
       child: Card(
-        color: getBgColor(),
+        color: getRowBgColor(rowIndex),
         elevation: 18.0,
         shadowColor: Colors.pinkAccent,
         borderOnForeground: true,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 6.0,
+          ),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: getBgColor(),
+            color: getRowBgColor(rowIndex),
             borderRadius: BorderRadius.circular(
               12.0,
             ),
           ),
-          child: Text(
-            leaveRequests[rowIndex].toString(),
-            style: const TextStyle(
-              color: Colors.white,
-            ),
+          child: Table(
+            columnWidths: const <int, TableColumnWidth>{
+              0: FractionColumnWidth(0.50),
+              1: FractionColumnWidth(0.50),
+            },
+            children: [
+              TableRow(
+                children: [
+                  /// staff name
+                  TableCell(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        leaveRequests[rowIndex]['leaveFacultyUserName']
+                            .toString(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  /// faculty dept name
+                  TableCell(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        leaveRequests[rowIndex]['leaveFacultyDeptName']
+                            .toString(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  /// leave type Name
+                  TableCell(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Table(
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FractionColumnWidth(0.50),
+                          1: FractionColumnWidth(0.50),
+                        },
+                        children: [
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  alignment: Alignment.centerLeft,
+                                  child: const Text(
+                                    "Type: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              TableCell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    leaveRequests[rowIndex]['leaveTypeName']
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  ///  number of days
+                  TableCell(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Table(
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FractionColumnWidth(0.50),
+                          1: FractionColumnWidth(0.50),
+                        },
+                        children: [
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: const Text(
+                                    "Days: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              TableCell(
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    leaveRequests[rowIndex]['leaveDays']
+                                        .toString(),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              TableRow(
+                children: [
+                  TableCell(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Table(
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FractionColumnWidth(0.40),
+                          1: FractionColumnWidth(0.60),
+                        },
+                        children: [
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: const Text(
+                                    "From: ",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              TableCell(
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    dateFormatter(leaveRequests[rowIndex]
+                                        ['leaveFromDate']),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  TableCell(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      alignment: Alignment.centerLeft,
+                      child: Table(
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FractionColumnWidth(0.40),
+                          1: FractionColumnWidth(0.60),
+                        },
+                        children: [
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: const Text(
+                                    "To: ",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              TableCell(
+                                child: Container(
+                                  alignment: Alignment.centerLeft,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    dateFormatter(
+                                        leaveRequests[rowIndex]['leaveToDate']),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -246,7 +493,7 @@ class _MasterLeaveApproveTableWidgetState
         cellDimensions: CellDimensions.variableColumnWidthAndRowHeight(
           columnWidths: [],
           rowHeights:
-              List<double>.generate(leaveRequests.length, (int index) => 75),
+              List<double>.generate(leaveRequests.length, (int index) => 120),
           stickyLegendWidth: MediaQuery.of(context).size.width * 0.99,
           stickyLegendHeight: 0,
         ),

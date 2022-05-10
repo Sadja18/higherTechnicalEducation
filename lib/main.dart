@@ -9,10 +9,15 @@ import './screens/common/no_data_screen.dart';
 import './screens/common/test_home.dart';
 import './screens/common/home_screen.dart';
 import './screens/common/dashboard_screen.dart';
+
 import './screens/leave_screen/student.dart';
 import './screens/leave_screen/master.dart';
+
 import './screens/leave_screen/head.dart';
 import './screens/attendance/master.dart';
+
+import './screens/leave_screen/faculty.dart';
+// import './screens/attendance/';
 import './helpers/controllers/common/user_session_db_requests.dart';
 
 void main() {
@@ -40,7 +45,7 @@ class MyApp extends StatelessWidget {
                 return const NoDataExists();
               } else {
                 if ([1, 2, 3, 4, 5, 6].contains(snapshot.data)) {
-                  return DashboardScreen();
+                  return TestScreen();
                 } else {
                   return const TestScreen();
                 }
@@ -79,6 +84,7 @@ class MyApp extends StatelessWidget {
         HeadLeaveScreen.routeName: (ctx) => HeadLeaveScreen(),
         MasterStaffAttendanceScreen.routeName: (ctx) =>
             MasterStaffAttendanceScreen(),
+        FacultyLeaveScreen.routeName: (ctx) => FacultyLeaveScreen(),
       },
     );
   }

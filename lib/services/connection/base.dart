@@ -337,7 +337,108 @@ Future<dynamic> sendParentLoginRequest(
 }
 
 Future<dynamic> sendFacultyLoginRequest(
-    enteredUserName, enteredUserPassword) async {}
+    enteredUserName, enteredUserPassword) async {
+  int saveFlag = 0;
+
+  try {
+    var requestBodyMap = {
+      "userName": enteredUserName,
+      "userPassword": enteredUserPassword,
+      "dbname": "college",
+      "str": 1,
+    };
+    if (kDebugMode) {
+      log('sending faculty login request');
+    }
+
+    var response = await http.post(
+      Uri.parse('$baseUriLocal$facultyUriStart$facultyUriLogin'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
+
+    if (response.statusCode != 200) {
+      saveFlag = 0;
+    } else {
+      var resp = jsonDecode(response.body);
+
+      if (kDebugMode) {
+        log(response.body);
+      }
+
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var data = resp['data'];
+        var userName = data['userName'];
+        var userPassword = data['userPassword'];
+        var userId = data['userId'];
+        var userType = userTypes['faculty']!;
+        var isOnline = 1;
+        var loginStatus = 1;
+
+        await DBProvider.db.dynamicInsert("UserLoginSession", <String, Object>{
+          "userName": userName,
+          "userPassword": userPassword,
+          "userId": userId,
+          "userType": userType,
+          "loginStatus": 1,
+          "isOnline": 1
+        });
+        var collegeId = data['collegeId'];
+        var collegeName = data['collegeName'];
+        var deptId = data['deptId'];
+        var deptName = data['deptName'];
+        await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+          "deptId": deptId,
+          "deptName": deptName,
+          'collegeId': collegeId
+        });
+
+        await DBProvider.db.dynamicInsert("College", <String, Object>{
+          "collegeId": collegeId,
+          "collegeName": collegeName,
+        });
+
+        var teacherId = data['teacherId'];
+        var empId = data['empId'];
+        var teacherName = data['facultyName'];
+        var teacherCode = data['teacherCode'];
+        var isHod = data['isHoD'];
+
+        var deptHeadFacultyUserId = data['deptHeadFacultyUserId'];
+        var deptHeadName = data['deptHeadName'];
+
+        await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
+          "teacherId": teacherId,
+          "userId": userId,
+          "teacherName": teacherName,
+          "employeeId": empId,
+          "teacherCode": teacherCode,
+          "isHoD": isHod,
+          "deptId": deptId,
+          "deptName": deptName,
+          "deptHeadFacultyUserId": deptHeadFacultyUserId,
+          "deptHeadName": deptHeadName,
+          "collegeId": collegeId,
+          "collegeName": collegeName
+        });
+        saveFlag = 1;
+      } else {
+        saveFlag = 0;
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log("faculty login error");
+      log(e.toString());
+    }
+    saveFlag = 0;
+  }
+
+  return saveFlag;
+}
+
 Future<dynamic> sendNtStaffLoginRequest(
     enteredUserName, enteredUserPassword) async {}
 Future<dynamic> sendHeadLoginRequest(

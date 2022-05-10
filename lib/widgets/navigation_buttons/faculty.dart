@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../screens/leave_screen/faculty.dart';
 
 class FacultyScreenNavigationButtons extends StatelessWidget {
   const FacultyScreenNavigationButtons({Key? key}) : super(key: key);
@@ -13,7 +17,12 @@ class FacultyScreenNavigationButtons extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
-            onTap: () {},
+            onTap: () {
+              if (kDebugMode) {
+                log('tapped to attendance screen faculty');
+                print('d');
+              }
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,
               height: MediaQuery.of(context).size.height * 0.05,
@@ -37,7 +46,13 @@ class FacultyScreenNavigationButtons extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              if (kDebugMode) {
+                log('faculty leave screen');
+                print('switch');
+              }
+              Navigator.of(context).pushNamed(FacultyLeaveScreen.routeName);
+            },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,
               height: MediaQuery.of(context).size.height * 0.05,

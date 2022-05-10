@@ -110,9 +110,10 @@ class DBProvider {
         "isHoD TEXT DEFAULT 'no',"
         "deptId INTEGER NOT NULL,"
         "deptName INTEGER NOT NULL,"
-        "deptHeadId INTEGER NOT NULL,"
+        "deptHeadFacultyUserId INTEGER NOT NULL,"
         "deptHeadName INTEGER NOT NULL,"
         "collegeId INTEGER NOT NULL,"
+        "collegeName TEXT,"
         "UNIQUE(teacherId, collegeId)"
         ");";
   }
@@ -217,16 +218,23 @@ class DBProvider {
   String _createFacultyLeaveTable() {
     return "CREATE TABLE FacultytLeaveRequest("
         "leaveId INTEGER,"
-        "leaveFacultyId INTEGER NOT NULL,"
         "leaveFacultyUserId INTEGER NOT NULL,"
+        "leaveFacultyUserName TEXT,"
+        "leaveFacultyDeptId INTEGER NOT NULL,"
+        "leaveFacultyDeptName TEXT,"
         "leaveFacultyCollegeId INTEGER NOT NULL,"
+        "leaveFacultyCollegeName TEXT,"
+        "leaveTypeId INTEGER NOT NULL,"
+        "leaveTypeName INTEGER NOT NULL,"
         "leaveFromDate TEXT NOT NULL,"
         "leaveToDate TEXT NOT NULL,"
+        'leaveSession TEXT NOT NULL,'
         "leaveDays TEXT NOT NULL,"
+        "leaveAppliedDate TEXT NOT NULL,"
         "leaveReason TEXT NOT NULL,"
         "leaveAttachement TEXT,"
         "leaveStatus TEXT DEFAULT 'toapprove',"
-        "UNIQUE(leaveFacultyId, leaveFromDate, leaveToDate)"
+        "UNIQUE(leaveFacultyUserId, leaveFromDate, leaveToDate)"
         ");";
   }
 

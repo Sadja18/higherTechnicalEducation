@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../leave_screen/master.dart';
 
 class TestScreen extends StatelessWidget {
   static const routeName = "screen-common-test";
@@ -30,7 +31,12 @@ class TestScreen extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        child: const Text("GO crazy"),
+        child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .pushNamed(MasterApproveFacultyLeaveScreen.routeName);
+            },
+            child: const Text("data")),
       ),
     );
   }
