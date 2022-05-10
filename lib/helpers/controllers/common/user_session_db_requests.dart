@@ -138,7 +138,13 @@ Future<dynamic> getLoggedInUserName() async {
         // case "4":
         //   return "ntStaff";
         case 5:
-          return "parent";
+          var val = await DBProvider.db.dynamicRead(
+              "SELECT parentName FROM Parent WHERE "
+              "userId = "
+              "(SELECT userId FROM UserLoginSession WHERE loginStatus = 1);",
+              []);
+          nameOfUser = val[0]['parentName'];
+          return nameOfUser;
         // case "5":
         //   return "parent";
         case 6:

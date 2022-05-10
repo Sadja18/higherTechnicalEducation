@@ -144,6 +144,14 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
               log('sending parent login request');
               loginStatus =
                   await tryLogin(enteredUserName, enteredUserPassword);
+
+              if (loginStatus == 1) {
+                Navigator.of(context)
+                    .popAndPushNamed(DashboardScreen.routeName);
+              } else {
+                alertMessage0 = "Login failed.";
+                showAlertBox(alertMessage0);
+              }
               if (kDebugMode) {
                 log('save flag');
                 log(loginStatus.toString());

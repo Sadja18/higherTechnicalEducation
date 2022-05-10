@@ -291,6 +291,41 @@ Future<dynamic> sendParentLoginRequest(
         log(resp.toString());
         saveFlag = 0;
       }
+
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var data = resp['data'];
+        var userName = data['userName'];
+        var userPassword = data['userPassword'];
+        var userId = data['userId'];
+        var userType = userTypes["parent"]!;
+        var loginStatus = 1;
+        var isOnline = 1;
+        var parentId = data['parentId'];
+        var parentName = data['displayName'];
+        var children = jsonEncode(data['children']);
+
+        Map<String, Object> userTableEntry = {
+          'userName': userName,
+          'userPassword': userPassword,
+          "userType": userType,
+          "userId": userId,
+          "loginStatus": loginStatus,
+          "isOnline": isOnline
+        };
+        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+
+        Map<String, Object> parentProfileEntry = {
+          "parentId": parentId,
+          "parentName": parentName,
+          "userId": userId,
+          "childrenStudentIdList": children,
+        };
+
+        await DBProvider.db.dynamicInsert("Parent", parentProfileEntry);
+        saveFlag = 1;
+      } else {
+        saveFlag = 0;
+      }
     }
   } catch (e) {
     if (kDebugMode) {
