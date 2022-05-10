@@ -261,7 +261,46 @@ Future<dynamic> sendStudentLoginRequest(
 }
 
 Future<dynamic> sendParentLoginRequest(
-    enteredUserName, enteredUserPassword) async {}
+    enteredUserName, enteredUserPassword) async {
+  int saveFlag = 1;
+  try {
+    var requestBodyMap = {
+      "userName": enteredUserName,
+      "userPassword": enteredUserPassword,
+      "dbname": "college",
+      "str": 1,
+    };
+
+    if (kDebugMode) {
+      log('sending parent login request');
+    }
+    var response = await http.post(
+      Uri.parse("$baseUriLocal$parentUriStart$parentUriLogin"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
+
+    if (response.statusCode != 200) {
+      saveFlag = 0;
+    } else {
+      var resp = jsonDecode(response.body);
+
+      if (kDebugMode) {
+        log(resp.toString());
+        saveFlag = 0;
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('parent login error');
+      log(e.toString());
+    }
+  }
+  return saveFlag;
+}
+
 Future<dynamic> sendFacultyLoginRequest(
     enteredUserName, enteredUserPassword) async {}
 Future<dynamic> sendNtStaffLoginRequest(

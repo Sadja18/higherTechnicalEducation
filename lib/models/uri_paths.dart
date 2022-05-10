@@ -2,9 +2,15 @@ const baseUriLocal = "http://10.0.2.2/";
 const baseUriLocalA = "10.0.2.2";
 const baseURL = "https://namanpwa.xyz";
 const baseURLA = "namanpwa.xyz";
+
 const parentUriStart = '/api/parent';
+const parentUriLogin = '/login.php';
+
 const ntStaffUriStart = '/api/staff';
+const ntStaffUriLogin = '/login.php';
+
 const facultyUriStart = '/api/faculty';
+const facultyUriLogin = '/login.php';
 
 const headUriStart = '/api/head';
 const headUriLogin = '/login.php';

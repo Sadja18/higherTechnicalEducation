@@ -8,7 +8,7 @@ RegExp emailRegex = RegExp(
 /// In India, possible mobile number length can be 10 or 11
 /// sample user login
 /// 9876565643; parent@1234
-RegExp phoneRegex = RegExp(r'^[6789]\d{10}|\d{11}$', multiLine: false);
+RegExp phoneRegex = RegExp(r'^[6-9]\d{9}|\d{10}|\d{11}$', multiLine: false);
 
 /// return value == 1 means, the entered user name is a valid phone number
 int checkIfUserNameIsPhone(String enteredUserName) {

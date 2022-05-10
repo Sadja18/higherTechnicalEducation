@@ -92,6 +92,7 @@ class DBProvider {
 
   String _createParentProfile() {
     return "CREATE TABLE Parent("
+        "parentId INTEGER PRIMARY KEY"
         "userId INTEGER NOT NULL,"
         "parentName INTEGER,"
         "childrenStudentIdList TEXT NOT NULL,"

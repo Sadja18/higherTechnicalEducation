@@ -140,6 +140,15 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
         case "parent":
           userNameValidation = checkIfUserNameIsPhone(enteredUserName);
           if (userNameValidation == 1) {
+            if (kDebugMode) {
+              log('sending parent login request');
+              loginStatus =
+                  await tryLogin(enteredUserName, enteredUserPassword);
+              if (kDebugMode) {
+                log('save flag');
+                log(loginStatus.toString());
+              }
+            }
           } else {
             alertMessage0 = "User Name should be a phone number";
             showAlertBox(alertMessage0);
@@ -186,6 +195,10 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
       case "head":
         saveFlag =
             await sendHeadLoginRequest(enteredUserName, enteredUserPassword);
+        break;
+      case "parent":
+        saveFlag =
+            await sendParentLoginRequest(enteredUserName, enteredUserPassword);
         break;
       default:
         break;
