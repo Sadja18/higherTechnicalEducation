@@ -189,7 +189,7 @@ class _MasterLeaveApproveTableWidgetState
                   }
                   setState(() {
                     currentRowIndex = staffId;
-                    leaveRequests[staffId]['leaveRequestStatus'] = 'approve';
+                    leaveRequests[staffId]['leaveStatus'] = 'approve';
                   });
                 },
                 child: const Text(
@@ -206,7 +206,7 @@ class _MasterLeaveApproveTableWidgetState
                   }
                   setState(() {
                     currentRowIndex = staffId;
-                    leaveRequests[staffId]['leaveRequestStatus'] = 'reject';
+                    leaveRequests[staffId]['leaveStatus'] = 'reject';
                   });
                 },
                 child: const Text(
@@ -228,7 +228,7 @@ class _MasterLeaveApproveTableWidgetState
   }
 
   Color getRowBgColor(rowIndex) {
-    switch (leaveRequests[rowIndex]['leaveRequestStatus']) {
+    switch (leaveRequests[rowIndex]['leaveStatus']) {
       case "toapprovep":
         return Colors.blue;
       case "approve":
@@ -506,7 +506,7 @@ class _MasterLeaveApproveTableWidgetState
   }
 
   double verticalRowScrollOffset() {
-    double scrollOffset = 75.0;
+    double scrollOffset = 120.0;
     if (currentRowIndex == 0.0) {
       return 0.0;
     } else {

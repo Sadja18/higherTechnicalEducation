@@ -232,6 +232,9 @@ Future<dynamic> sendStudentLoginRequest(
           saveFlag = 0;
         }
 
+        var profilePic = loginData['profilePic'];
+        studentProfileEntry['profilePic'] = profilePic;
+
         if (studentProfileEntry['yearId'] != null &&
             studentProfileEntry['yearId'] != 0 &&
             studentProfileEntry['courseId'] != null &&
@@ -409,6 +412,8 @@ Future<dynamic> sendFacultyLoginRequest(
         var deptHeadFacultyUserId = data['deptHeadFacultyUserId'];
         var deptHeadName = data['deptHeadName'];
 
+        var profilePic = data['profilePic'];
+
         await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
           "teacherId": teacherId,
           "userId": userId,
@@ -421,7 +426,8 @@ Future<dynamic> sendFacultyLoginRequest(
           "deptHeadFacultyUserId": deptHeadFacultyUserId,
           "deptHeadName": deptHeadName,
           "collegeId": collegeId,
-          "collegeName": collegeName
+          "collegeName": collegeName,
+          'profilePic': profilePic,
         });
         saveFlag = 1;
       } else {
@@ -490,6 +496,7 @@ Future<dynamic> sendHeadLoginRequest(
         var deptName = data['deptName'];
         var teacherId = data['facultyId'];
         var teacherName = data['facultyName'];
+        var profilePic = data['profilePic'];
 
         Map<String, Object> userTableEntry = {
           "userId": userId,
@@ -508,6 +515,7 @@ Future<dynamic> sendHeadLoginRequest(
           "deptId": deptId,
           "collegeId": collegeId,
           "collegeName": collegeName,
+          "profilePic": profilePic,
         };
         await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
         await DBProvider.db.dynamicInsert("Head", headTableEntry);
@@ -623,4 +631,42 @@ Future<dynamic> sendMasterLoginRequest(
     saveFlag = 0;
   }
   return saveFlag;
+}
+
+Future<dynamic> fetchStudentProfilesHeadMode() async {
+  try {
+    var userName = 'chemgcd@gmai.com';
+    var userPassword = 'depthod@1234';
+    var dbname = 'college';
+    var str = "1";
+
+    var requestBodyMap = {
+      "userName": userName,
+      "userPassword": userPassword,
+      "dbname": dbname,
+      'str': str,
+    };
+
+    if (kDebugMode) {
+      log('head mode student profile fetch');
+    }
+
+    var response = await http.post(
+      Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentProfiles'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
+    if (kDebugMode) {
+      log('head mode student profile fetch response');
+      log(response.statusCode.toString());
+      log(response.body);
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('head mode error, fetch students');
+      log(e.toString());
+    }
+  }
 }

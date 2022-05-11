@@ -86,6 +86,7 @@ class DBProvider {
         "semId INTEGER NOT NULL,"
         "classId INTEGER,"
         "deptId TEXT,"
+        "profilePic TEXT,"
         "UNIQUE(studentId, collegeId)"
         ");";
   }
@@ -114,6 +115,7 @@ class DBProvider {
         "deptHeadName INTEGER NOT NULL,"
         "collegeId INTEGER NOT NULL,"
         "collegeName TEXT,"
+        "profilePic TEXT,"
         "UNIQUE(teacherId, collegeId)"
         ");";
   }
@@ -143,6 +145,7 @@ class DBProvider {
         "deptName INTEGER NOT NULL,"
         "collegeId INTEGER NOT NULL,"
         "collegeName TEXT,"
+        'profilePic TEXT,'
         "UNIQUE(userId, deptId, collegeId)"
         ");";
   }
@@ -202,8 +205,10 @@ class DBProvider {
   String _createStudentLeaveTable() {
     return "CREATE TABLE StudentLeaveRequest("
         "leaveId INTEGER,"
-        "leaveStudentId INTEGER NOT NULL,"
         "leaveStudentUserId INTEGER NOT NULL,"
+        "leaveStudentClassId INTEGER NOT NULL,"
+        "leaveStudentDeptId INTEGER NOT NULL,"
+        "leaveStudentDeptName TEXT,"
         "leaveStudentCollegeId INTEGER NOT NULL,"
         "leaveFromDate TEXT NOT NULL,"
         "leaveToDate TEXT NOT NULL,"
@@ -211,7 +216,7 @@ class DBProvider {
         "leaveReason TEXT NOT NULL,"
         "leaveAttachement TEXT,"
         "leaveStatus TEXT DEFAULT 'draft',"
-        "UNIQUE(leaveStudentId, leaveFromDate, leaveToDate)"
+        "UNIQUE(leaveStudentUserId, leaveFromDate, leaveToDate)"
         ");";
   }
 

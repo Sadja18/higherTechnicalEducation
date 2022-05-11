@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/common/buttons/logout.dart';
@@ -145,26 +148,166 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
+  Map<int, TableColumnWidth> getvals(bool change) {
+    Map<int, TableColumnWidth> tableColumn = {
+      0: FractionColumnWidth(0),
+      1: FractionColumnWidth(1),
+    };
+
+    if (change == true) {
+      tableColumn[0] = FractionColumnWidth(0.50);
+      tableColumn[1] = FractionColumnWidth(0.50);
+    }
+    return tableColumn;
+  }
+
   Widget homeHeader() {
     return FutureBuilder(
-        future: getLoggedInUserName(),
+        future: getUserProfilePic(),
         builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-          // if(kDebugMode){}
-          if (snapshot.hasError ||
-              snapshot.hasData == false ||
-              snapshot.data.isEmpty ||
-              snapshot.data == "") {
-            return const SizedBox(
-              height: 0,
-            );
+          if (snapshot.hasError == false &&
+              snapshot.hasData == true &&
+              snapshot.data != null &&
+              snapshot.data != "") {
+            // there was a profile pic
+            var profilePicString = snapshot.data;
+            return FutureBuilder(
+                future: getLoggedInUserName(),
+                builder: (BuildContext ctx, AsyncSnapshot snap) {
+                  if (snap.hasError == false &&
+                      snap.hasData == true &&
+                      snap.data != null &&
+                      snap.data != "") {
+                    return Table(
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: FractionColumnWidth(0.50),
+                        1: FractionColumnWidth(0.50),
+                      },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: [
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: Image(
+                                image: Image.memory(const Base64Decoder()
+                                        .convert(profilePicString))
+                                    .image,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            TableCell(
+                              child: Text(
+                                'Welcome, \n ${snap.data}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const SizedBox(
+                      height: 0,
+                    );
+                  }
+                });
           } else {
-            var nameOfUser = snapshot.data;
-            return Text('Welcome $nameOfUser',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ));
+            // there was not a profile pic
+            return FutureBuilder(
+              future: getLoggedInUserName(),
+              builder: (BuildContext ctx, AsyncSnapshot snap) {
+                if (snap.hasError == false &&
+                    snap.hasData == true &&
+                    snap.data != null &&
+                    snap.data != "") {
+                  return Text(
+                    'Welcome, \n ${snap.data}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                } else {
+                  return const SizedBox(
+                    height: 0,
+                  );
+                }
+              },
+            );
           }
         });
+    // return FutureBuilder(
+    //     future: getLoggedInUserName(),
+    //     builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+    //       // if(kDebugMode){}
+    //       if (snapshot.hasError ||
+    //           snapshot.hasData == false ||
+    //           snapshot.data.isEmpty ||
+    //           snapshot.data == "") {
+    //         return const SizedBox(
+    //           height: 0,
+    //         );
+    //       } else {
+    //         var nameOfUser = snapshot.data;
+    //         if (kDebugMode) {
+    //           log('nameOfUser $nameOfUser');
+    //         }
+    //         return Container(
+    //           alignment: Alignment.topCenter,
+    //           decoration: const BoxDecoration(
+    //             color: Colors.deepPurpleAccent,
+    //           ),
+    //           child: Table(
+    //             columnWidths: <int, TableColumnWidth>{
+    //               0: nameOfUser == "" || nameOfUser == null
+    //                   ? const FractionColumnWidth(0.00)
+    //                   : const FractionColumnWidth(0.50),
+    //               1: nameOfUser == "" || nameOfUser == null
+    //                   ? const FractionColumnWidth(1.00)
+    //                   : const FractionColumnWidth(0.50)
+    //             },
+    //             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+    //             children: [
+    //               TableRow(children: [
+    //                 TableCell(
+    //                   child: FutureBuilder(
+    //                       future: getUserProfilePic(),
+    //                       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+    //                         if (snapshot.hasData &&
+    //                             snapshot.data != null &&
+    //                             snapshot.data != "") {
+    //                           var profilePicString = snapshot.data;
+    //                           return Container(
+    //                             decoration: const BoxDecoration(),
+    //                             child: Image(
+    //                               image: Image.memory(const Base64Decoder()
+    //                                       .convert(profilePicString))
+    //                                   .image,
+    //                               fit: BoxFit.fill,
+    //                             ),
+    //                           );
+    //                         }
+    //                         return const SizedBox(
+    //                           height: 0,
+    //                         );
+    //                       }),
+    //                 ),
+    //                 TableCell(
+    //                   child: Text(
+    //                     'Welcome, \n $nameOfUser',
+    //                     style: const TextStyle(
+    //                       fontWeight: FontWeight.bold,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ]),
+    //             ],
+    //           ),
+    //         );
+    //       }
+    //     });
   }
 
   @override

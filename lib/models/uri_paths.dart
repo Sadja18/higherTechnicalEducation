@@ -14,6 +14,9 @@ const facultyUriLogin = '/login.php';
 
 const headUriStart = '/api/head';
 const headUriLogin = '/login.php';
+const headUriFetchStudentProfiles = 'fetchstudentprofiles.php';
+const headUriFetchFacultyLeave = '/fetchfacultyleave.php';
+const headUriFetchStudentLeave = '/fetchstudentleave.php';
 
 const masterUriStart = '/api/principal';
 const masterUriLogin = '/login.php';

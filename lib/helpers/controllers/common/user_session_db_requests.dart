@@ -184,3 +184,56 @@ Future<dynamic> getLoggedInUserName() async {
     }
   }
 }
+
+Future<dynamic> getUserProfilePic() async {
+  try {
+    var query = "";
+    query = "SELECT userType FROM UserLoginSession WHERE loginStatus=1;";
+    var params = [];
+    var users = await DBProvider.db.dynamicRead(query, params);
+
+    if (users.isNotEmpty) {
+      var user = users[0];
+      var userType = user['userType'];
+      //     6: "student",
+      // 5: "parent",
+      // 4: "ntStaff",
+      // 3: "faculty",
+      // 2: "head",
+      // 1: "master"
+
+      switch (userType) {
+        case 2:
+          query = "SELECT profilePic FROM Head WHERE "
+              "userId = "
+              "(SELECT userId FROM UserLoginSession WHERE loginStatus = 1);";
+          var data = await DBProvider.db.dynamicRead(query, params);
+          var profilePic = data[0]['profilePic'];
+          return profilePic;
+        case 3:
+          query = "SELECT profilePic FROM Faculty WHERE "
+              "userId = "
+              "(SELECT userId FROM UserLoginSession WHERE loginStatus = 1);";
+          var data = await DBProvider.db.dynamicRead(query, params);
+          var profilePic = data[0]['profilePic'];
+          return profilePic;
+        case 6:
+          query = "SELECT profilePic FROM Student WHERE "
+              "userId = "
+              "(SELECT userId FROM UserLoginSession WHERE loginStatus = 1);";
+          var data = await DBProvider.db.dynamicRead(query, params);
+          var profilePic = data[0]['profilePic'];
+          return profilePic;
+        default:
+          return "";
+      }
+    } else {
+      return "";
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log(e.toString());
+      return "";
+    }
+  }
+}
