@@ -148,19 +148,6 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Map<int, TableColumnWidth> getvals(bool change) {
-    Map<int, TableColumnWidth> tableColumn = {
-      0: FractionColumnWidth(0),
-      1: FractionColumnWidth(1),
-    };
-
-    if (change == true) {
-      tableColumn[0] = FractionColumnWidth(0.50);
-      tableColumn[1] = FractionColumnWidth(0.50);
-    }
-    return tableColumn;
-  }
-
   Widget homeHeader() {
     return FutureBuilder(
         future: getUserProfilePic(),
@@ -172,48 +159,48 @@ class DashboardScreen extends StatelessWidget {
             // there was a profile pic
             var profilePicString = snapshot.data;
             return FutureBuilder(
-                future: getLoggedInUserName(),
-                builder: (BuildContext ctx, AsyncSnapshot snap) {
-                  if (snap.hasError == false &&
-                      snap.hasData == true &&
-                      snap.data != null &&
-                      snap.data != "") {
-                    return Table(
-                      columnWidths: const <int, TableColumnWidth>{
-                        0: FractionColumnWidth(0.50),
-                        1: FractionColumnWidth(0.50),
-                      },
-                      defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
-                      children: [
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: Image(
-                                image: Image.memory(const Base64Decoder()
-                                        .convert(profilePicString))
-                                    .image,
-                                fit: BoxFit.fill,
+              future: getLoggedInUserName(),
+              builder: (BuildContext ctx, AsyncSnapshot snap) {
+                if (snap.hasError == false &&
+                    snap.hasData == true &&
+                    snap.data != null &&
+                    snap.data != "") {
+                  return Table(
+                    columnWidths: const <int, TableColumnWidth>{
+                      0: FractionColumnWidth(0.50),
+                      1: FractionColumnWidth(0.50),
+                    },
+                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                    children: [
+                      TableRow(
+                        children: [
+                          TableCell(
+                            child: Image(
+                              image: Image.memory(const Base64Decoder()
+                                      .convert(profilePicString))
+                                  .image,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          TableCell(
+                            child: Text(
+                              'Welcome, \n ${snap.data}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            TableCell(
-                              child: Text(
-                                'Welcome, \n ${snap.data}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const SizedBox(
-                      height: 0,
-                    );
-                  }
-                });
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                } else {
+                  return const SizedBox(
+                    height: 0,
+                  );
+                }
+              },
+            );
           } else {
             // there was not a profile pic
             return FutureBuilder(
