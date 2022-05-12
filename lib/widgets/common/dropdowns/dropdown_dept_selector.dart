@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:higher/services/database/handler.dart';
 
-import '../../services/connection/base.dart';
+import '../../../services/connection/base.dart';
 
 class DropdownDeptSelector extends StatefulWidget {
   final Function(int) deptSelector;

@@ -17,7 +17,7 @@ import './screens/leave_screen/head.dart';
 import './screens/attendance/master.dart';
 
 import './screens/leave_screen/faculty.dart';
-// import './screens/attendance/';
+import './screens/attendance/faculty.dart';
 import './helpers/controllers/common/user_session_db_requests.dart';
 
 void main() {
@@ -45,7 +45,8 @@ class MyApp extends StatelessWidget {
                 return const NoDataExists();
               } else {
                 if ([1, 2, 3, 4, 5, 6].contains(snapshot.data)) {
-                  return MasterStaffAttendanceScreen();
+                  // return MasterStaffAttendanceScreen();
+                  return AttendanceScreenFacultyMode();
                   // return DashboardScreen();
                 } else {
                   return const TestScreen();
@@ -86,6 +87,8 @@ class MyApp extends StatelessWidget {
         MasterStaffAttendanceScreen.routeName: (ctx) =>
             MasterStaffAttendanceScreen(),
         FacultyLeaveScreen.routeName: (ctx) => FacultyLeaveScreen(),
+        AttendanceScreenFacultyMode.routeName: (ctx) =>
+            AttendanceScreenFacultyMode(),
       },
     );
   }

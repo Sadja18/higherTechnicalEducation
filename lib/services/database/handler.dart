@@ -38,7 +38,12 @@ class DBProvider {
     return "CREATE TABLE Course("
         "courseId INTEGER PRIMARY KEY,"
         "courseName TEXT NOT NULL,"
-        "noDept TEXT NOT NULL"
+        "courseCode TEXT,"
+        "courseDuration TEXT NOT NULL,"
+        "noDept TEXT NOT NULL,"
+        "deptId INTEGER,"
+        "deptName INTEGER,"
+        "collegeId INTEGER NOT NULL"
         ");";
   }
 

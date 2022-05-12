@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../services/connection/fetch_faculty.dart';
-import '../../widgets/common/dropdown_dept_selector.dart';
+import '../../widgets/common/dropdowns/dropdown_dept_selector.dart';
 import '../../widgets/attendance/edit/master.dart';
 
 class MasterStaffAttendanceScreen extends StatefulWidget {

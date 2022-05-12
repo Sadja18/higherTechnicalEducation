@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/common/dropdown_user_type.dart';
+import '../../widgets/common/dropdowns/dropdown_user_type.dart';
 import '../../widgets/common/login.dart';
 
 const Map<String, String> userTypes = {
