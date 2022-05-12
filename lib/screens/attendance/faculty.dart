@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:developer';
+// import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class AttendanceScreenFacultyMode extends StatefulWidget {
 class _AttendanceScreenFacultyModeState
     extends State<AttendanceScreenFacultyMode> {
   late int selectedCourseId;
-  late int selectedCourseDuration;
+  late String selectedCourseDuration;
   late String selectedNoDept;
   late int selectedClassId;
   late int selectedYearId;
@@ -26,7 +26,7 @@ class _AttendanceScreenFacultyModeState
   late int selectedSubjectId;
   late int selectedLectureDuration;
 
-  void courseSelection(int courseId, String noDept, int courseDuration) {
+  void courseSelection(int courseId, String noDept, String courseDuration) {
     setState(() {
       selectedCourseId = courseId;
       selectedCourseDuration = courseDuration;
@@ -72,6 +72,21 @@ class _AttendanceScreenFacultyModeState
       selectedSubjectId = subjectId;
       selectedLectureDuration = 1;
     });
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      selectedCourseId = 0;
+      selectedCourseDuration = "0";
+      selectedNoDept = "yes";
+      selectedClassId = 0;
+      selectedSemId = 0;
+      selectedYearId = 0;
+      selectedSubjectId = 0;
+      selectedLectureDuration = 0;
+    });
+    super.initState();
   }
 
   @override

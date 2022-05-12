@@ -1,10 +1,13 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../services/connection/faculty_mode_fetches.dart';
 
 /// courseSelection returns three values:
 /// courseId and noDept and duration
 class CourseSelector extends StatefulWidget {
-  final Function(int, String, int) courseSelection;
+  final Function(int, String, String) courseSelection;
   const CourseSelector({Key? key, required this.courseSelection})
       : super(key: key);
 
@@ -21,6 +24,9 @@ class _CourseSelectorState extends State<CourseSelector> {
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.symmetric(
         vertical: 4.0,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.purpleAccent,
       ),
       child: FutureBuilder(
         future: getCoursesFromServerFacultyMode(),
@@ -47,7 +53,7 @@ class _CourseSelectorState extends State<CourseSelector> {
 /// courseId and noDept and course duration
 class CourseDropdown extends StatefulWidget {
   final List courses;
-  final Function(int, String, int) courseSelection;
+  final Function(int, String, String) courseSelection;
   const CourseDropdown(
       {Key? key, required this.courses, required this.courseSelection})
       : super(key: key);
@@ -62,9 +68,12 @@ class _CourseDropdownState extends State<CourseDropdown> {
 
   void handleSelection() async {
     var res = await getCourseDetails("Faculty", selectedCourseCode);
+    if (kDebugMode) {
+      log(res.toString());
+    }
 
     if (res.isNotEmpty) {
-      widget.courseSelection(res[0], res[1], res[2]);
+      widget.courseSelection(res[0], res[1], res[2].toString());
     }
   }
 
@@ -100,6 +109,10 @@ class _CourseDropdownState extends State<CourseDropdown> {
             setState(() {
               selectedCourseCode = selection.toString();
             });
+            if (kDebugMode) {
+              print("Selected course");
+              print(selection.toString());
+            }
 
             handleSelection();
           }),

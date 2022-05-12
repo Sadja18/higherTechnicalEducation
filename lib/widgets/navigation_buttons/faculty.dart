@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../screens/leave_screen/faculty.dart';
+import '../../screens/attendance/faculty.dart';
 
 class FacultyScreenNavigationButtons extends StatelessWidget {
   const FacultyScreenNavigationButtons({Key? key}) : super(key: key);
@@ -22,6 +23,8 @@ class FacultyScreenNavigationButtons extends StatelessWidget {
                 log('tapped to attendance screen faculty');
                 print('d');
               }
+              Navigator.of(context)
+                  .pushNamed(AttendanceScreenFacultyMode.routeName);
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,

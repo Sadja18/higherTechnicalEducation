@@ -37,7 +37,7 @@ Future<dynamic> getCoursesFromServerFacultyMode() async {
         body: jsonEncode(requestBodyMap));
     if (kDebugMode) {
       print('receiving fetch courses response');
-      log(response.statusCode.toString());
+      // log(response.statusCode.toString());
     }
 
     if (response.statusCode == 200) {
@@ -45,69 +45,111 @@ Future<dynamic> getCoursesFromServerFacultyMode() async {
 
       if (resp['message'].toString().toLowerCase() == 'success') {
         var courseArts = resp['data']['coursesArts'];
-        for (var course in courseArts) {
+        // if (kDebugMode) {
+        //   log(courseArts[0].toString());
+        // }
+        for (var i = 0; i < courseArts.length; i++) {
+          var course = courseArts[i];
+          if (kDebugMode) {
+            log("course art ${i.toString()}");
+            log(course.toString());
+          }
           var courseId = course['id'];
           var courseName = course['name'].toString();
-          var courseCode = course['code'].toString();
+          var courseCode = (course['code'] != false && course['code'] != null)
+              ? course['code'].toString()
+              : course['name'].toString();
+
           var courseDuration = course['duration'];
-          var collegeId = course['collegeId'];
+          var collegeId = course['college_id'][0];
           var noDept = 'yes';
 
-          await DBProvider.db.dynamicInsert("Course", <String, Object>{
+          Map<String, Object> dbEntry = {
             "courseId": courseId,
             "courseName": courseName,
             "courseCode": courseCode,
             "courseDuration": courseDuration,
             "collegeId": collegeId,
             "noDept": noDept,
-          });
+          };
+          // if (kDebugMode) {
+          //   log(dbEntry.toString());
+          // }
+
+          await DBProvider.db.dynamicInsert("Course", dbEntry);
         }
 
         var courseAlt = resp['data']['coursesAlt'];
-        for (var course in courseAlt) {
+        // if (kDebugMode) {
+        //   log(courseAlt[0].toString());
+        // }
+        for (var i = 0; i < courseAlt.length; i++) {
+          var course = courseAlt[i];
+          if (kDebugMode) {
+            log("course alt ${i.toString()}");
+            log(course.toString());
+          }
           var courseId = course['id'];
           var courseName = course['name'].toString();
-          var courseCode = course['code'].toString();
+          var courseCode = (course['code'] != false && course['code'] != null)
+              ? course['code'].toString()
+              : course['name'].toString();
           var courseDuration = course['duration'];
-          var collegeId = course['collegeId'];
+          var collegeId = course['college_id'][0];
           var noDept = 'no';
-          var deptId = course['department_id'][0];
-          var deptName = course['department_id'][1];
-          await DBProvider.db.dynamicInsert("Course", <String, Object>{
+          var dept = course['department_id'];
+
+          Map<String, Object> dbEntry = {
             "courseId": courseId,
             "courseName": courseName,
             "courseCode": courseCode,
             "courseDuration": courseDuration,
             "collegeId": collegeId,
             "noDept": noDept,
-            "deptId": deptId,
-            "deptName": deptName,
-          });
+          };
+          if (dept != false && dept != null) {
+            var deptId = course['department_id'][0];
+            var deptName = course['department_id'][1];
+            dbEntry["deptId"] = deptId;
+            dbEntry["deptName"] = deptName;
+          }
+          // if (kDebugMode) {
+          //   log(dbEntry.toString());
+          // }
+          await DBProvider.db.dynamicInsert("Course", dbEntry);
         }
       }
     }
 
     String query = "SELECT courseCode FROM Course "
         "WHERE collegeId=(SELECT collegeId FROM Faculty WHERE userId = "
-        "(SELECT userId FROM UserLoginSession WHERE loginStatus=1));";
+        "(SELECT userId FROM UserLoginSession WHERE loginStatus=1)) ORDER BY courseId;";
     var params = [];
     var courses = await DBProvider.db.dynamicRead(query, params);
+    if (kDebugMode) {
+      print(courses.runtimeType);
+    }
     if (courses.isNotEmpty) {
-      var list = courses.list;
-      return list;
+      return courses;
+    } else {
+      return [];
     }
   } catch (e) {
     if (kDebugMode) {
       log("fetch course faculty mode error");
       log(e.toString());
     }
+    return [];
   }
 }
 
 Future<dynamic> getCourseDetails(String tableName, String courseCode) async {
   try {
     String dbQuery = "SELECT courseId, noDept, courseDuration FROM Course "
-        "WHERE collegeId = (SELECT collegeId FROM $tableName"
+        "WHERE "
+        "courseCode = ? AND "
+        "collegeId = (SELECT collegeId FROM $tableName"
+        " WHERE userId = "
         "(SELECT userId FROM UserLoginSession WHERE loginStatus=1));";
     List params = [courseCode];
 
