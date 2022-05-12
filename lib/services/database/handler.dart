@@ -75,6 +75,8 @@ class DBProvider {
         "classId INTEGER NOT NULL,"
         "className TEXT NOT NULL,"
         "courseId INTEGER NOT NULL,"
+        "yearId INTEGER NOT NULL,"
+        "semId INTEGER NOT NULL,"
         "UNIQUE(classId, courseId)"
         ");";
   }
