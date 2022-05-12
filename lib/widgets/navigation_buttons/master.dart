@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../screens/leave_screen/master.dart';
+import '../../screens/attendance/master.dart';
 
 class MasterScreenNavigationButtons extends StatelessWidget {
   const MasterScreenNavigationButtons({Key? key}) : super(key: key);
@@ -21,6 +22,8 @@ class MasterScreenNavigationButtons extends StatelessWidget {
               if (kDebugMode) {
                 log('master attendance navigation');
               }
+              Navigator.of(context)
+                  .pushNamed(MasterStaffAttendanceScreen.routeName);
             },
             child: Container(
               width: MediaQuery.of(context).size.width * 0.60,

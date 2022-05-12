@@ -57,16 +57,69 @@ Future<dynamic> getDepartmentDataFromServerMasterMode() async {
       "str": str,
     };
 
-    var response = await http.post(
-      Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchDepartment'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBodyMap),
-    );
+    // var response = await http.post(
+    //   Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchFacultyProfile'),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(requestBodyMap),
+    // );
 
-    if (response.statusCode == 200) {
-      return response.body;
+    // if (response.statusCode == 200) {
+    //   if (kDebugMode) {
+    //     log(response.body);
+    //   }
+
+    //   var resp = jsonDecode(response.body);
+    //   if (resp['message'].toString().toLowerCase() == 'success') {
+    //     var data = resp['data'];
+
+    //     for (var faculty in data) {
+    //       var teacherId = faculty['id'];
+    //       var userId = faculty['user_id'][0];
+    //       var teacherName = faculty['name'];
+    //       var teacherCode = faculty['teacher_code'];
+    //       var employeeId = faculty['employee_id'][0];
+    //       var isHoD = faculty['is_hod'] == true ? 'yes' : 'no';
+    //       var deptId = faculty['dept_id'][0];
+    //       var deptName = faculty['dept_id'][1];
+    //       var profilePic = faculty['image'];
+    //       var collegeId = faculty['college_id'][0];
+    //       var collegeName = faculty['college_id'][1];
+
+    //       await DBProvider.db.dynamicInsert("College", <String, Object>{
+    //         "collegeId": collegeId,
+    //         "collegeName": collegeName,
+    //       });
+    //       await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+    //         "deptId": deptId,
+    //         "deptName": deptName,
+    //         "collegeId": collegeId,
+    //       });
+    //       await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
+    //         "teacherId": teacherId,
+    //         "userId": userId,
+    //         "teacherName": teacherName,
+    //         "teacherCode": teacherCode,
+    //         "employeeId": employeeId,
+    //         "isHoD": isHoD,
+    //         "deptId": deptId,
+    //         "deptName": deptName,
+    //         "profilePic": profilePic,
+    //         "collegeId": collegeId,
+    //         "collegeName": collegeName,
+    //       });
+    //     }
+    //   }
+    // }
+    var depts = await DBProvider.db.dynamicRead(
+        "SELECT * FROM Dept"
+        " WHERE collegeId = (SELECT collegeId FROM master WHERE userId = "
+        "(SELECT userId FROM UserLoginSession WHERE loginStatus=1));",
+        []);
+    if (depts.isNotEmpty) {
+      var deptList = depts.toList();
+      return deptList;
     }
   } catch (e) {
     if (kDebugMode) {
@@ -668,5 +721,29 @@ Future<dynamic> fetchStudentProfilesHeadMode() async {
       log('head mode error, fetch students');
       log(e.toString());
     }
+  }
+}
+
+Future<int> getDeptIdFromDeptName(String tableName, String deptName) async {
+  try {
+    var dbQuery = "SELECT deptId FROM Dept WHERE "
+        "deptName = '$deptName' AND "
+        "collegeId = (SELECT collegeId FROM $tableName WHERE userId = "
+        "(SELECT userId FROM userLoginSession WHERE loginStatus=1));";
+    var params = [];
+    var data = await DBProvider.db.dynamicRead(dbQuery, params);
+
+    if (kDebugMode) {
+      log(data.toString());
+    }
+    var deptId = 0;
+    if (data.isNotEmpty && data[0]['deptId'] != null) {
+      return data[0]['deptId'];
+    }
+
+    return deptId;
+  } catch (e) {
+    log(e.toString());
+    return 0;
   }
 }

@@ -45,8 +45,8 @@ class MyApp extends StatelessWidget {
                 return const NoDataExists();
               } else {
                 if ([1, 2, 3, 4, 5, 6].contains(snapshot.data)) {
-                  // return HeadLeaveScreen();
-                  return DashboardScreen();
+                  return MasterStaffAttendanceScreen();
+                  // return DashboardScreen();
                 } else {
                   return const TestScreen();
                 }

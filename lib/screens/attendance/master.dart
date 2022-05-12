@@ -1,6 +1,10 @@
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../services/connection/fetch_faculty.dart';
 import '../../widgets/common/dropdown_dept_selector.dart';
+import '../../widgets/attendance/edit/master.dart';
 
 class MasterStaffAttendanceScreen extends StatefulWidget {
   static const routeName = "/screen-master-attendance";
@@ -13,6 +17,18 @@ class MasterStaffAttendanceScreen extends StatefulWidget {
 
 class _MasterStaffAttendanceScreenState
     extends State<MasterStaffAttendanceScreen> {
+  late int selectedDeptId = 0;
+
+  void deptSelector(int selectionDeptId) {
+    setState(() {
+      selectedDeptId = selectionDeptId;
+    });
+    if (kDebugMode) {
+      log("selection: $selectedDeptId");
+      log("selected: $selectedDeptId");
+    }
+  }
+
   Widget titleBar() {
     return const Text(
       "Attendance",
@@ -41,29 +57,44 @@ class _MasterStaffAttendanceScreenState
         ),
       ),
       body: Container(
+        decoration: BoxDecoration(color: Colors.amber.shade100),
+        alignment: Alignment.topCenter,
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.70,
+        height: MediaQuery.of(context).size.height,
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              DropdownDeptSelector(),
-              FutureBuilder(
-                future: getFacultyDataFromServerMasterMode(),
-                builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-                  if (snapshot.hasError ||
-                      snapshot.hasData == false ||
-                      snapshot.data == null ||
-                      snapshot.data.isEmpty) {
-                    return const SizedBox(
-                      child: Text("NO Staff members data found"),
-                    );
-                  } else {
-                    var staffData = snapshot.data;
-                    return Text("staffData.toString()");
-                  }
-                },
+              DropdownDeptSelector(
+                deptSelector: deptSelector,
               ),
+              (selectedDeptId == 0)
+                  ? const SizedBox(
+                      height: 0,
+                    )
+                  : FutureBuilder(
+                      future:
+                          getFacultyDataFromDatabaseMasterMode(selectedDeptId),
+                      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+                        if (snapshot.hasError ||
+                            snapshot.hasData == false ||
+                            snapshot.data == null ||
+                            snapshot.data.isEmpty) {
+                          return const SizedBox(
+                            child: Text("NO Staff members data found"),
+                          );
+                        } else {
+                          var staffData = snapshot.data;
+                          if (kDebugMode) {
+                            // log(staffData.toString());
+                          }
+                          return StaffAttendanceWidget(
+                            members: staffData,
+                          );
+                        }
+                      },
+                    ),
             ],
           ),
         ),

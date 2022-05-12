@@ -94,6 +94,10 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           userNameValidation = checkIfUserNameIsEmail(enteredUserName);
           if (userNameValidation == 1) {
             loginStatus = await tryLogin(enteredUserName, enteredUserPassword);
+            if (kDebugMode) {
+              log('loggin ');
+              log(loginStatus.toString());
+            }
             if (loginStatus == 1) {
               Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
             } else {

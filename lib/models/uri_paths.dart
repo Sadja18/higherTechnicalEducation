@@ -22,6 +22,7 @@ const masterUriStart = '/api/principal';
 const masterUriLogin = '/login.php';
 const masterUriFetchLeave = '/fetchfacultyleave.php';
 const masterUriFetchFacultyProfile = '/fetchfaculty.php';
+const masterUriFetchFacultyProfileDeptId = '/fetchfacultydeptid.php';
 const masterUriFetchDepartment = '/fetchdepartments.php';
 
 const studentUriStart = '/api/student';
