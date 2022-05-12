@@ -29,97 +29,97 @@ Future<dynamic> getCoursesFromServerFacultyMode() async {
       print('sending fetch courses request');
     }
 
-    var response = await http.post(
-        Uri.parse("$baseUriLocal$facultyUriStart$facultyUriFetchCourses"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(requestBodyMap));
-    if (kDebugMode) {
-      print('receiving fetch courses response');
-      // log(response.statusCode.toString());
-    }
+    // var response = await http.post(
+    //     Uri.parse("$baseUriLocal$facultyUriStart$facultyUriFetchCourses"),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     },
+    //     body: jsonEncode(requestBodyMap));
+    // if (kDebugMode) {
+    //   print('receiving fetch courses response');
+    //   // log(response.statusCode.toString());
+    // }
 
-    if (response.statusCode == 200) {
-      var resp = jsonDecode(response.body);
+    // if (response.statusCode == 200) {
+    //   var resp = jsonDecode(response.body);
 
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var courseArts = resp['data']['coursesArts'];
-        // if (kDebugMode) {
-        //   log(courseArts[0].toString());
-        // }
-        for (var i = 0; i < courseArts.length; i++) {
-          var course = courseArts[i];
-          if (kDebugMode) {
-            log("course art ${i.toString()}");
-            log(course.toString());
-          }
-          var courseId = course['id'];
-          var courseName = course['name'].toString();
-          var courseCode = (course['code'] != false && course['code'] != null)
-              ? course['code'].toString()
-              : course['name'].toString();
+    //   if (resp['message'].toString().toLowerCase() == 'success') {
+    //     var courseArts = resp['data']['coursesArts'];
+    //     // if (kDebugMode) {
+    //     //   log(courseArts[0].toString());
+    //     // }
+    //     for (var i = 0; i < courseArts.length; i++) {
+    //       var course = courseArts[i];
+    //       if (kDebugMode) {
+    //         log("course art ${i.toString()}");
+    //         log(course.toString());
+    //       }
+    //       var courseId = course['id'];
+    //       var courseName = course['name'].toString();
+    //       var courseCode = (course['code'] != false && course['code'] != null)
+    //           ? course['code'].toString()
+    //           : course['name'].toString();
 
-          var courseDuration = course['duration'];
-          var collegeId = course['college_id'][0];
-          var noDept = 'yes';
+    //       var courseDuration = course['duration'];
+    //       var collegeId = course['college_id'][0];
+    //       var noDept = 'yes';
 
-          Map<String, Object> dbEntry = {
-            "courseId": courseId,
-            "courseName": courseName,
-            "courseCode": courseCode,
-            "courseDuration": courseDuration,
-            "collegeId": collegeId,
-            "noDept": noDept,
-          };
-          // if (kDebugMode) {
-          //   log(dbEntry.toString());
-          // }
+    //       Map<String, Object> dbEntry = {
+    //         "courseId": courseId,
+    //         "courseName": courseName,
+    //         "courseCode": courseCode,
+    //         "courseDuration": courseDuration,
+    //         "collegeId": collegeId,
+    //         "noDept": noDept,
+    //       };
+    //       // if (kDebugMode) {
+    //       //   log(dbEntry.toString());
+    //       // }
 
-          await DBProvider.db.dynamicInsert("Course", dbEntry);
-        }
+    //       await DBProvider.db.dynamicInsert("Course", dbEntry);
+    //     }
 
-        var courseAlt = resp['data']['coursesAlt'];
-        // if (kDebugMode) {
-        //   log(courseAlt[0].toString());
-        // }
-        for (var i = 0; i < courseAlt.length; i++) {
-          var course = courseAlt[i];
-          if (kDebugMode) {
-            log("course alt ${i.toString()}");
-            log(course.toString());
-          }
-          var courseId = course['id'];
-          var courseName = course['name'].toString();
-          var courseCode = (course['code'] != false && course['code'] != null)
-              ? course['code'].toString()
-              : course['name'].toString();
-          var courseDuration = course['duration'];
-          var collegeId = course['college_id'][0];
-          var noDept = 'no';
-          var dept = course['department_id'];
+    //     var courseAlt = resp['data']['coursesAlt'];
+    //     // if (kDebugMode) {
+    //     //   log(courseAlt[0].toString());
+    //     // }
+    //     for (var i = 0; i < courseAlt.length; i++) {
+    //       var course = courseAlt[i];
+    //       if (kDebugMode) {
+    //         log("course alt ${i.toString()}");
+    //         log(course.toString());
+    //       }
+    //       var courseId = course['id'];
+    //       var courseName = course['name'].toString();
+    //       var courseCode = (course['code'] != false && course['code'] != null)
+    //           ? course['code'].toString()
+    //           : course['name'].toString();
+    //       var courseDuration = course['duration'];
+    //       var collegeId = course['college_id'][0];
+    //       var noDept = 'no';
+    //       var dept = course['department_id'];
 
-          Map<String, Object> dbEntry = {
-            "courseId": courseId,
-            "courseName": courseName,
-            "courseCode": courseCode,
-            "courseDuration": courseDuration,
-            "collegeId": collegeId,
-            "noDept": noDept,
-          };
-          if (dept != false && dept != null) {
-            var deptId = course['department_id'][0];
-            var deptName = course['department_id'][1];
-            dbEntry["deptId"] = deptId;
-            dbEntry["deptName"] = deptName;
-          }
-          // if (kDebugMode) {
-          //   log(dbEntry.toString());
-          // }
-          await DBProvider.db.dynamicInsert("Course", dbEntry);
-        }
-      }
-    }
+    //       Map<String, Object> dbEntry = {
+    //         "courseId": courseId,
+    //         "courseName": courseName,
+    //         "courseCode": courseCode,
+    //         "courseDuration": courseDuration,
+    //         "collegeId": collegeId,
+    //         "noDept": noDept,
+    //       };
+    //       if (dept != false && dept != null) {
+    //         var deptId = course['department_id'][0];
+    //         var deptName = course['department_id'][1];
+    //         dbEntry["deptId"] = deptId;
+    //         dbEntry["deptName"] = deptName;
+    //       }
+    //       // if (kDebugMode) {
+    //       //   log(dbEntry.toString());
+    //       // }
+    //       await DBProvider.db.dynamicInsert("Course", dbEntry);
+    //     }
+    //   }
+    // }
 
     String query = "SELECT courseCode FROM Course "
         "WHERE collegeId=(SELECT collegeId FROM Faculty WHERE userId = "

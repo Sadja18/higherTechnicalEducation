@@ -127,7 +127,7 @@ class _AttendanceScreenFacultyModeState
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text("Student Attendance"),
+                  // const Text("Student Attendance"),
                   CourseSelector(courseSelection: courseSelection),
                   (selectedCourseId == 0)
                       ? const SizedBox(

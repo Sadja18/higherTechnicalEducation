@@ -19,7 +19,7 @@ class _CourseSelectorState extends State<CourseSelector> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.80,
       height: MediaQuery.of(context).size.height * 0.05,
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.symmetric(
