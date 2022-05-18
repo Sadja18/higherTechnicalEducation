@@ -2,9 +2,10 @@
 
 // import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/common/dropdowns/course_select.dart';
+import '../../widgets/common/dropdowns/class_select.dart';
 
 class AttendanceScreenFacultyMode extends StatefulWidget {
   static const routeName = "screen-attendance-faculty-mode";
@@ -134,7 +135,9 @@ class _AttendanceScreenFacultyModeState
                           height: 0,
                         )
                       : (selectedNoDept == 'no')
-                          ? const Text("Class Dropdown")
+                          ? ClassSelector(
+                              courseId: selectedCourseId,
+                              classSelection: classSelection)
                           : const Text("year + sem dropdown"),
                   (selectedCourseId == 0 ||
                           selectedYearId == 0 ||

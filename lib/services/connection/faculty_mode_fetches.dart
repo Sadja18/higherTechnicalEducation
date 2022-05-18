@@ -131,15 +131,13 @@ Future<dynamic> getCoursesFromServerFacultyMode() async {
     }
     if (courses.isNotEmpty) {
       return courses;
-    } else {
-      return [];
     }
   } catch (e) {
     if (kDebugMode) {
       log("fetch course faculty mode error");
       log(e.toString());
     }
-    return [];
+    // return [];
   }
 }
 
@@ -189,81 +187,104 @@ Future<dynamic> getClassesForCourseId(int courseId) async {
       "str": str
     };
 
-    var response = await http.post(
-      Uri.parse(
-          "$baseUriLocal$facultyUriStart$facultyUriFetchClassesForCourseId"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBodyMap),
-    );
+    // var response = await http.post(
+    //   Uri.parse(
+    //       "$baseUriLocal$facultyUriStart$facultyUriFetchClassesForCourseId"),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(requestBodyMap),
+    // );
 
-    if (response.statusCode == 200) {
-      if (kDebugMode) {
-        log(response.body);
-      }
+    // if (response.statusCode == 200) {
+    //   if (kDebugMode) {
+    //     log(response.body);
+    //   }
 
-      var resp = jsonDecode(response.body);
+    //   var resp = jsonDecode(response.body);
 
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var data = resp['data'];
+    //   if (resp['message'].toString().toLowerCase() == 'success') {
+    //     var data = resp['data'];
 
-        for (var i = 0; i < data.length; i++) {
-          var classRecord = data[i];
+    //     for (var i = 0; i < data.length; i++) {
+    //       var classRecord = data[i];
 
-          var college = classRecord['college_id'];
-          var dept = classRecord['department_id'];
-          var year = classRecord['year_id'];
-          var sem = classRecord['sem_id'];
+    //       var college = classRecord['college_id'];
+    //       var dept = classRecord['department_id'];
+    //       var year = classRecord['year_id'];
+    //       var sem = classRecord['sem_id'];
 
-          if (college != null &&
-              college != false &&
-              college.isNotEmpty &&
-              dept != null &&
-              dept != false &&
-              dept.isNotEmpty &&
-              year != null &&
-              year != false &&
-              year.isNotEmpty &&
-              sem != null &&
-              sem != false &&
-              sem.isNotEmpty) {
-            await DBProvider.db.dynamicInsert("Year", <String, Object>{
-              'yearId': year[0],
-              'yearName': year[1],
-            });
-            await DBProvider.db.dynamicInsert("Semester", <String, Object>{
-              'semId': sem[0],
-              'semName': sem[1],
-            });
-            Map<String, Object> dbEntry = {
-              'classId': classRecord['id'],
-              'className': classRecord['name'],
-              'courseId': courseId,
-              'yearId': year[0],
-              'semId': sem[0],
-            };
-            await DBProvider.db.dynamicInsert("Classes", dbEntry);
-          }
-        }
-      }
-      String dbQuery = "SELECT * FROM Classes WHERE courseId = ?";
-      var params = [courseId];
-      var classes = await DBProvider.db.dynamicRead(dbQuery, params);
+    //       if (college != null &&
+    //           college != false &&
+    //           college.isNotEmpty &&
+    //           dept != null &&
+    //           dept != false &&
+    //           dept.isNotEmpty &&
+    //           year != null &&
+    //           year != false &&
+    //           year.isNotEmpty &&
+    //           sem != null &&
+    //           sem != false &&
+    //           sem.isNotEmpty) {
+    //         await DBProvider.db.dynamicInsert("Year", <String, Object>{
+    //           'yearId': year[0],
+    //           'yearName': year[1],
+    //         });
+    //         await DBProvider.db.dynamicInsert("Semester", <String, Object>{
+    //           'semId': sem[0],
+    //           'semName': sem[1],
+    //           'yearId': year[0],
+    //         });
+    //         String className = classRecord['display_name'] == false ||
+    //                 classRecord['display_name'] == null
+    //             ? classRecord['name']
+    //             : classRecord['display_name'];
+    //         Map<String, Object> dbEntry = {
+    //           'classId': classRecord['id'],
+    //           'className': className,
+    //           'courseId': courseId,
+    //           'yearId': year[0],
+    //           'semId': sem[0],
+    //         };
+    //         await DBProvider.db.dynamicInsert("Classes", dbEntry);
+    //       }
+    //     }
+    //   }
+    // }
+    String dbQuery = "SELECT className FROM Classes WHERE courseId = ?";
+    var params = [courseId];
+    var classes = await DBProvider.db.dynamicRead(dbQuery, params);
 
-      if (classes.isNotEmpty) {
-        return classes;
-      } else {
-        return [];
-      }
-    } else {
-      return [];
+    if (classes.isNotEmpty) {
+      return classes;
     }
   } catch (e) {
     if (kDebugMode) {
       log('fethc error course classes faculty mode');
       log(e.toString());
     }
-    return [];
+    // return [];
+  }
+}
+
+Future<dynamic> getClassDetails(int courseId, String className) async {
+  try {
+    var dbQuery =
+        "SELECT classId, yearId, semId FROM Classes WHERE courseId=? AND className=?";
+    var params = [courseId, className];
+    var records = await DBProvider.db.dynamicRead(dbQuery, params);
+
+    if (records.isNotEmpty) {
+      if (kDebugMode) {
+        print('class Dettails');
+        print(records.toString());
+      }
+      return records[0];
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('faculty error class details');
+      log(e.toString());
+    }
   }
 }

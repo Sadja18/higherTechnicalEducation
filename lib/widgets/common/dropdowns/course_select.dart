@@ -16,35 +16,52 @@ class CourseSelector extends StatefulWidget {
 }
 
 class _CourseSelectorState extends State<CourseSelector> {
+  late final Future courseFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    courseFuture = getCoursesFromServerFacultyMode();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.80,
-      height: MediaQuery.of(context).size.height * 0.05,
-      alignment: Alignment.topCenter,
-      margin: const EdgeInsets.symmetric(
-        vertical: 4.0,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.purpleAccent,
-      ),
-      child: FutureBuilder(
-        future: getCoursesFromServerFacultyMode(),
-        builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-          if (snapshot.hasData &&
-              snapshot.data != null &&
-              snapshot.data.isNotEmpty) {
-            var courses = snapshot.data;
-            return CourseDropdown(
-              courses: courses,
-              courseSelection: widget.courseSelection,
-            );
+    return FutureBuilder(
+      future: courseFuture,
+      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircularProgressIndicator(
+              color: Colors.deepPurple,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SizedBox(
+              child: Text(
+                  "There was a problem fetching required data from server."),
+            ),
+          );
+        } else if (snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data.isNotEmpty) {
+          var courses = snapshot.data;
+          if (kDebugMode) {
+            print("object courses");
+            print(courses.toString());
           }
+          return CourseDropdown(
+            courses: courses,
+            courseSelection: widget.courseSelection,
+          );
+        } else {
           return const SizedBox(
             height: 0,
           );
-        },
-      ),
+        }
+      },
     );
   }
 }
@@ -89,8 +106,15 @@ class _CourseDropdownState extends State<CourseDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: MediaQuery.of(context).size.width * 0.80,
+      height: MediaQuery.of(context).size.height * 0.05,
       alignment: Alignment.topCenter,
-      decoration: const BoxDecoration(),
+      margin: const EdgeInsets.only(
+        top: 6.0,
+      ),
+      decoration: const BoxDecoration(
+        color: Colors.purpleAccent,
+      ),
       child: DropdownButton(
           value: selectedCourseCode,
           dropdownColor: Colors.deepPurpleAccent.shade200,
