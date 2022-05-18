@@ -251,6 +251,7 @@ Future<dynamic> getClassesForCourseId(int courseId) async {
     //     }
     //   }
     // }
+
     String dbQuery = "SELECT className FROM Classes WHERE courseId = ?";
     var params = [courseId];
     var classes = await DBProvider.db.dynamicRead(dbQuery, params);
@@ -284,6 +285,185 @@ Future<dynamic> getClassDetails(int courseId, String className) async {
   } catch (e) {
     if (kDebugMode) {
       log('faculty error class details');
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> getSubjectsForCourseIdYearIdSemIdFrom(
+    int courseId, int yearId, int semId) async {
+  try {
+    if (kDebugMode) {
+      log('sending subject fetch call');
+    }
+    var userName = "dramitgcd@gmail.com";
+    var userPassword = "faculty@1234";
+    var dbname = "college";
+    var collegeId = "13";
+    var deptId = "9";
+    var str = "1";
+
+    Map<String, Object> requestBodyMap = {
+      "userName": userName,
+      "userPassword": userPassword,
+      "dbname": dbname,
+      "collegeId": collegeId,
+      "deptId": deptId,
+      "courseId": courseId,
+      "yearId": yearId,
+      "semId": semId,
+      "str": str
+    };
+
+    if (kDebugMode) {
+      log(requestBodyMap.toString());
+    }
+
+    // var response = await http.post(
+    //   Uri.parse(
+    //       "$baseUriLocal$facultyUriStart$facultyUriFetchSubjectsForYearIdSemId"),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(requestBodyMap),
+    // );
+
+    // if (response.statusCode == 200) {
+    //   if (kDebugMode) {
+    //     log('subjects');
+    //     log(response.statusCode.toString());
+    //   }
+
+    //   var resp = jsonDecode(response.body);
+
+    //   if (resp['message'].toString().toLowerCase() == "success") {
+    //     var subjects = resp['data'];
+
+    //     for (var subject in subjects) {
+    //       if (kDebugMode) {
+    //         log(subject.toString());
+    //       }
+
+    //       var subjectId = subject['id'];
+    //       var subjectName = subject['display_name'] != null &&
+    //               subject['display_name'] != false
+    //           ? subject['display_name']
+    //           : subject['name'] != null && subject['name'] != false
+    //               ? subject['name']
+    //               : subject['code'];
+    //       var subjectCode = subject['code'];
+    //       // var collegeId = subject['college'][0];
+
+    //       Map<String, Object> subjectDbEntry = {
+    //         "subjectId": subjectId,
+    //         "subjectName": subjectName,
+    //         "subjectCode": subjectCode,
+    //         "yearId": yearId,
+    //         "semId": semId,
+    //         "collegeId": collegeId
+    //       };
+    //       await DBProvider.db.dynamicInsert("Subject", subjectDbEntry);
+    //     }
+    //   }
+    // }
+
+    var dbQuery = "SELECT subjectName FROM Subject "
+        "WHERE "
+        "yearId=? AND semId=? AND collegeId=?";
+    var params = [yearId, semId, collegeId];
+    // var params = [];
+
+    var subjects = await DBProvider.db.dynamicRead(dbQuery, params);
+    if (kDebugMode) {
+      log("subject names data");
+      log(subjects.toString());
+    }
+    if (subjects.isNotEmpty) {
+      return subjects;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('fethc error subjects faculty mode');
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> getSubjectDetails(
+    String subjectName, int yearId, int semId) async {
+  try {
+    var dbQuery = "SELECT subjectId FROM Subject WHERE "
+        "subjectName=? AND semId=? AND yearId = ?";
+    var params = [subjectName, yearId, semId];
+
+    var records = await DBProvider.db.dynamicRead(dbQuery, params);
+    if (records.isNotEmpty) {
+      return records[0];
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('fethc error subjects local db faculty mode');
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> getStudentDataCourseIdYearIdSemId(
+    int courseId, int yearId, int semId) async {
+  try {
+    if (kDebugMode) {
+      log('sending students fetch call');
+    }
+    var userName = "dramitgcd@gmail.com";
+    var userPassword = "faculty@1234";
+    var dbname = "college";
+    var collegeId = "13";
+    var str = "1";
+
+    Map<String, Object> requestBodyMap = {
+      "userName": userName,
+      "userPassword": userPassword,
+      "dbname": dbname,
+      "collegeId": collegeId,
+      "courseId": courseId,
+      "yearId": yearId,
+      "semId": semId,
+      "str": str
+    };
+
+    if (kDebugMode) {
+      log(requestBodyMap.toString());
+    }
+
+    var response = await http.post(
+      Uri.parse(
+          "$baseUriLocal$facultyUriStart$facultyUriFetchStudentsForYearIdSemId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        log('students');
+        log(response.statusCode.toString());
+        log(response.body);
+      }
+
+      var resp = jsonDecode(response.body);
+
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var students = resp['data'];
+        if (kDebugMode) {
+          log(students.toString());
+        }
+        return students;
+      }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('fethc error students local db faculty mode');
       log(e.toString());
     }
   }

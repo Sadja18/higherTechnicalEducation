@@ -13,6 +13,8 @@ const facultyUriStart = '/api/faculty';
 const facultyUriLogin = '/login.php';
 const facultyUriFetchCourses = '/fetchcourses.php';
 const facultyUriFetchClassesForCourseId = '/fetchclasses.php';
+const facultyUriFetchSubjectsForYearIdSemId = '/fetchsubjects.php';
+const facultyUriFetchStudentsForYearIdSemId = '/fetchstudents.php';
 
 const headUriStart = '/api/head';
 const headUriLogin = '/login.php';

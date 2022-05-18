@@ -3,9 +3,14 @@
 // import 'dart:developer';
 
 // import 'package:flutter/foundation.dart';
+import 'dart:developer';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/common/dropdowns/course_select.dart';
 import '../../widgets/common/dropdowns/class_select.dart';
+import '../../widgets/common/dropdowns/subject_select.dart';
+import '../../widgets/attendance/edit/faculty_mode_student_table.dart';
 
 class AttendanceScreenFacultyMode extends StatefulWidget {
   static const routeName = "screen-attendance-faculty-mode";
@@ -25,7 +30,8 @@ class _AttendanceScreenFacultyModeState
   late int selectedYearId;
   late int selectedSemId;
   late int selectedSubjectId;
-  late int selectedLectureDuration;
+  String selectedLectureDuration = "0";
+  final FocusNode _durationFocusNode = FocusNode();
 
   void courseSelection(int courseId, String noDept, String courseDuration) {
     setState(() {
@@ -36,17 +42,21 @@ class _AttendanceScreenFacultyModeState
       selectedSemId = 0;
       selectedYearId = 0;
       selectedSubjectId = 0;
-      selectedLectureDuration = 1;
+      selectedLectureDuration = "1";
     });
   }
 
   void classSelection(int classId, int yearId, int semId) {
+    if (kDebugMode) {
+      log('call back values');
+      log('$classId $yearId $semId');
+    }
     setState(() {
       selectedClassId = classId;
       selectedYearId = yearId;
       selectedSemId = semId;
       selectedSubjectId = 0;
-      selectedLectureDuration = 1;
+      selectedLectureDuration = "1";
     });
   }
 
@@ -56,7 +66,7 @@ class _AttendanceScreenFacultyModeState
       selectedClassId = 0;
       selectedSemId = 0;
       selectedSubjectId = 0;
-      selectedLectureDuration = 1;
+      selectedLectureDuration = "1";
     });
   }
 
@@ -64,14 +74,14 @@ class _AttendanceScreenFacultyModeState
     setState(() {
       selectedSemId = semId;
       selectedSubjectId = 0;
-      selectedLectureDuration = 1;
+      selectedLectureDuration = "1";
     });
   }
 
-  void subjectSelection(int subjectId) {
+  void subjectSelection(int subjectId, int courseId, int yearId, int semId) {
     setState(() {
       selectedSubjectId = subjectId;
-      selectedLectureDuration = 1;
+      selectedLectureDuration = "1";
     });
   }
 
@@ -85,13 +95,15 @@ class _AttendanceScreenFacultyModeState
       selectedSemId = 0;
       selectedYearId = 0;
       selectedSubjectId = 0;
-      selectedLectureDuration = 0;
+      selectedLectureDuration = "0";
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var appBarHeight = kToolbarHeight;
     return DefaultTabController(
       length: 1,
       child: Scaffold(
@@ -120,52 +132,143 @@ class _AttendanceScreenFacultyModeState
             ],
           ),
         ),
+        drawer: Container(
+          margin: EdgeInsets.only(top: statusBarHeight + appBarHeight + 1),
+          alignment: Alignment.topCenter,
+          decoration: const BoxDecoration(
+              // color: Colors.white,
+              ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // const Text("Student Attendance"),
+              CourseSelector(
+                courseSelection: courseSelection,
+              ),
+              (selectedCourseId == 0)
+                  ? const SizedBox(
+                      height: 0,
+                    )
+                  : (selectedNoDept == 'no')
+                      ? ClassSelector(
+                          // key: ObjectKey(
+                          // "$selectedCourseId $selectedClassId"),
+                          courseId: selectedCourseId,
+                          classSelection: classSelection,
+                        )
+                      : const Text("year + sem dropdown"),
+              (selectedCourseId == 0 ||
+                      selectedYearId == 0 ||
+                      selectedSemId == 0)
+                  ? const SizedBox(
+                      height: 0,
+                    )
+                  : SubjectSelector(
+                      // key: ObjectKey("$selectedCourseId"),
+                      courseId: selectedCourseId,
+                      yearId: selectedYearId,
+                      semId: selectedSemId,
+                      subjectSelection: subjectSelection,
+                    ),
+              (selectedCourseId == 0 ||
+                      selectedYearId == 0 ||
+                      selectedSemId == 0 ||
+                      selectedSubjectId == 0)
+                  ? const SizedBox(
+                      height: 0,
+                    )
+                  : Container(
+                      decoration: BoxDecoration(
+                        color: Colors.purpleAccent,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 3.0,
+                      ),
+                      child: Table(
+                        columnWidths: const {
+                          0: FractionColumnWidth(0.50),
+                          1: FractionColumnWidth(0.50),
+                        },
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        children: [
+                          TableRow(children: [
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  "Duration: ",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Center(
+                                child: TextFormField(
+                                  // initialValue: selectedLectureDuration,
+                                  textAlign: TextAlign.center,
+                                  controller: TextEditingController(
+                                      text: selectedLectureDuration),
+                                  keyboardType: TextInputType.number,
+                                  focusNode: _durationFocusNode,
+                                  decoration: InputDecoration(
+                                    alignLabelWithHint: true,
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.greenAccent,
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.blue,
+                                      ),
+                                    ),
+                                    hintText: "Duration",
+                                  ),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (value) {
+                                    if (int.tryParse(value.toString()) !=
+                                        null) {
+                                      setState(() {
+                                        setState(() {
+                                          selectedLectureDuration =
+                                              value.toString();
+                                        });
+                                      });
+                                    }
+                                    _durationFocusNode.unfocus();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ]),
+                        ],
+                      ),
+                    ),
+            ],
+          ),
+        ),
         body: TabBarView(
           children: [
-            Container(
-              alignment: Alignment.topCenter,
-              decoration: const BoxDecoration(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // const Text("Student Attendance"),
-                  CourseSelector(courseSelection: courseSelection),
-                  (selectedCourseId == 0)
-                      ? const SizedBox(
-                          height: 0,
-                        )
-                      : (selectedNoDept == 'no')
-                          ? ClassSelector(
-                              courseId: selectedCourseId,
-                              classSelection: classSelection)
-                          : const Text("year + sem dropdown"),
-                  (selectedCourseId == 0 ||
-                          selectedYearId == 0 ||
-                          selectedSemId == 0)
-                      ? const SizedBox(
-                          height: 0,
-                        )
-                      : const Text("Subject Dropdown"),
-                  (selectedCourseId == 0 ||
-                          selectedYearId == 0 ||
-                          selectedSemId == 0 ||
-                          selectedSubjectId == 0)
-                      ? const SizedBox(
-                          height: 0,
-                        )
-                      : const Text("Lecture Duration Dropdown"),
-                  (selectedCourseId == 0 ||
-                          selectedYearId == 0 ||
-                          selectedSemId == 0 ||
-                          selectedSubjectId == 0 ||
-                          selectedLectureDuration == 0)
-                      ? const SizedBox(
-                          height: 0,
-                        )
-                      : const Text("Attendance Table + Submit Button"),
-                ],
-              ),
-            )
+            (selectedCourseId == 0 ||
+                    selectedYearId == 0 ||
+                    selectedSemId == 0 ||
+                    selectedSubjectId == 0 ||
+                    selectedLectureDuration == "0")
+                ? const SizedBox(
+                    height: 0,
+                  )
+                : FacultyModeStudentAttendanceTable(
+                    courseId: selectedCourseId,
+                    yearId: selectedYearId,
+                    semId: selectedSemId,
+                  ),
           ],
         ),
       ),

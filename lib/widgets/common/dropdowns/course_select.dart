@@ -106,8 +106,8 @@ class _CourseDropdownState extends State<CourseDropdown> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.80,
-      height: MediaQuery.of(context).size.height * 0.05,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.08,
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(
         top: 6.0,
@@ -118,6 +118,7 @@ class _CourseDropdownState extends State<CourseDropdown> {
       child: DropdownButton(
           value: selectedCourseCode,
           dropdownColor: Colors.deepPurpleAccent.shade200,
+          itemHeight: MediaQuery.of(context).size.height * 0.08,
           items: courses.map<DropdownMenuItem<String>>((e) {
             return DropdownMenuItem(
               child: Text(

@@ -81,6 +81,18 @@ class DBProvider {
         ");";
   }
 
+  String _createSubjectsTable() {
+    return "CREATE TABLE Subject("
+        "subjectId INTEGER PRIMARY KEY,"
+        "subjectName TEXT NOT NULL,"
+        "subjectCode TEXT NOT NULL,"
+        "yearId INTEGER NOT NULL,"
+        "semId INTEGER NOT NULL,"
+        "courseId INTEGER,"
+        "collegeId INTEGER NOT NULL"
+        ");";
+  }
+
   String _createStudentProfile() {
     return "CREATE TABLE Student("
         "studentId INTEGER NOT NULL,"
@@ -292,6 +304,7 @@ class DBProvider {
         dbBatch.execute(_createYearTable());
         dbBatch.execute(_createSemesterTable());
         dbBatch.execute(_createClassesTable());
+        dbBatch.execute(_createSubjectsTable());
 
         dbBatch.execute(_createDeptTable());
         dbBatch.execute(_createCourseTable());

@@ -31,7 +31,7 @@ class _ClassSelectorState extends State<ClassSelector> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: classFuture,
+      future: getClassesForCourseId(courseId),
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -116,18 +116,24 @@ class _ClassSelectionState extends State<ClassSelection> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.08,
+      height: MediaQuery.of(context).size.height * 0.10,
       margin: const EdgeInsets.symmetric(
-        vertical: 6.0,
+        vertical: 3.0,
       ),
-      alignment: Alignment.topCenter,
+      alignment: Alignment.center,
       decoration: const BoxDecoration(
         color: Colors.purpleAccent,
       ),
       child: DropdownButton(
           isExpanded: true,
+          underline: const DropdownButtonHideUnderline(
+            child: SizedBox(
+              height: 0,
+            ),
+          ),
           value: selectedClassName,
           dropdownColor: Colors.deepPurpleAccent.shade200,
+          itemHeight: MediaQuery.of(context).size.height * 0.10,
           items: classNames.map<DropdownMenuItem<String>>((e) {
             return DropdownMenuItem(
               child: Text(
