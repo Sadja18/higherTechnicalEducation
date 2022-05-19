@@ -419,47 +419,181 @@ Future<dynamic> getStudentDataCourseIdYearIdSemId(
     var dbname = "college";
     var collegeId = "13";
     var str = "1";
+    var collegeIdInt = 13;
 
-    Map<String, Object> requestBodyMap = {
-      "userName": userName,
-      "userPassword": userPassword,
-      "dbname": dbname,
-      "collegeId": collegeId,
-      "courseId": courseId,
-      "yearId": yearId,
-      "semId": semId,
-      "str": str
-    };
+    // Map<String, Object> requestBodyMap = {
+    //   "userName": userName,
+    //   "userPassword": userPassword,
+    //   "dbname": dbname,
+    //   "collegeId": collegeId,
+    //   "courseId": courseId,
+    //   "yearId": yearId,
+    //   "semId": semId,
+    //   "str": str
+    // };
 
+    // if (kDebugMode) {
+    //   log('faculty mode student data fetch request body');
+    //   log(requestBodyMap.toString());
+    // }
+
+    // var response = await http.post(
+    //   Uri.parse(
+    //       "$baseUriLocal$facultyUriStart$facultyUriFetchStudentsForYearIdSemId"),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(requestBodyMap),
+    // );
+
+    // if (response.statusCode == 200) {
+    //   if (kDebugMode) {
+    //     log('students');
+    //     log(response.statusCode.toString());
+    //     // log(response.body);
+    //   }
+
+    //   var resp = jsonDecode(response.body);
+
+    //   if (resp['message'].toString().toLowerCase() == 'success') {
+    //     var students = resp['data'];
+    //     if (kDebugMode) {
+    //       log(students[0]['id'].toString());
+    //       log(students[0]['user_id'].toString());
+    //       log(students[0]['student_name'].toString());
+    //       log(students[0]['middle'].toString());
+    //       log(students[0]['last'].toString());
+    //       log(students[0]['college_id'].toString());
+    //       log(students[0]['course_id'].toString());
+    //       log(students[0]['colyear'].toString());
+    //       log(students[0]['semester'].toString());
+    //       log(students[0]['class_id'].toString());
+    //       log(students[0]['dept_id'].toString());
+    //       log(students[0]['photo'].runtimeType.toString());
+    //     }
+    //     for (var student in students) {
+    //       if (student['college_id'] != null &&
+    //           student['college_id'] != false &&
+    //           student['course_id'] != null &&
+    //           student['course_id'] != false &&
+    //           student['user_id'] != null &&
+    //           student['user_id'] != false &&
+    //           student['id'] != null &&
+    //           student['id'] != false &&
+    //           student['colyear'] != null &&
+    //           student['colyear'] != false &&
+    //           student['semester'] != null &&
+    //           student['semester'] != false) {
+    //         var collegeIdNew = student['college_id'][0];
+    //         var collegeName = student['college_id'][1];
+
+    //         await DBProvider.db.dynamicInsert("College", <String, Object>{
+    //           "collegeId": collegeIdNew,
+    //           "collegeName": collegeName,
+    //         });
+
+    //         var courseIdNew = student['course_id'][0];
+    //         var classId =
+    //             student['class_id'] != null && student['class_id'] != false
+    //                 ? student['class_id'][0]
+    //                 : '';
+    //         var deptId =
+    //             student['dept_id'] != null && student['dept_id'] != false
+    //                 ? student['dept_id'][0]
+    //                 : "";
+    //         var deptName =
+    //             student['dept_id'] != null && student['dept_id'] != false
+    //                 ? student['dept_id'][1]
+    //                 : "";
+    //         if (deptId != "") {
+    //           await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+    //             "deptId": deptId,
+    //             "deptName": deptName,
+    //             "collegeId": collegeId
+    //           });
+    //         }
+
+    //         var yearIdNew =
+    //             student['colyear'] != null && student['colyear'] != false
+    //                 ? student['colyear'][0]
+    //                 : "";
+    //         var yearName =
+    //             student['colyear'] != null && student['colyear'] != false
+    //                 ? student['colyear'][1]
+    //                 : "";
+    //         await DBProvider.db.dynamicInsert("Year", <String, Object>{
+    //           "yearId": yearIdNew,
+    //           "yearName": yearName,
+    //         });
+    //         var semIdNew =
+    //             student['semester'] != null && student['semester'] != false
+    //                 ? student['semester'][0]
+    //                 : "";
+    //         var semName =
+    //             student['semester'] != null && student['semester'] != false
+    //                 ? student['semester'][1]
+    //                 : "";
+    //         await DBProvider.db.dynamicInsert("Semester", <String, Object>{
+    //           "semId": semIdNew,
+    //           "semName": semName,
+    //           "yearId": yearId,
+    //         });
+
+    //         var studentId = student['id'];
+    //         var studentUserId = student['user_id'][0];
+    //         var studentCode = student['student_code'].toString();
+    //         var fName = student['student_name'];
+    //         if (student['middle'] != null &&
+    //             student['middle'] != false &&
+    //             student['middle'] != 'false') {
+    //           fName = fName + " " + student['middle'].toString();
+    //         }
+    //         if (student['last'] != null &&
+    //             student['last'] != false &&
+    //             student['last'] != 'false') {
+    //           fName = fName + " " + student['last'].toString();
+    //         }
+
+    //         var profilePic =
+    //             student['photo'] != null && student['photo'] != false
+    //                 ? student['photo']
+    //                 : '';
+
+    //         await DBProvider.db.dynamicInsert('Student', <String, Object>{
+    //           "studentId": studentId,
+    //           "studentCode": studentCode,
+    //           "studentName": fName,
+    //           "userId": studentUserId,
+    //           "collegeId": collegeIdNew,
+    //           "courseId": courseIdNew,
+    //           "yearId": yearIdNew,
+    //           "semId": semIdNew,
+    //           'classId': classId,
+    //           'deptId': deptId,
+    //           'profilePic': profilePic,
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
+
+    String dbQuery = "SELECT studentId, studentName, profilePic FROM Student "
+        "WHERE "
+        "collegeId = ? AND "
+        "courseId = ? AND "
+        "yearId = ? AND "
+        "semId = ? "
+        "ORDER BY studentCode;";
+    var params = [collegeIdInt, courseId, yearId, semId];
+
+    var studentRecords = await DBProvider.db.dynamicRead(dbQuery, params);
     if (kDebugMode) {
-      log(requestBodyMap.toString());
+      log('db query');
+      // log(studentRecords.toString());
     }
 
-    var response = await http.post(
-      Uri.parse(
-          "$baseUriLocal$facultyUriStart$facultyUriFetchStudentsForYearIdSemId"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBodyMap),
-    );
-
-    if (response.statusCode == 200) {
-      if (kDebugMode) {
-        log('students');
-        log(response.statusCode.toString());
-        log(response.body);
-      }
-
-      var resp = jsonDecode(response.body);
-
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var students = resp['data'];
-        if (kDebugMode) {
-          log(students.toString());
-        }
-        return students;
-      }
+    if (studentRecords.isNotEmpty) {
+      return studentRecords;
     }
   } catch (e) {
     if (kDebugMode) {

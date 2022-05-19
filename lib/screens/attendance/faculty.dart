@@ -136,8 +136,8 @@ class _AttendanceScreenFacultyModeState
           margin: EdgeInsets.only(top: statusBarHeight + appBarHeight + 1),
           alignment: Alignment.topCenter,
           decoration: const BoxDecoration(
-              // color: Colors.white,
-              ),
+            color: Colors.white,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -193,64 +193,83 @@ class _AttendanceScreenFacultyModeState
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
                         children: [
-                          TableRow(children: [
-                            TableCell(
-                              child: Center(
-                                child: Text(
-                                  "Duration: ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0,
-                                    color: Colors.white,
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Center(
+                                  child: Text(
+                                    "Duration: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            TableCell(
-                              child: Center(
-                                child: TextFormField(
-                                  // initialValue: selectedLectureDuration,
-                                  textAlign: TextAlign.center,
-                                  controller: TextEditingController(
-                                      text: selectedLectureDuration),
-                                  keyboardType: TextInputType.number,
-                                  focusNode: _durationFocusNode,
-                                  decoration: InputDecoration(
-                                    alignLabelWithHint: true,
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.greenAccent,
+                              TableCell(
+                                child: Center(
+                                  child: TextFormField(
+                                    // initialValue: selectedLectureDuration,
+                                    textAlign: TextAlign.center,
+                                    controller: TextEditingController(
+                                        text: selectedLectureDuration),
+                                    keyboardType: TextInputType.number,
+                                    focusNode: _durationFocusNode,
+                                    decoration: InputDecoration(
+                                      alignLabelWithHint: true,
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.greenAccent,
+                                        ),
                                       ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.blue,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.blue,
+                                        ),
                                       ),
+                                      hintText: "Duration",
                                     ),
-                                    hintText: "Duration",
-                                  ),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  onChanged: (value) {
-                                    if (int.tryParse(value.toString()) !=
-                                        null) {
-                                      setState(() {
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    onChanged: (value) {
+                                      if (int.tryParse(value.toString()) !=
+                                          null) {
                                         setState(() {
-                                          selectedLectureDuration =
-                                              value.toString();
+                                          setState(() {
+                                            selectedLectureDuration =
+                                                value.toString();
+                                          });
                                         });
-                                      });
-                                    }
-                                    _durationFocusNode.unfocus();
-                                  },
+                                      }
+                                      _durationFocusNode.unfocus();
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          ]),
+                            ],
+                          ),
                         ],
                       ),
                     ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.30,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8.0,
+                  ),
+                  child: Icon(
+                    Icons.cancel_outlined,
+                    size: 35,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
