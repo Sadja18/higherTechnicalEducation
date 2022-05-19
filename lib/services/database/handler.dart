@@ -56,7 +56,7 @@ class DBProvider {
 
   String _createSemesterTable() {
     return "CREATE TABLE Semester("
-        "semId INTEGER NOT NULL,"
+        "semId INTEGER PRIMARY KEY,"
         "semName TEXT NOT NULL,"
         "yearId INTEGER NOT NULL"
         ");";

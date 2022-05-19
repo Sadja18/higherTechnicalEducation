@@ -15,6 +15,7 @@ const facultyUriFetchCourses = '/fetchcourses.php';
 const facultyUriFetchClassesForCourseId = '/fetchclasses.php';
 const facultyUriFetchSubjectsForYearIdSemId = '/fetchsubjects.php';
 const facultyUriFetchStudentsForYearIdSemId = '/fetchstudents.php';
+const facultyUriFetchYearSem = '/fetchyearsem.php';
 
 const headUriStart = '/api/head';
 const headUriLogin = '/login.php';

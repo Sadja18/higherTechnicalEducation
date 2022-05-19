@@ -11,6 +11,7 @@ import '../../widgets/common/dropdowns/course_select.dart';
 import '../../widgets/common/dropdowns/class_select.dart';
 import '../../widgets/common/dropdowns/subject_select.dart';
 import '../../widgets/attendance/edit/faculty_mode_student_table.dart';
+import '../../widgets/common/dropdowns/year_sem_select.dart';
 
 class AttendanceScreenFacultyMode extends StatefulWidget {
   static const routeName = "screen-attendance-faculty-mode";
@@ -34,6 +35,9 @@ class _AttendanceScreenFacultyModeState
   final FocusNode _durationFocusNode = FocusNode();
 
   void courseSelection(int courseId, String noDept, String courseDuration) {
+    // if(kDebugMode){
+
+    // }
     setState(() {
       selectedCourseId = courseId;
       selectedCourseDuration = courseDuration;
@@ -156,7 +160,46 @@ class _AttendanceScreenFacultyModeState
                           courseId: selectedCourseId,
                           classSelection: classSelection,
                         )
-                      : const Text("year + sem dropdown"),
+                      : SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Table(
+                            columnWidths: const {
+                              0: FractionColumnWidth(0.50),
+                            },
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
+                            children: [
+                              TableRow(
+                                children: [
+                                  TableCell(
+                                    child: YearDropdown(
+                                        yearSelection: yearSelection),
+                                  ),
+                                ],
+                              ),
+                              (selectedYearId == 0)
+                                  ? TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: SizedBox(
+                                            height: 0,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : TableRow(
+                                      children: [
+                                        TableCell(
+                                          child: SemDrodown(
+                                            semSelection: semSelection,
+                                            yearId: selectedYearId,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                            ],
+                          ),
+                        ),
               (selectedCourseId == 0 ||
                       selectedYearId == 0 ||
                       selectedSemId == 0)

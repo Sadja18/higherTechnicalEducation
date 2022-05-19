@@ -602,3 +602,125 @@ Future<dynamic> getStudentDataCourseIdYearIdSemId(
     }
   }
 }
+
+Future<dynamic> getYearsFromServerFacultyMode() async {
+  try {
+    var userName = "dramitgcd@gmail.com";
+    var userPassword = "faculty@1234";
+    var dbname = "college";
+    // var collegeId = "13";
+    var str = "1";
+    // var collegeIdInt = 13;
+
+    var requestBodyMap = {
+      "userName": userName,
+      "userPassword": userPassword,
+      "dbname": dbname,
+      "str": str,
+    };
+
+    // var response = await http.post(
+    //   Uri.parse("$baseUriLocal$facultyUriStart$facultyUriFetchYearSem"),
+    //   headers: <String, String>{
+    //     'Content-Type': 'application/json; charset=UTF-8',
+    //   },
+    //   body: jsonEncode(requestBodyMap),
+    // );
+
+    // if (kDebugMode) {
+    //   log('recieved log year sem');
+    //   log(response.statusCode.toString());
+    // }
+
+    // if (response.statusCode == 200) {
+    //   var resp = jsonDecode(response.body);
+
+    //   if (resp['message'].toString().toLowerCase() == 'success') {
+    //     var data = resp['data'];
+    //     var years = data['years'];
+    //     var semesters = data['semesters'];
+
+    //     for (var year in years) {
+    //       var yearId = year['id'];
+    //       var yearName = year['name'];
+    //       await DBProvider.db.dynamicInsert("Year", <String, Object>{
+    //         "yearId": yearId,
+    //         "yearName": yearName,
+    //       });
+    //     }
+    //     for (var sem in semesters) {
+    //       var semId = sem['id'];
+    //       var semName = sem['name'];
+    //       var yearIdSem = sem['year_id'][0];
+    //       await DBProvider.db.dynamicInsert("Semester", <String, Object>{
+    //         "semId": semId,
+    //         "semName": semName,
+    //         "yearId": yearIdSem
+    //       });
+    //     }
+    //   }
+    // }
+
+    var years = await DBProvider.db.dynamicRead("SELECT * FROM Year;", []);
+
+    if (years.isNotEmpty) {
+      return years;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('fethc error years faculty mode');
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> getSemestersFromServerFacultyMode(int yearId) async {
+  try {
+    var dbQuery = "SELECT semId, semName FROM Semester WHERE yearId=?";
+    var params = [yearId];
+    var sem = await DBProvider.db.dynamicRead(dbQuery, params);
+
+    if (sem.isNotEmpty) {
+      return sem;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('fethc error sem $yearId faculty mode');
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> getYearDetails(String yearName) async {
+  try {
+    var dbQuery = "SELECT yearId FROM Year WHERE yearName=?;";
+    var params = [yearName];
+
+    var year = await DBProvider.db.dynamicRead(dbQuery, params);
+    if (year.isNotEmpty) {
+      return year;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('error fetch details $yearName faculty mode');
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> getSemDetails(String semName) async {
+  try {
+    var dbQuery = "SELECT semId FROM Semester WHERE semName=?;";
+    var params = [semName];
+
+    var year = await DBProvider.db.dynamicRead(dbQuery, params);
+    if (year.isNotEmpty) {
+      return year;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log('error fetch details $semName faculty mode');
+      log(e.toString());
+    }
+  }
+}
