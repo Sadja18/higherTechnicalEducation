@@ -1,8 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-// import 'dart:developer';
-
-// import 'package:flutter/foundation.dart';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -24,13 +19,13 @@ class AttendanceScreenFacultyMode extends StatefulWidget {
 
 class _AttendanceScreenFacultyModeState
     extends State<AttendanceScreenFacultyMode> {
-  late int selectedCourseId;
-  late String selectedCourseDuration;
-  late String selectedNoDept;
-  late int selectedClassId;
-  late int selectedYearId;
-  late int selectedSemId;
-  late int selectedSubjectId;
+  late int selectedCourseId = 0;
+  late String selectedCourseDuration = "0";
+  late String selectedNoDept = 'yes';
+  late int selectedClassId = 0;
+  late int selectedYearId = 0;
+  late int selectedSemId = 0;
+  late int selectedSubjectId = 0;
   String selectedLectureDuration = "0";
   final FocusNode _durationFocusNode = FocusNode();
 
@@ -42,11 +37,11 @@ class _AttendanceScreenFacultyModeState
       selectedCourseId = courseId;
       selectedCourseDuration = courseDuration;
       selectedNoDept = noDept;
-      selectedClassId = 0;
-      selectedSemId = 0;
-      selectedYearId = 0;
-      selectedSubjectId = 0;
-      selectedLectureDuration = "1";
+      // selectedClassId = 0;
+      // selectedSemId = 0;
+      // selectedYearId = 0;
+      // selectedSubjectId = 0;
+      // selectedLectureDuration = "1";
     });
   }
 
@@ -59,47 +54,47 @@ class _AttendanceScreenFacultyModeState
       selectedClassId = classId;
       selectedYearId = yearId;
       selectedSemId = semId;
-      selectedSubjectId = 0;
-      selectedLectureDuration = "1";
+      // selectedSubjectId = 0;
+      // selectedLectureDuration = "1";
     });
   }
 
   void yearSelection(int yearId) {
     setState(() {
       selectedYearId = yearId;
-      selectedClassId = 0;
-      selectedSemId = 0;
-      selectedSubjectId = 0;
-      selectedLectureDuration = "1";
+      // selectedClassId = 0;
+      // selectedSemId = 0;
+      // selectedSubjectId = 0;
+      // selectedLectureDuration = "1";
     });
   }
 
   void semSelection(int semId) {
     setState(() {
       selectedSemId = semId;
-      selectedSubjectId = 0;
-      selectedLectureDuration = "1";
+      // selectedSubjectId = 0;
+      // selectedLectureDuration = "1";
     });
   }
 
   void subjectSelection(int subjectId, int courseId, int yearId, int semId) {
     setState(() {
       selectedSubjectId = subjectId;
-      selectedLectureDuration = "1";
+      // selectedLectureDuration = "1";
     });
   }
 
   @override
   void initState() {
     setState(() {
-      selectedCourseId = 0;
-      selectedCourseDuration = "0";
-      selectedNoDept = "yes";
-      selectedClassId = 0;
-      selectedSemId = 0;
-      selectedYearId = 0;
-      selectedSubjectId = 0;
-      selectedLectureDuration = "0";
+      // selectedCourseId = 0;
+      // selectedCourseDuration = "0";
+      // selectedNoDept = "yes";
+      // selectedClassId = 0;
+      // selectedSemId = 0;
+      // selectedYearId = 0;
+      // selectedSubjectId = 0;
+      // selectedLectureDuration = "0";
     });
     super.initState();
   }
@@ -178,7 +173,7 @@ class _AttendanceScreenFacultyModeState
                                 ],
                               ),
                               (selectedYearId == 0)
-                                  ? TableRow(
+                                  ? const TableRow(
                                       children: [
                                         TableCell(
                                           child: SizedBox(

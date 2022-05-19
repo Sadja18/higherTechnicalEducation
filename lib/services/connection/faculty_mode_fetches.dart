@@ -421,21 +421,21 @@ Future<dynamic> getStudentDataCourseIdYearIdSemId(
     var str = "1";
     var collegeIdInt = 13;
 
-    // Map<String, Object> requestBodyMap = {
-    //   "userName": userName,
-    //   "userPassword": userPassword,
-    //   "dbname": dbname,
-    //   "collegeId": collegeId,
-    //   "courseId": courseId,
-    //   "yearId": yearId,
-    //   "semId": semId,
-    //   "str": str
-    // };
+    Map<String, Object> requestBodyMap = {
+      "userName": userName,
+      "userPassword": userPassword,
+      "dbname": dbname,
+      "collegeId": collegeId,
+      "courseId": courseId,
+      "yearId": yearId,
+      "semId": semId,
+      "str": str
+    };
 
-    // if (kDebugMode) {
-    //   log('faculty mode student data fetch request body');
-    //   log(requestBodyMap.toString());
-    // }
+    if (kDebugMode) {
+      log('faculty mode student data fetch request body');
+      log(requestBodyMap.toString());
+    }
 
     // var response = await http.post(
     //   Uri.parse(

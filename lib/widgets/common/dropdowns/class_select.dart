@@ -152,10 +152,9 @@ class _ClassSelectionState extends State<ClassSelection> {
               selectedClassName = selection.toString();
             });
             if (kDebugMode) {
-              print("Selected course");
+              print("Selected class");
               print(selection.toString());
             }
-
             handleClassSelection();
           }),
     );

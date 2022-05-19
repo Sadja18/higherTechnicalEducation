@@ -94,6 +94,10 @@ class _YearSelectorState extends State<YearSelector> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.10,
       alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(
+        vertical: 6.0,
+      ),
+      decoration: const BoxDecoration(color: Colors.purpleAccent),
       child: DropdownButton(
           isExpanded: true,
           underline: const DropdownButtonHideUnderline(
@@ -173,11 +177,11 @@ class _SemDrodownState extends State<SemDrodown> {
             if (kDebugMode) {
               log(semesters.toString());
             }
-            return Text(semesters.toString());
-            // return SemesterSelector(
-            //   semesters: semesters,
-            //   semSelection: widget.semSelection,
-            // );
+            // return Text(semesters.toString());
+            return SemesterSelector(
+              semesters: semesters,
+              semSelection: widget.semSelection,
+            );
           }
         }
       },
@@ -228,6 +232,10 @@ class _SemesterSelectorState extends State<SemesterSelector> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.10,
       alignment: Alignment.center,
+      margin: const EdgeInsets.symmetric(vertical: 6.0),
+      decoration: const BoxDecoration(
+        color: Colors.purpleAccent,
+      ),
       child: DropdownButton(
           isExpanded: true,
           underline: const DropdownButtonHideUnderline(
