@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:higher/services/connection/faculty_mode_fetches.dart';
 import '../../../helpers/controllers/common/user_session_db_requests.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -298,8 +299,35 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
             height: 0,
           );
         } else {
-          return tableViewField(
-              "Leave Type", const Text("Dropdown for leave types"));
+          return tableViewField("Leave Type", leaveTypeDropdownFuture());
+        }
+      },
+    );
+  }
+
+  Widget leaveTypeDropdownFuture() {
+    var startDate = _selectedStartDate;
+    var dateDifference = dateDiff;
+    return FutureBuilder(
+      future: getLeaveAllocationsForCurrentFaculty(startDate, dateDifference),
+      builder: (BuildContext c, AsyncSnapshot s) {
+        if (s.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        } else {
+          if (s.hasError ||
+              s.hasData != true ||
+              s.data == null ||
+              s.data == false ||
+              s.data.isEmpty) {
+            return const SizedBox(
+              height: 0,
+            );
+          } else {
+            var leaveTypeData = s.data;
+            return Text(leaveTypeData.toString());
+          }
         }
       },
     );

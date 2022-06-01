@@ -745,6 +745,9 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
     var collegeId = "13";
     var deptId = "9";
     var str = "1";
+    if (kDebugMode) {
+      print("fetychingnbvskv,js");
+    }
 
     Map<String, Object> requestBodyMap = {
       "userName": "dramitgcd@gmail.com",
@@ -772,21 +775,43 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
         var data = res['data'];
         if (data != null) {
           var leaveAllocations = data['leaveAllocation'];
-
+          // if (kDebugMode) {
+          //   log(response.statusCode.toString());
+          //   log(leaveAllocations.toString());
+          // }
           if (leaveAllocations != null && leaveAllocations.isNotEmpty) {
             for (var leaveAllocation in leaveAllocations) {
+              if (kDebugMode) {
+                print("updar");
+                var a = "leaveAllocation['id'] " +
+                    leaveAllocation['id'].runtimeType.toString() +
+                    "\nleaveAllocation['faculty_name'] ".toString() +
+                    leaveAllocation['faculty_name'].runtimeType.toString() +
+                    "\nleaveAllocation['no_leaves'] " +
+                    leaveAllocation['no_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['pending_leaves'] " +
+                    leaveAllocation['pending_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['approved_leaves'] " +
+                    leaveAllocation['approved_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['available_leaves'] " +
+                    leaveAllocation['available_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['dept_name'] " +
+                    leaveAllocation['dept_name'].runtimeType.toString() +
+                    "\nleaveAllocation['college_id'] " +
+                    leaveAllocation['college_id'].runtimeType.toString() +
+                    "\nleaveAllocation['year'] ".toString() +
+                    leaveAllocation['year'].runtimeType.toString() +
+                    "\nleaveAllocation['leave_type']".toString() +
+                    leaveAllocation['leave_type'].runtimeType.toString();
+                print(a);
+              }
               if (leaveAllocation['id'] != null &&
-                  leaveAllocation['id'] != false &&
                   leaveAllocation['faculty_name'] != null &&
                   leaveAllocation['faculty_name'] != false &&
-                  leaveAllocation['no_leaves'] != null &&
-                  leaveAllocation['no_leaves'] != false &&
-                  leaveAllocation['pending_leaves'] &&
-                  leaveAllocation['pending_leaves'] != false &&
-                  leaveAllocation['approved_leaves'] != null &&
-                  leaveAllocation['approved_leaves'] != false &&
-                  leaveAllocation['available_leaves'] != null &&
-                  leaveAllocation['available_leaves'] != false &&
+                  // leaveAllocation['no_leaves'] != null &&
+                  // leaveAllocation['pending_leaves'] &&
+                  // leaveAllocation['approved_leaves'] != null &&
+                  // leaveAllocation['available_leaves'] != null &&
                   leaveAllocation['dept_name'] != null &&
                   leaveAllocation['dept_name'] != false &&
                   leaveAllocation['college_id'] != null &&
@@ -795,9 +820,14 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
                   leaveAllocation['year'] != false &&
                   leaveAllocation['leave_type'] != null &&
                   leaveAllocation['leave_type'] != false) {
+                if (kDebugMode) {
+                  print("andar");
+                  print(response.statusCode.toString());
+                  print("response.body");
+                }
                 var leaveAllocationId = leaveAllocation['id'];
                 var leaveAllocatedToFacultyId =
-                    leaveAllocationId['faculty_name'][0];
+                    leaveAllocation['faculty_name'][0];
                 var totalAllocatedLeaves =
                     double.tryParse(leaveAllocation['no_leaves'].toString()) !=
                             null
@@ -839,6 +869,10 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
                   "leaveTypeId": leaveTypeId,
                   "leaveTypeName": leaveTypeName,
                 };
+                if (kDebugMode) {
+                  log("dbentry");
+                  log(dbEntry.toString());
+                }
                 await DBProvider.db
                     .dynamicInsert("FacultyLeaveAllcoation", dbEntry);
               }
@@ -847,10 +881,15 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
           var leaveTypes = data['leaveTypes'];
           if (leaveTypes != null && leaveTypes.isNotEmpty) {
             for (var leaveType in leaveTypes) {
+              if (kDebugMode) {
+                log(leaveType.toString());
+              }
               var leaveTypeId = leaveType['id'];
               var leaveTypeName = leaveType['name'];
-              var isHalf = leaveType['isHalf'].toString();
-
+              var isHalf = leaveType['is_half'] == true ? "true" : "false";
+              if (kDebugMode) {
+                log(leaveType.toString());
+              }
               await DBProvider.db
                   .dynamicInsert("LeaveSession", <String, Object>{
                 "leaveTypeId": leaveTypeId,
@@ -864,14 +903,17 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
     }
 
     var thisYearName = DateFormat("yyyy").format(DateTime.parse(startDate));
+    if (kDebugMode) {
+      log(thisYearName);
+    }
 
-    var query = "SELECT leaveTypeId, leaveTypeName FROM LeaveSession "
-        "WHERE leaveTypeId = ("
+    var query = "SELECT * FROM LeaveSession ";
+    "WHERE leaveTypeId = ("
         "SELECT leaveTypeId "
         "FROM FacultyLeaveAllocation "
         "WHERE availableLeaves >= ? "
         "yearName = ? "
-        "AND teacherId=("
+        "AND leaveAllocatedToFacultyId=("
         "SELECT teacherId FROM Faculty "
         "WHERE userId = ("
         "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
@@ -883,6 +925,9 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
     var leaveTypes = await DBProvider.db.dynamicRead(query, params);
 
     if (leaveTypes != null && leaveTypes.isNotEmpty) {
+      if (kDebugMode) {
+        log(leaveTypes.toString());
+      }
       return leaveTypes;
     }
   } catch (e) {
@@ -893,13 +938,13 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
     if (e is SocketException) {
       var thisYearName = DateFormat("yyyy").format(DateTime.parse(startDate));
 
-      var query = "SELECT leaveTypeId, leaveTypeName FROM LeaveSession "
+      var query = "SELECT * FROM LeaveSession "
           "WHERE leaveTypeId = ("
           "SELECT leaveTypeId "
           "FROM FacultyLeaveAllocation "
           "WHERE availableLeaves >= ? "
           "yearName = ? "
-          "AND teacherId=("
+          "AND leaveAllocatedToFacultyId=("
           "SELECT teacherId FROM Faculty "
           "WHERE userId = ("
           "SELECT userId FROM UserLoginSession WHERE loginStatus=1"

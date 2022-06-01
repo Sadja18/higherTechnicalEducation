@@ -241,8 +241,8 @@ class DBProvider {
 
   String _createLeaveSessions() {
     return "CREATE TABLE LeaveSession("
-        "leaveSessionId INTEGER PRIMARY KEY,"
-        "leaveSessionName TEXT NOT NULL,"
+        "leaveTypeId INTEGER PRIMARY KEY,"
+        "leaveTypeName TEXT NOT NULL,"
         "isHalf TEXT NOT NULL"
         ");";
   }
@@ -259,7 +259,7 @@ class DBProvider {
         "yearName TEXT NOT NULL,"
         "leaveTypeId INTEGER NOT NULL,"
         "leaveTypeName TEXT NOT NULL,"
-        "collegeId INTEGER NOT NULL,"
+        "collegeId INTEGER NOT NULL"
         ");";
   }
 
