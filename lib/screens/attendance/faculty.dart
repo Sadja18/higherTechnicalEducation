@@ -7,6 +7,7 @@ import '../../widgets/common/dropdowns/class_select.dart';
 import '../../widgets/common/dropdowns/subject_select.dart';
 import '../../widgets/attendance/edit/faculty_mode_student_table.dart';
 import '../../widgets/common/dropdowns/year_sem_select.dart';
+import '../common/dashboard_screen.dart';
 
 class AttendanceScreenFacultyMode extends StatefulWidget {
   static const routeName = "screen-attendance-faculty-mode";
@@ -19,13 +20,13 @@ class AttendanceScreenFacultyMode extends StatefulWidget {
 
 class _AttendanceScreenFacultyModeState
     extends State<AttendanceScreenFacultyMode> {
-  late int selectedCourseId = 0;
-  late String selectedCourseDuration = "0";
-  late String selectedNoDept = 'yes';
-  late int selectedClassId = 0;
-  late int selectedYearId = 0;
-  late int selectedSemId = 0;
-  late int selectedSubjectId = 0;
+  int selectedCourseId = 0;
+  String selectedCourseDuration = "0";
+  String selectedNoDept = 'yes';
+  int selectedClassId = 0;
+  int selectedYearId = 0;
+  int selectedSemId = 0;
+  int selectedSubjectId = 0;
   String selectedLectureDuration = "0";
   final FocusNode _durationFocusNode = FocusNode();
 
@@ -119,6 +120,20 @@ class _AttendanceScreenFacultyModeState
               ),
             ),
           ),
+          actions: [
+            InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .popAndPushNamed(DashboardScreen.routeName);
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.home_outlined,
+                ),
+              ),
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Text(

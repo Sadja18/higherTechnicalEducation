@@ -1,7 +1,7 @@
 const baseUriLocal = "http://10.0.2.2/";
 const baseUriLocalA = "10.0.2.2";
-const baseURL = "https://namanpwa.xyz";
-const baseURLA = "namanpwa.xyz";
+// const baseURL = "https://namanpwa.xyz";
+// const baseURLA = "namanpwa.xyz";
 
 const parentUriStart = '/api/parent';
 const parentUriLogin = '/login.php';
@@ -16,6 +16,7 @@ const facultyUriFetchClassesForCourseId = '/fetchclasses.php';
 const facultyUriFetchSubjectsForYearIdSemId = '/fetchsubjects.php';
 const facultyUriFetchStudentsForYearIdSemId = '/fetchstudents.php';
 const facultyUriFetchYearSem = '/fetchyearsem.php';
+const facultyLeaveAllocations = "/fetchleaveallocation.php";
 
 const headUriStart = '/api/head';
 const headUriLogin = '/login.php';

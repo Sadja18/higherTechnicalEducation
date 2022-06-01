@@ -239,6 +239,30 @@ class DBProvider {
         ");";
   }
 
+  String _createLeaveSessions() {
+    return "CREATE TABLE LeaveSession("
+        "leaveSessionId INTEGER PRIMARY KEY,"
+        "leaveSessionName TEXT NOT NULL,"
+        "isHalf TEXT NOT NULL"
+        ");";
+  }
+
+  String _createFacultyLeaveAllocationTable() {
+    return "CREATE TABLE FacultyLeaveAllocation("
+        "leaveAllocationId INTEGER PRIMARY KEY,"
+        "leaveAllocatedToFacultyId INTEGER NOT NULL,"
+        "totalAllocatedLeaves REAL NOT NULL,"
+        "pendingLeaves REAL DEFAULT 0.0,"
+        "approvedLeaves REAL NOT NULL,"
+        "availableLeaves REAL NOT NULL,"
+        "deptId INTEGER NOT NULL,"
+        "yearName TEXT NOT NULL,"
+        "leaveTypeId INTEGER NOT NULL,"
+        "leaveTypeName TEXT NOT NULL,"
+        "collegeId INTEGER NOT NULL,"
+        ");";
+  }
+
   String _createFacultyLeaveTable() {
     return "CREATE TABLE FacultytLeaveRequest("
         "leaveId INTEGER,"
@@ -322,6 +346,8 @@ class DBProvider {
         dbBatch.execute(_createStudentLeaveTable());
         dbBatch.execute(_createFacultyLeaveTable());
         dbBatch.execute(_createNtStaffLeaveTable());
+        dbBatch.execute(_createLeaveSessions());
+        dbBatch.execute(_createFacultyLeaveAllocationTable());
         await dbBatch.commit(noResult: true);
       });
     } catch (e) {
@@ -396,7 +422,7 @@ class DBProvider {
     try {
       final db = await initDB();
       String query =
-          "UPDATE UserLoginSession SET loginStatus = 0, isOnline = 0;";
+          "UPDATE UserLoginSession SET loginStatus = 0, isOnline = 0 WHERE loginStatus=1;";
 
       var result = await db.rawQuery(query);
 

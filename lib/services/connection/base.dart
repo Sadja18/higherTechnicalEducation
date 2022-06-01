@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -57,61 +58,61 @@ Future<dynamic> getDepartmentDataFromServerMasterMode() async {
       "str": str,
     };
 
-    // var response = await http.post(
-    //   Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchFacultyProfile'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(requestBodyMap),
-    // );
+    var response = await http.post(
+      Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchFacultyProfile'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
 
-    // if (response.statusCode == 200) {
-    //   if (kDebugMode) {
-    //     log(response.body);
-    //   }
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        log(response.body);
+      }
 
-    //   var resp = jsonDecode(response.body);
-    //   if (resp['message'].toString().toLowerCase() == 'success') {
-    //     var data = resp['data'];
+      var resp = jsonDecode(response.body);
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var data = resp['data'];
 
-    //     for (var faculty in data) {
-    //       var teacherId = faculty['id'];
-    //       var userId = faculty['user_id'][0];
-    //       var teacherName = faculty['name'];
-    //       var teacherCode = faculty['teacher_code'];
-    //       var employeeId = faculty['employee_id'][0];
-    //       var isHoD = faculty['is_hod'] == true ? 'yes' : 'no';
-    //       var deptId = faculty['dept_id'][0];
-    //       var deptName = faculty['dept_id'][1];
-    //       var profilePic = faculty['image'];
-    //       var collegeId = faculty['college_id'][0];
-    //       var collegeName = faculty['college_id'][1];
+        for (var faculty in data) {
+          var teacherId = faculty['id'];
+          var userId = faculty['user_id'][0];
+          var teacherName = faculty['name'];
+          var teacherCode = faculty['teacher_code'];
+          var employeeId = faculty['employee_id'][0];
+          var isHoD = faculty['is_hod'] == true ? 'yes' : 'no';
+          var deptId = faculty['dept_id'][0];
+          var deptName = faculty['dept_id'][1];
+          var profilePic = faculty['image'];
+          var collegeId = faculty['college_id'][0];
+          var collegeName = faculty['college_id'][1];
 
-    //       await DBProvider.db.dynamicInsert("College", <String, Object>{
-    //         "collegeId": collegeId,
-    //         "collegeName": collegeName,
-    //       });
-    //       await DBProvider.db.dynamicInsert("Dept", <String, Object>{
-    //         "deptId": deptId,
-    //         "deptName": deptName,
-    //         "collegeId": collegeId,
-    //       });
-    //       await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
-    //         "teacherId": teacherId,
-    //         "userId": userId,
-    //         "teacherName": teacherName,
-    //         "teacherCode": teacherCode,
-    //         "employeeId": employeeId,
-    //         "isHoD": isHoD,
-    //         "deptId": deptId,
-    //         "deptName": deptName,
-    //         "profilePic": profilePic,
-    //         "collegeId": collegeId,
-    //         "collegeName": collegeName,
-    //       });
-    //     }
-    //   }
-    // }
+          await DBProvider.db.dynamicInsert("College", <String, Object>{
+            "collegeId": collegeId,
+            "collegeName": collegeName,
+          });
+          await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+            "deptId": deptId,
+            "deptName": deptName,
+            "collegeId": collegeId,
+          });
+          await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
+            "teacherId": teacherId,
+            "userId": userId,
+            "teacherName": teacherName,
+            "teacherCode": teacherCode,
+            "employeeId": employeeId,
+            "isHoD": isHoD,
+            "deptId": deptId,
+            "deptName": deptName,
+            "profilePic": profilePic,
+            "collegeId": collegeId,
+            "collegeName": collegeName,
+          });
+        }
+      }
+    }
     var depts = await DBProvider.db.dynamicRead(
         "SELECT * FROM Dept"
         " WHERE collegeId = (SELECT collegeId FROM master WHERE userId = "
@@ -311,7 +312,24 @@ Future<dynamic> sendStudentLoginRequest(
       log('student login error');
       log(e.toString());
     }
-    saveFlag = 0;
+    if (e is SocketException) {
+      var queryT = "SELECT * FROM UserLoginSession "
+          "WHERE "
+          "userName = ? AND userPassword   = ?;";
+      var params = [enteredUserName, enteredUserPassword];
+      var r = await DBProvider.db.dynamicRead(queryT, params);
+
+      if (r != null && r.isNotEmpty && r.length == 1) {
+        var queryR = 'UPDATE UserLoginSession SET loginStatus=1, isOnline=0 '
+            'WHERE '
+            'userName=? AND userPassword=?';
+        var s = await DBProvider.db
+            .dynamicRead(queryR, [enteredUserName, enteredUserPassword]);
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
   return saveFlag;
 }
@@ -338,9 +356,7 @@ Future<dynamic> sendParentLoginRequest(
       body: jsonEncode(requestBodyMap),
     );
 
-    if (response.statusCode != 200) {
-      saveFlag = 0;
-    } else {
+    if (response.statusCode == 200) {
       var resp = jsonDecode(response.body);
 
       if (kDebugMode) {
@@ -388,6 +404,24 @@ Future<dynamic> sendParentLoginRequest(
       log('parent login error');
       log(e.toString());
     }
+    if (e is SocketException) {
+      var queryT = "SELECT * FROM UserLoginSession "
+          "WHERE "
+          "userName = ? AND userPassword   = ?;";
+      var params = [enteredUserName, enteredUserPassword];
+      var r = await DBProvider.db.dynamicRead(queryT, params);
+
+      if (r != null && r.isNotEmpty && r.length == 1) {
+        var queryR = 'UPDATE UserLoginSession SET loginStatus=1, isOnline=0 '
+            'WHERE '
+            'userName=? AND userPassword=?';
+        var s = await DBProvider.db
+            .dynamicRead(queryR, [enteredUserName, enteredUserPassword]);
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
   return saveFlag;
 }
@@ -414,10 +448,12 @@ Future<dynamic> sendFacultyLoginRequest(
       },
       body: jsonEncode(requestBodyMap),
     );
+    if (kDebugMode) {
+      log(response.statusCode.toString());
+      log(response.persistentConnection.toString());
+    }
 
-    if (response.statusCode != 200) {
-      saveFlag = 0;
-    } else {
+    if (response.statusCode == 200) {
       var resp = jsonDecode(response.body);
 
       if (kDebugMode) {
@@ -492,7 +528,24 @@ Future<dynamic> sendFacultyLoginRequest(
       log("faculty login error");
       log(e.toString());
     }
-    saveFlag = 0;
+    if (e is SocketException) {
+      var queryT = "SELECT * FROM UserLoginSession "
+          "WHERE "
+          "userName = ? AND userPassword   = ?;";
+      var params = [enteredUserName, enteredUserPassword];
+      var r = await DBProvider.db.dynamicRead(queryT, params);
+
+      if (r != null && r.isNotEmpty && r.length == 1) {
+        var queryR = 'UPDATE UserLoginSession SET loginStatus=1, isOnline=0 '
+            'WHERE '
+            'userName=? AND userPassword=?';
+        var s = await DBProvider.db
+            .dynamicRead(queryR, [enteredUserName, enteredUserPassword]);
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
 
   return saveFlag;
@@ -500,6 +553,8 @@ Future<dynamic> sendFacultyLoginRequest(
 
 Future<dynamic> sendNtStaffLoginRequest(
     enteredUserName, enteredUserPassword) async {}
+
+// head login request
 Future<dynamic> sendHeadLoginRequest(
     enteredUserName, enteredUserPassword) async {
   int saveFlag = 1;
@@ -581,6 +636,24 @@ Future<dynamic> sendHeadLoginRequest(
     if (kDebugMode) {
       log("head login error");
       log(e.toString());
+    }
+    if (e is SocketException) {
+      var queryT = "SELECT * FROM UserLoginSession "
+          "WHERE "
+          "userName = ? AND userPassword   = ?;";
+      var params = [enteredUserName, enteredUserPassword];
+      var r = await DBProvider.db.dynamicRead(queryT, params);
+
+      if (r != null && r.isNotEmpty && r.length == 1) {
+        var queryR = 'UPDATE UserLoginSession SET loginStatus=1, isOnline=0 '
+            'WHERE '
+            'userName=? AND userPassword=?';
+        var s = await DBProvider.db
+            .dynamicRead(queryR, [enteredUserName, enteredUserPassword]);
+        return 1;
+      } else {
+        return 0;
+      }
     }
   }
   return saveFlag;
@@ -681,7 +754,24 @@ Future<dynamic> sendMasterLoginRequest(
   } catch (e) {
     log('master login error');
     log(e.toString());
-    saveFlag = 0;
+    if (e is SocketException) {
+      var queryT = "SELECT * FROM UserLoginSession "
+          "WHERE "
+          "userName = ? AND userPassword   = ?;";
+      var params = [enteredUserName, enteredUserPassword];
+      var r = await DBProvider.db.dynamicRead(queryT, params);
+
+      if (r != null && r.isNotEmpty && r.length == 1) {
+        var queryR = 'UPDATE UserLoginSession SET loginStatus=1, isOnline=0 '
+            'WHERE '
+            'userName=? AND userPassword=?';
+        var s = await DBProvider.db
+            .dynamicRead(queryR, [enteredUserName, enteredUserPassword]);
+        return 1;
+      } else {
+        return 0;
+      }
+    }
   }
   return saveFlag;
 }

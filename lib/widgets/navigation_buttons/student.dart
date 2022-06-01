@@ -41,34 +41,34 @@ class StudentScreenNavigationButtons extends StatelessWidget {
               ),
             ),
           ),
-          InkWell(
-            onTap: () {
-              if (kDebugMode) {
-                print("Navigate to attendance screen");
-              }
-            },
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.60,
-              height: MediaQuery.of(context).size.height * 0.05,
-              margin: const EdgeInsets.symmetric(
-                vertical: 4.0,
-              ),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.purpleAccent,
-                borderRadius: BorderRadius.circular(
-                  10.0,
-                ),
-              ),
-              child: const Text(
-                "Attendance",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
+          // InkWell(
+          //   onTap: () {
+          //     if (kDebugMode) {
+          //       print("Navigate to attendance screen");
+          //     }
+          //   },
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.width * 0.60,
+          //     height: MediaQuery.of(context).size.height * 0.05,
+          //     margin: const EdgeInsets.symmetric(
+          //       vertical: 4.0,
+          //     ),
+          //     alignment: Alignment.center,
+          //     decoration: BoxDecoration(
+          //       color: Colors.purpleAccent,
+          //       borderRadius: BorderRadius.circular(
+          //         10.0,
+          //       ),
+          //     ),
+          //     child: const Text(
+          //       "Attendance",
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //         fontWeight: FontWeight.bold,
+          //       ),
+          //     ),
+          //   ),
+          // ),
           InkWell(
             onTap: () {
               if (kDebugMode) {

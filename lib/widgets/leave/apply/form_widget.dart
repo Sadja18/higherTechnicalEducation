@@ -1,10 +1,15 @@
+import 'dart:developer';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../helpers/controllers/common/user_session_db_requests.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+
+import '../../common/date_select.dart';
 
 class ApplyForLeaveWidget extends StatefulWidget {
   final String userType;
@@ -21,6 +26,9 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
   final ImagePicker _picker = ImagePicker();
   late File _image;
   String _image64Code = "";
+  String _selectedEndDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String _selectedStartDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  double dateDiff = DateTime.now().difference(DateTime.now()).inHours / 24;
 
   void uploadedImagePreview() async {
     return showDialog(
@@ -145,6 +153,194 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
     }
   }
 
+  double dateDiffCalc() {
+    var to = DateTime.parse(_selectedEndDate);
+    var from = DateTime.parse(_selectedStartDate);
+    var dateDifference = (to.difference(from).inHours / 24);
+    // if(dateDifference)
+    dateDifference = dateDifference + 1;
+    setState(() {
+      dateDiff = dateDifference;
+    });
+    return dateDifference;
+  }
+
+  void startDateSelector(String? selectedDate) {
+    setState(() {
+      _selectedStartDate = selectedDate!;
+    });
+    dateDiffCalc();
+  }
+
+  void endDateSelector(String? selectedDate) {
+    setState(() {
+      _selectedEndDate = selectedDate!;
+    });
+    dateDiffCalc();
+  }
+
+  Widget showAttachment() {
+    return FutureBuilder(
+        future: whichUserLoggedIn(),
+        builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox(
+              height: 0,
+            );
+          } else {
+            if (snapshot.hasError ||
+                snapshot.hasData != true ||
+                snapshot.data == null ||
+                [1, 2, 3, 4, 5, 6].contains(snapshot.data) == false ||
+                snapshot.data == false) {
+              return const SizedBox(
+                height: 0,
+              );
+            } else {
+              var userType = snapshot.data;
+              switch (userType) {
+                case 6:
+                  return tableViewField(
+                    "Attachment:",
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Table(
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FractionColumnWidth(0.40),
+                          1: FractionColumnWidth(0.40)
+                        },
+                        children: [
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          getImagefromGallery();
+                                        },
+                                        child: const Icon(
+                                          Icons.browse_gallery_outlined,
+                                          size: 35,
+                                          color: Colors.purple,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4.0,
+                                      ),
+                                      child: InkWell(
+                                        onTap: () {
+                                          getImageFromCamera();
+                                        },
+                                        child: const Icon(
+                                          Icons.add_a_photo_outlined,
+                                          size: 35,
+                                          color: Colors.purple,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TableCell(
+                                child: (_image64Code == "")
+                                    ? const SizedBox(
+                                        height: 0,
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          if (kDebugMode) {
+                                            print("Show Preview");
+                                          }
+                                          uploadedImagePreview();
+                                        },
+                                        child: const Text(
+                                          "Preview",
+                                          style: TextStyle(
+                                            color: Colors.deepPurple,
+                                          ),
+                                        ),
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                default:
+                  return const SizedBox(
+                    height: 0,
+                  );
+              }
+            }
+          }
+        });
+  }
+
+  Widget showLeaveType() {
+    return FutureBuilder(
+      future: whichUserLoggedIn(),
+      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.hasError ||
+            snapshot.hasData != true ||
+            snapshot.data == null ||
+            snapshot.data == false ||
+            [1, 2, 3, 4, 5, 6].contains(snapshot.data) == false) {
+          return const SizedBox(
+            height: 0,
+          );
+        } else {
+          return tableViewField(
+              "Leave Type", const Text("Dropdown for leave types"));
+        }
+      },
+    );
+  }
+
+  Widget showDays() {
+    return FutureBuilder(
+      future: whichUserLoggedIn(),
+      builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox(
+            height: 0,
+          );
+        } else {
+          if (snapshot.hasError ||
+              snapshot.hasData != true ||
+              snapshot.data == null ||
+              [1, 2, 3, 4, 5, 6].contains(snapshot.data) == false ||
+              snapshot.data == false) {
+            return const SizedBox(
+              height: 0,
+            );
+          } else {
+            if (snapshot.data == 3) {
+              if (dateDiff == 0.0) {
+                return tableViewField(
+                    "Days", const Text("Dropdown for leave _session"));
+              } else {
+                return tableViewField("Days", Text("${dateDiff + 1}"));
+              }
+            } else {
+              return const SizedBox(
+                height: 0,
+              );
+            }
+          }
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var statusBarHeight = MediaQuery.of(context).padding.top;
@@ -164,16 +360,17 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
             "From:",
             Container(
               alignment: Alignment.centerLeft,
-              child: const Text("From Date"),
+              child: DateShowNew(dateSelector: startDateSelector),
             ),
           ),
           tableViewField(
             "To:",
             Container(
               alignment: Alignment.centerLeft,
-              child: const Text("To Date"),
+              child: DateShowNew(dateSelector: endDateSelector),
             ),
           ),
+          showLeaveType(),
           tableViewField(
               textFieldName(),
               Container(
@@ -205,80 +402,8 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
                   },
                 ),
               )),
-          tableViewField(
-            "Attachment:",
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Table(
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FractionColumnWidth(0.40),
-                  1: FractionColumnWidth(0.40)
-                },
-                children: [
-                  TableRow(
-                    children: [
-                      TableCell(
-                        child: Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 4.0,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  getImagefromGallery();
-                                },
-                                child: const Icon(
-                                  Icons.browse_gallery_outlined,
-                                  size: 35,
-                                  color: Colors.purple,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 4.0,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  getImageFromCamera();
-                                },
-                                child: const Icon(
-                                  Icons.add_a_photo_outlined,
-                                  size: 35,
-                                  color: Colors.purple,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      TableCell(
-                        child: (_image64Code == "")
-                            ? const SizedBox(
-                                height: 0,
-                              )
-                            : InkWell(
-                                onTap: () {
-                                  if (kDebugMode) {
-                                    print("Show Preview");
-                                  }
-                                  uploadedImagePreview();
-                                },
-                                child: const Text(
-                                  "Preview",
-                                  style: TextStyle(
-                                    color: Colors.deepPurple,
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+          showDays(),
+          showAttachment(),
           Container(
             margin: const EdgeInsets.symmetric(
               vertical: 15.0,
@@ -306,6 +431,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
                   print("reason submitted");
                   var reason = _reasonController.text;
                   print(reason);
+                  log(dateDiff.toString());
                 }
               },
             ),

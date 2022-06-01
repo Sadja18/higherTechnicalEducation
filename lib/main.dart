@@ -46,8 +46,11 @@ class MyApp extends StatelessWidget {
               } else {
                 if ([1, 2, 3, 4, 5, 6].contains(snapshot.data)) {
                   // return MasterStaffAttendanceScreen();
-                  return AttendanceScreenFacultyMode();
-                  // return DashboardScreen();
+                  // return AttendanceScreenFacultyMode();
+                  // return FacultyLeaveScreen();
+                  return DashboardScreen();
+                  // return MasterApproveFacultyLeaveScreen();
+                  // return HeadLeaveScreen();
                 } else {
                   return const TestScreen();
                 }

@@ -4,7 +4,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
+  sdk: ">=2.16.2 <3.0.2"
 
 dependencies:
   flutter:
@@ -20,6 +20,8 @@ dependencies:
   table_sticky_headers: ^2.0.0
   syncfusion_flutter_calendar: ^20.1.50
   image_picker: ^0.8.5
+  # charts_flutter: ^0.12.0
+  syncfusion_flutter_charts: ^20.1.57
 
 dev_dependencies:
   flutter_test:

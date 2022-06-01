@@ -25,13 +25,13 @@ class _ClassSelectorState extends State<ClassSelector> {
       courseId = widget.courseId;
     });
     super.initState();
-    classFuture = getClassesForCourseId(courseId);
+    classFuture = getClassesForCourseId(widget.courseId);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getClassesForCourseId(courseId),
+      future: classFuture,
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(

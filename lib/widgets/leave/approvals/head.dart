@@ -42,8 +42,8 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
       height: 0,
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        border: Border.all(),
-      ),
+          // border: Border.all(),
+          ),
     );
   }
 
@@ -539,8 +539,8 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.55,
       decoration: BoxDecoration(
-        border: Border.all(),
-      ),
+          // border: Border.all(),
+          ),
       child: StickyHeadersTable(
         initialScrollOffsetX: 0.0,
         initialScrollOffsetY: verticalRowScrollOffset(),

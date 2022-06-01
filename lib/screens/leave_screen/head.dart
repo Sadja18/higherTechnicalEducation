@@ -68,34 +68,35 @@ class HeadLeaveScreen extends StatelessWidget {
           children: [
             Container(
               alignment: Alignment.topCenter,
-              child: FutureBuilder(
-                  future: getStudentLeaveRequestsFromServerHeadMode(),
-                  builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-                    if (kDebugMode) {
-                      log('fetch student leaves');
-                      log(snapshot.hasData.toString());
-                    }
-                    if (snapshot.hasError) {
-                      return const SizedBox(
-                        height: 0,
-                      );
-                    } else {
-                      if (snapshot.hasData) {
-                        if (snapshot.data == null || snapshot.data.isEmpty) {
-                          return const SizedBox(
-                            height: 0,
-                          );
-                        } else {
-                          var studentLeaveRequests = snapshot.data;
-                          return Text(studentLeaveRequests.toString());
-                        }
-                      } else {
-                        return const SizedBox(
-                          height: 0,
-                        );
-                      }
-                    }
-                  }),
+              child: Text("Some data"),
+              // FutureBuilder(
+              //     future: getStudentLeaveRequestsFromServerHeadMode(),
+              //     builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+              //       if (kDebugMode) {
+              //         log('fetch student leaves');
+              //         log(snapshot.hasData.toString());
+              //       }
+              //       if (snapshot.hasError) {
+              //         return const SizedBox(
+              //           height: 0,
+              //         );
+              //       } else {
+              //         if (snapshot.hasData) {
+              //           if (snapshot.data == null || snapshot.data.isEmpty) {
+              //             return const SizedBox(
+              //               height: 0,
+              //             );
+              //           } else {
+              //             var studentLeaveRequests = snapshot.data;
+              //             return Text(studentLeaveRequests.toString());
+              //           }
+              //         } else {
+              //           return const SizedBox(
+              //             height: 0,
+              //           );
+              //         }
+              //       }
+              //     }),
             ),
             Container(
               alignment: Alignment.topCenter,
@@ -110,6 +111,9 @@ class HeadLeaveScreen extends StatelessWidget {
                       return const Text("No Leave Requests");
                     } else {
                       var leaveRequests = snapshot.data;
+                      if (leaveRequests.isNotEmpty && kDebugMode) {
+                        print("faculty leaves");
+                      }
                       return ApproveLeaveWidgetHead(
                           leaveRequests: leaveRequests);
                     }

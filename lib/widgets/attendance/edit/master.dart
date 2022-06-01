@@ -33,10 +33,12 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
     var empId = members[rowIndex]['employeeId'];
     if (absenteeMemberData[empId] && rowsTapped.contains(rowIndex)) {
       return Colors.red;
-    } else if (!absenteeMemberData[empId] && rowsTapped.contains(rowIndex)) {
+    }
+    // else if (!absenteeMemberData[empId] && rowsTapped.contains(rowIndex)) {
+    //   return Colors.green;
+    // }
+    else {
       return Colors.green;
-    } else {
-      return Colors.blue;
     }
   }
 

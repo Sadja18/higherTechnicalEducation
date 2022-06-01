@@ -155,11 +155,11 @@ Future<dynamic> getLoggedInUserName() async {
         //   return "parent";
         case 6:
           var val = await DBProvider.db.dynamicRead(
-              "SELECT studentName FROM Student ",
-              // "WHERE userId = (SELECT userId FROM UserLoginSession WHERE loginStatus=1;)",
+              "SELECT studentName FROM Student "
+              "WHERE userId = (SELECT userId FROM UserLoginSession WHERE loginStatus=1);",
               []);
           if (kDebugMode) {
-            log(val.toString());
+            // log(val.toString());
           }
           nameOfUser = val[0]['studentName'];
           return nameOfUser;

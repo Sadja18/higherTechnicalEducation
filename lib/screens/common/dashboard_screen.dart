@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
+// import 'dart:developer';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+// import 'package:syncfusion_flutter_charts/charts.dart';
+
 import '../../widgets/common/buttons/logout.dart';
 import '../../widgets/navigation_buttons/faculty.dart';
 import '../../widgets/navigation_buttons/head.dart';
@@ -13,8 +14,12 @@ import '../../widgets/navigation_buttons/nt_staff.dart';
 import '../../widgets/navigation_buttons/parent.dart';
 import '../../widgets/common/user_profile_card.dart';
 import '../../widgets/navigation_buttons/student.dart';
+import '../../widgets/dashboard/student.dart';
 import '../../helpers/controllers/common/user_session_db_requests.dart';
-import '../../services/database/common/tests.dart';
+import '../../services/connection/student_mode_fetches.dart';
+
+// import '../../services/database/common/tests.dart';
+// import 'package:charts_flutter/flutter.dart' as charts;
 
 class DashboardScreen extends StatelessWidget {
   static const routeName = "screen-dashboard";
@@ -165,34 +170,55 @@ class DashboardScreen extends StatelessWidget {
                     snap.hasData == true &&
                     snap.data != null &&
                     snap.data != "") {
-                  return Table(
-                    columnWidths: const <int, TableColumnWidth>{
-                      0: FractionColumnWidth(0.50),
-                      1: FractionColumnWidth(0.50),
-                    },
-                    defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                    children: [
-                      TableRow(
-                        children: [
-                          TableCell(
-                            child: Image(
-                              image: Image.memory(const Base64Decoder()
-                                      .convert(profilePicString))
-                                  .image,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                          TableCell(
-                            child: Text(
-                              'Welcome, \n ${snap.data}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                  return SizedBox(
+                    width: MediaQuery.of(ctx).size.width * 0.80,
+                    child: Table(
+                      // columnWidths: const <int, TableColumnWidth>{
+                      // 0: FractionColumnWidth(0.50),
+                      // 1: FractionColumnWidth(0.50),
+                      // },
+                      defaultVerticalAlignment:
+                          TableCellVerticalAlignment.middle,
+                      children: [
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: Center(
+                                child: Text(
+                                  'Welcome, \n ${snap.data}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: SizedBox(
+                                // decoration: BoxDecoration(
+                                //   color: Colors.red,
+                                // ),
+                                width: MediaQuery.of(ctx).size.width * 0.12,
+                                child: ClipOval(
+                                  child: Image(
+                                    image: Image.memory(const Base64Decoder()
+                                            .convert(profilePicString))
+                                        .image,
+                                    fit: BoxFit.fill,
+                                    height:
+                                        MediaQuery.of(ctx).size.height * 0.40,
+                                    width: MediaQuery.of(ctx).size.width * 0.05,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   );
                 } else {
                   return const SizedBox(
@@ -297,6 +323,111 @@ class DashboardScreen extends StatelessWidget {
     //     });
   }
 
+  Widget rollerWidget(context) {
+    // return FutureBuilder(builder: (BuildContext ctx, as))
+    // return
+    var someVar = 123 + 12;
+    // double overAll = 51;
+    return FutureBuilder(
+        future: whichUserLoggedIn(),
+        builder: (BuildContext ctxt, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          } else {
+            if (snapshot.hasError ||
+                snapshot.hasData != true ||
+                snapshot.data == null ||
+                snapshot.data == false) {
+              return const SizedBox(
+                height: 0,
+              );
+            } else {
+              var userType = snapshot.data;
+              switch (userType) {
+                case 6:
+                  return FutureBuilder(
+                    future: fetchSemesterAttendanceForCurrentStudent(),
+                    builder: (BuildContext c, AsyncSnapshot s) {
+                      if (s.connectionState == ConnectionState.waiting) {
+                        return const SizedBox(
+                          child: CircularProgressIndicator.adaptive(),
+                        );
+                      } else {
+                        if (s.hasError ||
+                            s.hasData != true ||
+                            s.data == null ||
+                            s.data == false ||
+                            s.data.isEmpty) {
+                          return const SizedBox(
+                            height: 0,
+                          );
+                        } else {
+                          var values = s.data;
+                          var overall = values['overall'];
+                          double overAll = 0;
+                          if (overall != null && overall != '') {
+                            overAll = double.parse(
+                                overall[0].toString().split("%")[0].toString());
+                          }
+                          // values.removeWhere((key, val){key=='overall'});
+                          return Expanded(
+                            child: Container(
+                              alignment: Alignment.topCenter,
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Colors.blueGrey.shade400,
+                              ),
+                              child: Table(
+                                columnWidths: const {
+                                  0: FractionColumnWidth(0.40),
+                                  1: FractionColumnWidth(0.60),
+                                },
+                                defaultVerticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                children: [
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                        child: overall != null || overall != ""
+                                            ? AttendanceOverAllCircularChart(
+                                                subjectName: "Overall",
+                                                presentPercentage: overAll,
+                                              )
+                                            : const SizedBox(
+                                                height: 0,
+                                              ),
+                                      ),
+                                      TableCell(
+                                        child: values.keys.toList().length > 1
+                                            ? AttendanceSubjectWise(
+                                                attendanceMap: values)
+                                            : const SizedBox(
+                                                height: 0,
+                                              ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  );
+                default:
+                  return const SizedBox(
+                    height: 0,
+                  );
+              }
+            }
+          }
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var statusBarHeight = MediaQuery.of(context).padding.top;
@@ -335,16 +466,13 @@ class DashboardScreen extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.topCenter,
-        decoration: const BoxDecoration(),
+        decoration: BoxDecoration(
+          color: Colors.blueGrey.shade100,
+        ),
         child: Column(
           children: [
             homeHeader(),
-            // OutlinedButton(
-            //   onPressed: () {
-            //     readTablesInDB();
-            //   },
-            //   child: const Text("Test"),
-            // ),
+            rollerWidget(context),
           ],
         ),
       ),
