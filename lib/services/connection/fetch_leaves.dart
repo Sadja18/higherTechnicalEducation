@@ -313,83 +313,83 @@ Future<dynamic> getStudentLeaveRequestsFromServerHeadMode() async {
     if (kDebugMode) {
       log('sending head fetch student leave requests');
     }
-    // var response = await http.post(
-    //   Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentLeave'),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(<String, String>{
-    //     'userName': userName,
-    //     'userPassword': userPassword,
-    //     'dbname': 'college',
-    //     "collegeId": "13",
-    //     'str': str
-    //   }),
-    // );
-    // if (kDebugMode) {
-    //   log('student leave requests u=in head mode');
-    //   log(response.statusCode.toString());
-    // }
+    var response = await http.post(
+      Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentLeave'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'userName': userName,
+        'userPassword': userPassword,
+        'dbname': 'college',
+        "collegeId": "13",
+        'str': str
+      }),
+    );
+    if (kDebugMode) {
+      log('student leave requests u=in head mode');
+      log(response.statusCode.toString());
+    }
 
-    // if (response.statusCode == 200) {
-    //   if (kDebugMode) {
-    //     log('sending head fetch student leave requests');
-    //     // log(response.body);
-    //   }
-    //   var resp = jsonDecode(response.body);
-    //   if (resp['message'].toString().toLowerCase() == 'success') {
-    //     var data = resp['data'];
-    //     var leaveRequestList = [];
-    //     if (kDebugMode) {
-    //       log("sucesdagsrjbs,j");
-    //       log(leaveRequestList.toString());
-    //     }
-    //     for (var leaveRequest in data) {
-    //       var leaveId = leaveRequest['leaveId'];
-    //       var leaveStudentUserId = leaveRequest['leaveStudentUserId'];
-    //       var leaveStudentClassId = leaveRequest['leaveStudentClassId'];
-    //       var leaveStudentClassName = leaveRequest['leaveStudentClassName'];
-    //       var leaveStudentDeptId = leaveRequest['leaveStudentDeptId'];
-    //       var leaveStudentDeptName = leaveRequest['leaveStudentDeptName'];
-    //       var leaveStudentCollegeId = leaveRequest['leaveStudentCollegeId'];
-    //       var fName = leaveRequest['leaveStudentFirstName'];
-    //       var mName = leaveRequest['leaveStudentMiddleName'];
-    //       var lName = leaveRequest['leaveStudentLastName'];
-    //       var leaveStudentName = fName + " " + mName + " " + lName;
-    //       var leaveFromDate = leaveRequest['leaveFromDate'];
-    //       var leaveToDate = leaveRequest['leaveToDate'];
-    //       var leaveReason = leaveRequest['leaveReason'];
-    //       var leaveDays = leaveRequest['leaveDays'];
-    //       var leaveAttachment = leaveRequest['leaveAttachment'];
-    //       var leaveStatus = leaveRequest['leaveStatus'];
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        log('sending head fetch student leave requests');
+        // log(response.body);
+      }
+      var resp = jsonDecode(response.body);
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var data = resp['data'];
+        var leaveRequestList = [];
+        if (kDebugMode) {
+          log("sucesdagsrjbs,j");
+          log(leaveRequestList.toString());
+        }
+        for (var leaveRequest in data) {
+          var leaveId = leaveRequest['leaveId'];
+          var leaveStudentUserId = leaveRequest['leaveStudentUserId'];
+          var leaveStudentClassId = leaveRequest['leaveStudentClassId'];
+          var leaveStudentClassName = leaveRequest['leaveStudentClassName'];
+          var leaveStudentDeptId = leaveRequest['leaveStudentDeptId'];
+          var leaveStudentDeptName = leaveRequest['leaveStudentDeptName'];
+          var leaveStudentCollegeId = leaveRequest['leaveStudentCollegeId'];
+          var fName = leaveRequest['leaveStudentFirstName'];
+          var mName = leaveRequest['leaveStudentMiddleName'];
+          var lName = leaveRequest['leaveStudentLastName'];
+          var leaveStudentName = fName + " " + mName + " " + lName;
+          var leaveFromDate = leaveRequest['leaveFromDate'];
+          var leaveToDate = leaveRequest['leaveToDate'];
+          var leaveReason = leaveRequest['leaveReason'];
+          var leaveDays = leaveRequest['leaveDays'];
+          var leaveAttachment = leaveRequest['leaveAttachment'];
+          var leaveStatus = leaveRequest['leaveStatus'];
 
-    //       var dbEntry = <String, Object>{
-    //         "leaveId": leaveId,
-    //         "leaveStudentUserId": leaveStudentUserId,
-    //         "leaveStudentClassId": leaveStudentClassId,
-    //         "leaveStudentClassName": leaveStudentClassName,
-    //         "leaveStudentDeptId": leaveStudentDeptId,
-    //         "leaveStudentDeptName": leaveStudentDeptName,
-    //         "leaveStudentCollegeId": leaveStudentCollegeId,
-    //         "leaveStudentName": leaveStudentName,
-    //         "leaveFromDate": leaveFromDate,
-    //         "leaveToDate": leaveToDate,
-    //         "leaveReason": leaveReason,
-    //         "leaveDays": leaveDays,
-    //         "leaveAttachement": leaveAttachment,
-    //         "leaveStatus": leaveStatus,
-    //       };
+          var dbEntry = <String, Object>{
+            "leaveId": leaveId,
+            "leaveStudentUserId": leaveStudentUserId,
+            "leaveStudentClassId": leaveStudentClassId,
+            "leaveStudentClassName": leaveStudentClassName,
+            "leaveStudentDeptId": leaveStudentDeptId,
+            "leaveStudentDeptName": leaveStudentDeptName,
+            "leaveStudentCollegeId": leaveStudentCollegeId,
+            "leaveStudentName": leaveStudentName,
+            "leaveFromDate": leaveFromDate,
+            "leaveToDate": leaveToDate,
+            "leaveReason": leaveReason,
+            "leaveDays": leaveDays,
+            "leaveAttachement": leaveAttachment,
+            "leaveStatus": leaveStatus,
+          };
 
-    //       if (kDebugMode) {
-    //         log("dbEntry");
-    //         log(dbEntry.toString());
-    //       }
+          if (kDebugMode) {
+            log("dbEntry");
+            log(dbEntry.toString());
+          }
 
-    //       await DBProvider.db.dynamicInsert("StudentLeaveRequest", dbEntry);
-    //     }
-    //     // return leaveRequestList;
-    //   }
-    // }
+          await DBProvider.db.dynamicInsert("StudentLeaveRequest", dbEntry);
+        }
+        // return leaveRequestList;
+      }
+    }
 
     var params = ['toapprove'];
     var dbQuery = "SELECT * FROM StudentLeaveRequest "

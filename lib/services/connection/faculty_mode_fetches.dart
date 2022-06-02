@@ -31,97 +31,97 @@ Future<dynamic> getCoursesFromServerFacultyMode() async {
       print('sending fetch courses request');
     }
 
-    // var response = await http.post(
-    //     Uri.parse("$baseUriLocal$facultyUriStart$facultyUriFetchCourses"),
-    //     headers: <String, String>{
-    //       'Content-Type': 'application/json; charset=UTF-8',
-    //     },
-    //     body: jsonEncode(requestBodyMap));
-    // if (kDebugMode) {
-    //   print('receiving fetch courses response');
-    //   // log(response.statusCode.toString());
-    // }
+    var response = await http.post(
+        Uri.parse("$baseUriLocal$facultyUriStart$facultyUriFetchCourses"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBodyMap));
+    if (kDebugMode) {
+      print('receiving fetch courses response');
+      // log(response.statusCode.toString());
+    }
 
-    // if (response.statusCode == 200) {
-    //   var resp = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      var resp = jsonDecode(response.body);
 
-    //   if (resp['message'].toString().toLowerCase() == 'success') {
-    //     var courseArts = resp['data']['coursesArts'];
-    //     // if (kDebugMode) {
-    //     //   log(courseArts[0].toString());
-    //     // }
-    //     for (var i = 0; i < courseArts.length; i++) {
-    //       var course = courseArts[i];
-    //       if (kDebugMode) {
-    //         log("course art ${i.toString()}");
-    //         log(course.toString());
-    //       }
-    //       var courseId = course['id'];
-    //       var courseName = course['name'].toString();
-    //       var courseCode = (course['code'] != false && course['code'] != null)
-    //           ? course['code'].toString()
-    //           : course['name'].toString();
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var courseArts = resp['data']['coursesArts'];
+        // if (kDebugMode) {
+        //   log(courseArts[0].toString());
+        // }
+        for (var i = 0; i < courseArts.length; i++) {
+          var course = courseArts[i];
+          if (kDebugMode) {
+            log("course art ${i.toString()}");
+            log(course.toString());
+          }
+          var courseId = course['id'];
+          var courseName = course['name'].toString();
+          var courseCode = (course['code'] != false && course['code'] != null)
+              ? course['code'].toString()
+              : course['name'].toString();
 
-    //       var courseDuration = course['duration'];
-    //       var collegeId = course['college_id'][0];
-    //       var noDept = 'yes';
+          var courseDuration = course['duration'];
+          var collegeId = course['college_id'][0];
+          var noDept = 'yes';
 
-    //       Map<String, Object> dbEntry = {
-    //         "courseId": courseId,
-    //         "courseName": courseName,
-    //         "courseCode": courseCode,
-    //         "courseDuration": courseDuration,
-    //         "collegeId": collegeId,
-    //         "noDept": noDept,
-    //       };
-    //       // if (kDebugMode) {
-    //       //   log(dbEntry.toString());
-    //       // }
+          Map<String, Object> dbEntry = {
+            "courseId": courseId,
+            "courseName": courseName,
+            "courseCode": courseCode,
+            "courseDuration": courseDuration,
+            "collegeId": collegeId,
+            "noDept": noDept,
+          };
+          // if (kDebugMode) {
+          //   log(dbEntry.toString());
+          // }
 
-    //       await DBProvider.db.dynamicInsert("Course", dbEntry);
-    //     }
+          await DBProvider.db.dynamicInsert("Course", dbEntry);
+        }
 
-    //     var courseAlt = resp['data']['coursesAlt'];
-    //     // if (kDebugMode) {
-    //     //   log(courseAlt[0].toString());
-    //     // }
-    //     for (var i = 0; i < courseAlt.length; i++) {
-    //       var course = courseAlt[i];
-    //       if (kDebugMode) {
-    //         log("course alt ${i.toString()}");
-    //         log(course.toString());
-    //       }
-    //       var courseId = course['id'];
-    //       var courseName = course['name'].toString();
-    //       var courseCode = (course['code'] != false && course['code'] != null)
-    //           ? course['code'].toString()
-    //           : course['name'].toString();
-    //       var courseDuration = course['duration'];
-    //       var collegeId = course['college_id'][0];
-    //       var noDept = 'no';
-    //       var dept = course['department_id'];
+        var courseAlt = resp['data']['coursesAlt'];
+        // if (kDebugMode) {
+        //   log(courseAlt[0].toString());
+        // }
+        for (var i = 0; i < courseAlt.length; i++) {
+          var course = courseAlt[i];
+          if (kDebugMode) {
+            log("course alt ${i.toString()}");
+            log(course.toString());
+          }
+          var courseId = course['id'];
+          var courseName = course['name'].toString();
+          var courseCode = (course['code'] != false && course['code'] != null)
+              ? course['code'].toString()
+              : course['name'].toString();
+          var courseDuration = course['duration'];
+          var collegeId = course['college_id'][0];
+          var noDept = 'no';
+          var dept = course['department_id'];
 
-    //       Map<String, Object> dbEntry = {
-    //         "courseId": courseId,
-    //         "courseName": courseName,
-    //         "courseCode": courseCode,
-    //         "courseDuration": courseDuration,
-    //         "collegeId": collegeId,
-    //         "noDept": noDept,
-    //       };
-    //       if (dept != false && dept != null) {
-    //         var deptId = course['department_id'][0];
-    //         var deptName = course['department_id'][1];
-    //         dbEntry["deptId"] = deptId;
-    //         dbEntry["deptName"] = deptName;
-    //       }
-    //       // if (kDebugMode) {
-    //       //   log(dbEntry.toString());
-    //       // }
-    //       await DBProvider.db.dynamicInsert("Course", dbEntry);
-    //     }
-    //   }
-    // }
+          Map<String, Object> dbEntry = {
+            "courseId": courseId,
+            "courseName": courseName,
+            "courseCode": courseCode,
+            "courseDuration": courseDuration,
+            "collegeId": collegeId,
+            "noDept": noDept,
+          };
+          if (dept != false && dept != null) {
+            var deptId = course['department_id'][0];
+            var deptName = course['department_id'][1];
+            dbEntry["deptId"] = deptId;
+            dbEntry["deptName"] = deptName;
+          }
+          // if (kDebugMode) {
+          //   log(dbEntry.toString());
+          // }
+          await DBProvider.db.dynamicInsert("Course", dbEntry);
+        }
+      }
+    }
 
     String query = "SELECT courseCode FROM Course "
         "WHERE collegeId=(SELECT collegeId FROM Faculty WHERE userId = "
@@ -193,70 +193,70 @@ Future<dynamic> getClassesForCourseId(int courseId) async {
       log(requestBodyMap.toString());
     }
 
-    // var response = await http.post(
-    //   Uri.parse(
-    //       "$baseUriLocal$facultyUriStart$facultyUriFetchClassesForCourseId"),
-    //   headers: <String, String>{
-    //     'Content-Type': 'application/json; charset=UTF-8',
-    //   },
-    //   body: jsonEncode(requestBodyMap),
-    // );
+    var response = await http.post(
+      Uri.parse(
+          "$baseUriLocal$facultyUriStart$facultyUriFetchClassesForCourseId"),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBodyMap),
+    );
 
-    // if (response.statusCode == 200) {
-    //   if (kDebugMode) {
-    //     log(response.body);
-    //   }
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        log(response.body);
+      }
 
-    //   var resp = jsonDecode(response.body);
+      var resp = jsonDecode(response.body);
 
-    //   if (resp['message'].toString().toLowerCase() == 'success') {
-    //     var data = resp['data'];
+      if (resp['message'].toString().toLowerCase() == 'success') {
+        var data = resp['data'];
 
-    //     for (var i = 0; i < data.length; i++) {
-    //       var classRecord = data[i];
+        for (var i = 0; i < data.length; i++) {
+          var classRecord = data[i];
 
-    //       var college = classRecord['college_id'];
-    //       var dept = classRecord['department_id'];
-    //       var year = classRecord['year_id'];
-    //       var sem = classRecord['sem_id'];
+          var college = classRecord['college_id'];
+          var dept = classRecord['department_id'];
+          var year = classRecord['year_id'];
+          var sem = classRecord['sem_id'];
 
-    //       if (college != null &&
-    //           college != false &&
-    //           college.isNotEmpty &&
-    //           dept != null &&
-    //           dept != false &&
-    //           dept.isNotEmpty &&
-    //           year != null &&
-    //           year != false &&
-    //           year.isNotEmpty &&
-    //           sem != null &&
-    //           sem != false &&
-    //           sem.isNotEmpty) {
-    //         await DBProvider.db.dynamicInsert("Year", <String, Object>{
-    //           'yearId': year[0],
-    //           'yearName': year[1],
-    //         });
-    //         await DBProvider.db.dynamicInsert("Semester", <String, Object>{
-    //           'semId': sem[0],
-    //           'semName': sem[1],
-    //           'yearId': year[0],
-    //         });
-    //         String className = classRecord['display_name'] == false ||
-    //                 classRecord['display_name'] == null
-    //             ? classRecord['name']
-    //             : classRecord['display_name'];
-    //         Map<String, Object> dbEntry = {
-    //           'classId': classRecord['id'],
-    //           'className': className,
-    //           'courseId': courseId,
-    //           'yearId': year[0],
-    //           'semId': sem[0],
-    //         };
-    //         await DBProvider.db.dynamicInsert("Classes", dbEntry);
-    //       }
-    //     }
-    //   }
-    // }
+          if (college != null &&
+              college != false &&
+              college.isNotEmpty &&
+              dept != null &&
+              dept != false &&
+              dept.isNotEmpty &&
+              year != null &&
+              year != false &&
+              year.isNotEmpty &&
+              sem != null &&
+              sem != false &&
+              sem.isNotEmpty) {
+            await DBProvider.db.dynamicInsert("Year", <String, Object>{
+              'yearId': year[0],
+              'yearName': year[1],
+            });
+            await DBProvider.db.dynamicInsert("Semester", <String, Object>{
+              'semId': sem[0],
+              'semName': sem[1],
+              'yearId': year[0],
+            });
+            String className = classRecord['display_name'] == false ||
+                    classRecord['display_name'] == null
+                ? classRecord['name']
+                : classRecord['display_name'];
+            Map<String, Object> dbEntry = {
+              'classId': classRecord['id'],
+              'className': className,
+              'courseId': courseId,
+              'yearId': year[0],
+              'semId': sem[0],
+            };
+            await DBProvider.db.dynamicInsert("Classes", dbEntry);
+          }
+        }
+      }
+    }
 
     String dbQuery = "SELECT className FROM Classes WHERE courseId = ?";
     var params = [courseId];
@@ -768,139 +768,139 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
       body: jsonEncode(requestBodyMap),
     );
 
-    // if (response.statusCode == 200) {
-    //   var res = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      var res = jsonDecode(response.body);
 
-    //   if (res['message'].toString().toLowerCase() == 'success') {
-    //     var data = res['data'];
-    //     if (data != null) {
-    //       var leaveAllocations = data['leaveAllocation'];
-    //       // if (kDebugMode) {
-    //       //   log(response.statusCode.toString());
-    //       //   log(leaveAllocations.toString());
-    //       // }
-    //       if (leaveAllocations != null && leaveAllocations.isNotEmpty) {
-    //         for (var leaveAllocation in leaveAllocations) {
-    //           if (kDebugMode) {
-    //             print("updar");
-    //             var a = "leaveAllocation['id'] " +
-    //                 leaveAllocation['id'].runtimeType.toString() +
-    //                 "\nleaveAllocation['faculty_name'] ".toString() +
-    //                 leaveAllocation['faculty_name'].runtimeType.toString() +
-    //                 "\nleaveAllocation['no_leaves'] " +
-    //                 leaveAllocation['no_leaves'].runtimeType.toString() +
-    //                 "\nleaveAllocation['pending_leaves'] " +
-    //                 leaveAllocation['pending_leaves'].runtimeType.toString() +
-    //                 "\nleaveAllocation['approved_leaves'] " +
-    //                 leaveAllocation['approved_leaves'].runtimeType.toString() +
-    //                 "\nleaveAllocation['available_leaves'] " +
-    //                 leaveAllocation['available_leaves'].runtimeType.toString() +
-    //                 "\nleaveAllocation['dept_name'] " +
-    //                 leaveAllocation['dept_name'].runtimeType.toString() +
-    //                 "\nleaveAllocation['college_id'] " +
-    //                 leaveAllocation['college_id'].runtimeType.toString() +
-    //                 "\nleaveAllocation['year'] ".toString() +
-    //                 leaveAllocation['year'].runtimeType.toString() +
-    //                 "\nleaveAllocation['leave_type']".toString() +
-    //                 leaveAllocation['leave_type'].runtimeType.toString();
-    //             print(a);
-    //           }
-    //           if (leaveAllocation['id'] != null &&
-    //               leaveAllocation['faculty_name'] != null &&
-    //               leaveAllocation['faculty_name'] != false &&
-    //               // leaveAllocation['no_leaves'] != null &&
-    //               // leaveAllocation['pending_leaves'] &&
-    //               // leaveAllocation['approved_leaves'] != null &&
-    //               // leaveAllocation['available_leaves'] != null &&
-    //               leaveAllocation['dept_name'] != null &&
-    //               leaveAllocation['dept_name'] != false &&
-    //               leaveAllocation['college_id'] != null &&
-    //               leaveAllocation['college_id'] != false &&
-    //               leaveAllocation['year'] != null &&
-    //               leaveAllocation['year'] != false &&
-    //               leaveAllocation['leave_type'] != null &&
-    //               leaveAllocation['leave_type'] != false) {
-    //             if (kDebugMode) {
-    //               print("andar");
-    //               print(response.statusCode.toString());
-    //               print("response.body");
-    //             }
-    //             var leaveAllocationId = leaveAllocation['id'];
-    //             var leaveAllocatedToFacultyId =
-    //                 leaveAllocation['faculty_name'][0];
-    //             var totalAllocatedLeaves =
-    //                 double.tryParse(leaveAllocation['no_leaves'].toString()) !=
-    //                         null
-    //                     ? double.parse(leaveAllocation['no_leaves'].toString())
-    //                     : double.parse("0");
-    //             var pendingLeaves = double.tryParse(
-    //                         leaveAllocation['pending_leaves'].toString()) !=
-    //                     null
-    //                 ? double.parse(leaveAllocation['pending_leaves'].toString())
-    //                 : double.parse("0");
-    //             var approvedLeaves = double.tryParse(
-    //                         leaveAllocation['approved_leaves'].toString()) !=
-    //                     null
-    //                 ? double.parse(
-    //                     leaveAllocation['approved_leaves'].toString())
-    //                 : double.parse("0");
-    //             var availableLeaves = double.tryParse(
-    //                         leaveAllocation['available_leaves'].toString()) !=
-    //                     null
-    //                 ? double.parse(
-    //                     leaveAllocation['available_leaves'].toString())
-    //                 : double.parse("0");
-    //             var deptId = leaveAllocation['dept_name'][0];
-    //             var yearName = leaveAllocation['year'];
-    //             var leaveTypeId = leaveAllocation['leave_type'][0];
-    //             var leaveTypeName = leaveAllocation['leave_type'][1];
-    //             var collegeId = leaveAllocation['college_id'][0];
+      if (res['message'].toString().toLowerCase() == 'success') {
+        var data = res['data'];
+        if (data != null) {
+          var leaveAllocations = data['leaveAllocation'];
+          // if (kDebugMode) {
+          //   log(response.statusCode.toString());
+          //   log(leaveAllocations.toString());
+          // }
+          if (leaveAllocations != null && leaveAllocations.isNotEmpty) {
+            for (var leaveAllocation in leaveAllocations) {
+              if (kDebugMode) {
+                print("updar");
+                var a = "leaveAllocation['id'] " +
+                    leaveAllocation['id'].runtimeType.toString() +
+                    "\nleaveAllocation['faculty_name'] ".toString() +
+                    leaveAllocation['faculty_name'].runtimeType.toString() +
+                    "\nleaveAllocation['no_leaves'] " +
+                    leaveAllocation['no_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['pending_leaves'] " +
+                    leaveAllocation['pending_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['approved_leaves'] " +
+                    leaveAllocation['approved_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['available_leaves'] " +
+                    leaveAllocation['available_leaves'].runtimeType.toString() +
+                    "\nleaveAllocation['dept_name'] " +
+                    leaveAllocation['dept_name'].runtimeType.toString() +
+                    "\nleaveAllocation['college_id'] " +
+                    leaveAllocation['college_id'].runtimeType.toString() +
+                    "\nleaveAllocation['year'] ".toString() +
+                    leaveAllocation['year'].runtimeType.toString() +
+                    "\nleaveAllocation['leave_type']".toString() +
+                    leaveAllocation['leave_type'].runtimeType.toString();
+                print(a);
+              }
+              if (leaveAllocation['id'] != null &&
+                  leaveAllocation['faculty_name'] != null &&
+                  leaveAllocation['faculty_name'] != false &&
+                  // leaveAllocation['no_leaves'] != null &&
+                  // leaveAllocation['pending_leaves'] &&
+                  // leaveAllocation['approved_leaves'] != null &&
+                  // leaveAllocation['available_leaves'] != null &&
+                  leaveAllocation['dept_name'] != null &&
+                  leaveAllocation['dept_name'] != false &&
+                  leaveAllocation['college_id'] != null &&
+                  leaveAllocation['college_id'] != false &&
+                  leaveAllocation['year'] != null &&
+                  leaveAllocation['year'] != false &&
+                  leaveAllocation['leave_type'] != null &&
+                  leaveAllocation['leave_type'] != false) {
+                if (kDebugMode) {
+                  print("andar");
+                  print(response.statusCode.toString());
+                  print("response.body");
+                }
+                var leaveAllocationId = leaveAllocation['id'];
+                var leaveAllocatedToFacultyId =
+                    leaveAllocation['faculty_name'][0];
+                var totalAllocatedLeaves =
+                    double.tryParse(leaveAllocation['no_leaves'].toString()) !=
+                            null
+                        ? double.parse(leaveAllocation['no_leaves'].toString())
+                        : double.parse("0");
+                var pendingLeaves = double.tryParse(
+                            leaveAllocation['pending_leaves'].toString()) !=
+                        null
+                    ? double.parse(leaveAllocation['pending_leaves'].toString())
+                    : double.parse("0");
+                var approvedLeaves = double.tryParse(
+                            leaveAllocation['approved_leaves'].toString()) !=
+                        null
+                    ? double.parse(
+                        leaveAllocation['approved_leaves'].toString())
+                    : double.parse("0");
+                var availableLeaves = double.tryParse(
+                            leaveAllocation['available_leaves'].toString()) !=
+                        null
+                    ? double.parse(
+                        leaveAllocation['available_leaves'].toString())
+                    : double.parse("0");
+                var deptId = leaveAllocation['dept_name'][0];
+                var yearName = leaveAllocation['year'];
+                var leaveTypeId = leaveAllocation['leave_type'][0];
+                var leaveTypeName = leaveAllocation['leave_type'][1];
+                var collegeId = leaveAllocation['college_id'][0];
 
-    //             var dbEntry = <String, Object>{
-    //               "leaveAllocationId": leaveAllocationId,
-    //               "leaveAllocatedToFacultyId": leaveAllocatedToFacultyId,
-    //               "totalAllocatedLeaves": totalAllocatedLeaves,
-    //               "pendingLeaves": pendingLeaves,
-    //               "approvedLeaves": approvedLeaves,
-    //               "availableLeaves": availableLeaves,
-    //               "deptId": deptId,
-    //               "collegeId": collegeId,
-    //               "yearName": yearName,
-    //               "leaveTypeId": leaveTypeId,
-    //               "leaveTypeName": leaveTypeName,
-    //             };
-    //             if (kDebugMode) {
-    //               log("dbentry");
-    //               log(dbEntry.toString());
-    //             }
-    //             await DBProvider.db
-    //                 .dynamicInsert("FacultyLeaveAllocation", dbEntry);
-    //           }
-    //         }
-    //       }
-    //       var leaveTypes = data['leaveTypes'];
-    //       if (leaveTypes != null && leaveTypes.isNotEmpty) {
-    //         for (var leaveType in leaveTypes) {
-    //           if (kDebugMode) {
-    //             log(leaveType.toString());
-    //           }
-    //           var leaveTypeId = leaveType['id'];
-    //           var leaveTypeName = leaveType['name'];
-    //           var isHalf = leaveType['is_half'] == true ? "true" : "false";
-    //           if (kDebugMode) {
-    //             log(leaveType.toString());
-    //           }
-    //           await DBProvider.db
-    //               .dynamicInsert("LeaveSession", <String, Object>{
-    //             "leaveTypeId": leaveTypeId,
-    //             "leaveTypeName": leaveTypeName,
-    //             "isHalf": isHalf,
-    //           });
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+                var dbEntry = <String, Object>{
+                  "leaveAllocationId": leaveAllocationId,
+                  "leaveAllocatedToFacultyId": leaveAllocatedToFacultyId,
+                  "totalAllocatedLeaves": totalAllocatedLeaves,
+                  "pendingLeaves": pendingLeaves,
+                  "approvedLeaves": approvedLeaves,
+                  "availableLeaves": availableLeaves,
+                  "deptId": deptId,
+                  "collegeId": collegeId,
+                  "yearName": yearName,
+                  "leaveTypeId": leaveTypeId,
+                  "leaveTypeName": leaveTypeName,
+                };
+                if (kDebugMode) {
+                  log("dbentry");
+                  log(dbEntry.toString());
+                }
+                await DBProvider.db
+                    .dynamicInsert("FacultyLeaveAllocation", dbEntry);
+              }
+            }
+          }
+          var leaveTypes = data['leaveTypes'];
+          if (leaveTypes != null && leaveTypes.isNotEmpty) {
+            for (var leaveType in leaveTypes) {
+              if (kDebugMode) {
+                log(leaveType.toString());
+              }
+              var leaveTypeId = leaveType['id'];
+              var leaveTypeName = leaveType['name'];
+              var isHalf = leaveType['is_half'] == true ? "true" : "false";
+              if (kDebugMode) {
+                log(leaveType.toString());
+              }
+              await DBProvider.db
+                  .dynamicInsert("LeaveSession", <String, Object>{
+                "leaveTypeId": leaveTypeId,
+                "leaveTypeName": leaveTypeName,
+                "isHalf": isHalf,
+              });
+            }
+          }
+        }
+      }
+    }
 
     var thisYearName = DateFormat("yyyy").format(DateTime.parse(startDate));
     if (kDebugMode) {
