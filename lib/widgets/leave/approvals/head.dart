@@ -41,7 +41,7 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
     return Container(
       height: 0,
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           // border: Border.all(),
           ),
     );
@@ -695,6 +695,208 @@ class _ApproveStudentLeaveHeadWidgetState
     return formatted;
   }
 
+  void showUserInputDialog(rowIndex) async {
+    if (kDebugMode) {
+      log(dateFormatter(leaveRequests[rowIndex]['leaveFromDate']));
+      log(dateFormatter(leaveRequests[rowIndex]['leaveToDate']));
+    }
+    return showDialog(
+        context: context,
+        builder: (BuildContext _) {
+          return AlertDialog(
+            title: Container(
+              alignment: Alignment.topCenter,
+              child: Text(
+                leaveRequests[rowIndex]['leaveStudentName'],
+              ),
+            ),
+            content: Container(
+              alignment: Alignment.topCenter,
+              width: MediaQuery.of(context).size.width * 0.70,
+              height: MediaQuery.of(context).size.height * 0.20,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 210, 98, 193),
+                    ),
+                    child: Table(
+                      columnWidths: const {
+                        0: FractionColumnWidth(0.50),
+                        1: FractionColumnWidth(0.50),
+                      },
+                      children: [
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
+                                child: const Text(
+                                  "From: ",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  1 == 2
+                                      ? "From"
+                                      : dateFormatter(leaveRequests[rowIndex]
+                                          ['leaveFromDate']),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
+                                child: const Text(
+                                  "To: ",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  1 == 2
+                                      ? "End"
+                                      : dateFormatter(leaveRequests[rowIndex]
+                                          ['leaveToDate']),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            TableCell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: MediaQuery.of(context).size.width,
+                                child: const Text(
+                                  "Reason: ",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            TableCell(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                width: MediaQuery.of(context).size.width,
+                                child: Text(
+                                  1 == 2
+                                      ? "Reason"
+                                      : leaveRequests[rowIndex]['leaveReason']
+                                          .toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  // decoration: BoxDecoration(c),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 5.0,
+                    vertical: 8.0,
+                  ),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      backgroundColor: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    leaveRequests[rowIndex]['leaveStatus'] = 'approve';
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 5.0,
+                    vertical: 8.0,
+                  ),
+                  child: const Text(
+                    "Approve",
+                    style: TextStyle(
+                      backgroundColor: Colors.green,
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    leaveRequests[rowIndex]['leaveStatus'] = 'reject';
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 5.0,
+                    vertical: 8.0,
+                  ),
+                  child: const Text(
+                    "Reject",
+                    style: TextStyle(
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   Widget rowsTitleBuilder(rowIndex) {
     return InkWell(
       onTap: () {
@@ -703,7 +905,7 @@ class _ApproveStudentLeaveHeadWidgetState
           print(leaveRequests.toString());
           print(widget.leaveRequests.toString());
         }
-        // showUserInputDialog(rowIndex);
+        showUserInputDialog(rowIndex);
       },
       child: Card(
         color: getBgColor(rowIndex),
@@ -734,9 +936,9 @@ class _ApproveStudentLeaveHeadWidgetState
                       width: MediaQuery.of(context).size.width,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        1 == 1
+                        1 == 2
                             ? "Student Name"
-                            : leaveRequests[rowIndex]['leaveStudentUserName']
+                            : leaveRequests[rowIndex]['leaveStudentName']
                                 .toString(),
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -752,7 +954,7 @@ class _ApproveStudentLeaveHeadWidgetState
                       width: MediaQuery.of(context).size.width,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        1 == 1
+                        1 == 2
                             ? "Student Dept"
                             : leaveRequests[rowIndex]['leaveStudentDeptName']
                                 .toString(),
@@ -774,34 +976,35 @@ class _ApproveStudentLeaveHeadWidgetState
                       alignment: Alignment.centerLeft,
                       child: Table(
                         columnWidths: const <int, TableColumnWidth>{
-                          0: FractionColumnWidth(0.50),
-                          1: FractionColumnWidth(0.50),
+                          // 0: FractionColumnWidth(0.50),
+                          // 0: FractionColumnWidth(0.50),
                         },
                         children: [
                           TableRow(
                             children: [
-                              TableCell(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  alignment: Alignment.centerLeft,
-                                  child: const Text(
-                                    "Class: ",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // TableCell(
+                              //   child: Container(
+                              //     width: MediaQuery.of(context).size.width,
+                              //     alignment: Alignment.centerLeft,
+                              //     child: const Text(
+                              //       "Class: ",
+                              //       style: TextStyle(
+                              //         fontWeight: FontWeight.bold,
+                              //         color: Colors.white,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+
                               TableCell(
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    1 == 1
+                                    1 == 2
                                         ? "Class Name"
                                         : leaveRequests[rowIndex]
-                                                ['leaveTypeName']
+                                                ['leaveStudentClassName']
                                             .toString(),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -848,7 +1051,7 @@ class _ApproveStudentLeaveHeadWidgetState
                                   width: MediaQuery.of(context).size.width,
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    1 == 1
+                                    1 == 2
                                         ? "Days"
                                         : leaveRequests[rowIndex]['leaveDays']
                                             .toString(),
@@ -899,7 +1102,7 @@ class _ApproveStudentLeaveHeadWidgetState
                                   alignment: Alignment.centerLeft,
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
-                                    1 == 1
+                                    1 == 2
                                         ? "From"
                                         : dateFormatter(leaveRequests[rowIndex]
                                             ['leaveFromDate']),
@@ -946,10 +1149,10 @@ class _ApproveStudentLeaveHeadWidgetState
                                   alignment: Alignment.centerLeft,
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
-                                    1 == 1
+                                    1 == 2
                                         ? "End"
-                                        : dateFormatter(leaveRequests[rowIndex]
-                                            ['leaveToDate']),
+                                        : leaveRequests[rowIndex]['leaveToDate']
+                                            .toString(),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -979,7 +1182,7 @@ class _ApproveStudentLeaveHeadWidgetState
         vertical: 6.0,
       ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.55,
+      height: MediaQuery.of(context).size.height * 0.80,
       decoration: BoxDecoration(
         border: Border.all(),
       ),
@@ -990,7 +1193,7 @@ class _ApproveStudentLeaveHeadWidgetState
         cellDimensions: CellDimensions.variableColumnWidthAndRowHeight(
           columnWidths: [],
           rowHeights:
-              List<double>.generate(leaveRequests.length, (int index) => 120),
+              List<double>.generate(leaveRequests.length, (int index) => 160),
           stickyLegendWidth: MediaQuery.of(context).size.width * 0.99,
           stickyLegendHeight: 0,
         ),
@@ -1036,8 +1239,9 @@ class _ApproveStudentLeaveHeadWidgetState
               color: Colors.purple,
               shadowColor: Colors.blueGrey,
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.55,
-                alignment: Alignment.topCenter,
+                width: MediaQuery.of(context).size.width * 0.40,
+                height: MediaQuery.of(context).size.height * 0.05,
+                alignment: Alignment.center,
                 decoration: const BoxDecoration(
                   color: Colors.purpleAccent,
                 ),

@@ -48,9 +48,10 @@ class MyApp extends StatelessWidget {
                   // return MasterStaffAttendanceScreen();
                   // return AttendanceScreenFacultyMode();
                   // return FacultyLeaveScreen();
-                  return DashboardScreen();
+                  // return DashboardScreen();
                   // return MasterApproveFacultyLeaveScreen();
                   // return HeadLeaveScreen();
+                  return HeadModeApproveStudentLeave();
                 } else {
                   return const TestScreen();
                 }
@@ -92,6 +93,12 @@ class MyApp extends StatelessWidget {
         FacultyLeaveScreen.routeName: (ctx) => FacultyLeaveScreen(),
         AttendanceScreenFacultyMode.routeName: (ctx) =>
             AttendanceScreenFacultyMode(),
+        HeadModeApproveStudentLeave.routeName: (ctx) =>
+            HeadModeApproveStudentLeave(),
+        HeadModeApproveFacultyLeave.routeName: (ctx) =>
+            HeadModeApproveFacultyLeave(),
+        HeadModeApproveNtStaffLeave.routeName: (ctx) =>
+            HeadModeApproveNtStaffLeave(),
       },
     );
   }
