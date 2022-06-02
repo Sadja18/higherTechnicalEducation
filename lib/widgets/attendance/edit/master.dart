@@ -178,7 +178,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   Widget leaveStickyTable() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.73,
+      height: MediaQuery.of(context).size.height * 0.674,
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(
         top: 5.0,
@@ -319,9 +319,9 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
               decoration: const BoxDecoration(
                 color: Colors.purpleAccent,
               ),
-              margin: const EdgeInsets.symmetric(
-                vertical: 5.0,
-              ),
+              // margin: const EdgeInsets.symmetric(
+              //   vertical: 5.0,
+              // ),
               child: const Text(
                 "Submit",
                 style: TextStyle(

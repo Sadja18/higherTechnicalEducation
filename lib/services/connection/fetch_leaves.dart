@@ -8,7 +8,8 @@ import 'package:higher/services/database/handler.dart';
 import 'package:http/http.dart' as http;
 import '../../models/uri_paths.dart';
 
-Future<dynamic> getFacultyLeaveRequestsFromServerMasterMode() async {
+Future<dynamic> getFacultyLeaveRequestsFromServerMasterMode(
+    int selectedDeptId) async {
   try {
     String userName = "pplgovt-dmn-dd@nic.in";
     String userPassword = 'collegeadmin@1234';
@@ -28,6 +29,7 @@ Future<dynamic> getFacultyLeaveRequestsFromServerMasterMode() async {
         'userName': userName,
         'userPassword': userPassword,
         'dbname': 'college',
+        'deptId': selectedDeptId.toString(),
         'collegeId': collegeId,
         'str': str
       }),

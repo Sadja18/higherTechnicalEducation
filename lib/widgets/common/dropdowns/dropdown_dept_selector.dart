@@ -60,8 +60,12 @@ class _DropdownDeptSelectorState extends State<DropdownDeptSelector> {
                 deptList: departmentData,
                 deptSelectionHandler: deptSelectionHandler,
               );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                child: CircularProgressIndicator.adaptive(),
+              );
             }
-            return const Text("data");
+            return const Text("");
           }),
     );
   }
