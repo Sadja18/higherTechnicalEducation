@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import '../../../widgets/leave/apply/form_widget.dart';
+import '../../widgets/leave/apply/form_widget.dart';
+import '../../widgets/leave/view/student_view_applied_leave.dart';
 
 class StudentLeaveScreen extends StatefulWidget {
   static const routeName = 'screen-student-leave';
@@ -85,10 +86,7 @@ class _StudentLeaveScreenState extends State<StudentLeaveScreen> {
             ApplyForLeaveWidget(
               userType: 'student',
             ),
-            Container(
-              alignment: Alignment.center,
-              child: const Text("Calendar view"),
-            ),
+            FutureBuilderForFetchStudentLeave(),
           ],
         ),
       ),

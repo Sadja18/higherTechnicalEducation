@@ -51,3 +51,75 @@ Future<dynamic> fetchSemesterAttendanceForCurrentStudent() async {
     }
   }
 }
+
+Future<dynamic> readStudentLeaveRequestRecords() async {
+  try {
+    "leaveStudentUserId INTEGER NOT NULL,"
+        "leaveStudentClassId INTEGER NOT NULL,"
+        "leaveStudentDeptId INTEGER NOT NULL,"
+        "leaveStudentDeptName TEXT,"
+        "leaveStudentCollegeId INTEGER NOT NULL,"
+        "leaveFromDate TEXT NOT NULL,"
+        "leaveToDate TEXT NOT NULL,"
+        "leaveDays TEXT NOT NULL,"
+        "leaveReason TEXT NOT NULL,"
+        "leaveAttachement TEXT,"
+        "leaveStatus TEXT DEFAULT 'draft',";
+    var leaveRequests = [
+      {
+        "leaveStudentUserId": 1915,
+        "leaveStudentClassId": 108,
+        "leaveStudentDeptId": 9,
+        "leaveStudentDeptName": "Department of Chemistry",
+        "leaveStudentCollegeId": 13,
+        "leaveFromDate": "2022-05-20",
+        "leaveToDate": "2022-05-21",
+        "leaveDays": "2",
+        "leaveReason": "Family Emergency",
+        "leaveStatus": "reject",
+      },
+      {
+        "leaveStudentUserId": 1915,
+        "leaveStudentClassId": 108,
+        "leaveStudentDeptId": 9,
+        "leaveStudentDeptName": "Department of Chemistry",
+        "leaveStudentCollegeId": 13,
+        "leaveFromDate": "2022-06-01",
+        "leaveToDate": "2022-06-01",
+        "leaveDays": "1",
+        "leaveReason": "Medical Leave",
+        "leaveStatus": "toapprove",
+      },
+      {
+        "leaveStudentUserId": 1915,
+        "leaveStudentClassId": 108,
+        "leaveStudentDeptId": 9,
+        "leaveStudentDeptName": "Department of Chemistry",
+        "leaveStudentCollegeId": 13,
+        "leaveFromDate": "2022-05-22",
+        "leaveToDate": "2022-05-23",
+        "leaveDays": "2",
+        "leaveReason": "Family Emergency",
+        "leaveStatus": "reject",
+      },
+      {
+        "leaveStudentUserId": 1915,
+        "leaveStudentClassId": 108,
+        "leaveStudentDeptId": 9,
+        "leaveStudentDeptName": "Department of Chemistry",
+        "leaveStudentCollegeId": 13,
+        "leaveFromDate": "2022-05-28",
+        "leaveToDate": "2022-05-28",
+        "leaveDays": "1",
+        "leaveReason": "Medical Leave",
+        "leaveStatus": "approve",
+      },
+    ];
+
+    return leaveRequests;
+  } catch (e) {
+    if (kDebugMode) {
+      log(e.toString());
+    }
+  }
+}

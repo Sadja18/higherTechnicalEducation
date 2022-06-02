@@ -768,150 +768,166 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
       body: jsonEncode(requestBodyMap),
     );
 
-    if (response.statusCode == 200) {
-      var res = jsonDecode(response.body);
+    // if (response.statusCode == 200) {
+    //   var res = jsonDecode(response.body);
 
-      if (res['message'].toString().toLowerCase() == 'success') {
-        var data = res['data'];
-        if (data != null) {
-          var leaveAllocations = data['leaveAllocation'];
-          // if (kDebugMode) {
-          //   log(response.statusCode.toString());
-          //   log(leaveAllocations.toString());
-          // }
-          if (leaveAllocations != null && leaveAllocations.isNotEmpty) {
-            for (var leaveAllocation in leaveAllocations) {
-              if (kDebugMode) {
-                print("updar");
-                var a = "leaveAllocation['id'] " +
-                    leaveAllocation['id'].runtimeType.toString() +
-                    "\nleaveAllocation['faculty_name'] ".toString() +
-                    leaveAllocation['faculty_name'].runtimeType.toString() +
-                    "\nleaveAllocation['no_leaves'] " +
-                    leaveAllocation['no_leaves'].runtimeType.toString() +
-                    "\nleaveAllocation['pending_leaves'] " +
-                    leaveAllocation['pending_leaves'].runtimeType.toString() +
-                    "\nleaveAllocation['approved_leaves'] " +
-                    leaveAllocation['approved_leaves'].runtimeType.toString() +
-                    "\nleaveAllocation['available_leaves'] " +
-                    leaveAllocation['available_leaves'].runtimeType.toString() +
-                    "\nleaveAllocation['dept_name'] " +
-                    leaveAllocation['dept_name'].runtimeType.toString() +
-                    "\nleaveAllocation['college_id'] " +
-                    leaveAllocation['college_id'].runtimeType.toString() +
-                    "\nleaveAllocation['year'] ".toString() +
-                    leaveAllocation['year'].runtimeType.toString() +
-                    "\nleaveAllocation['leave_type']".toString() +
-                    leaveAllocation['leave_type'].runtimeType.toString();
-                print(a);
-              }
-              if (leaveAllocation['id'] != null &&
-                  leaveAllocation['faculty_name'] != null &&
-                  leaveAllocation['faculty_name'] != false &&
-                  // leaveAllocation['no_leaves'] != null &&
-                  // leaveAllocation['pending_leaves'] &&
-                  // leaveAllocation['approved_leaves'] != null &&
-                  // leaveAllocation['available_leaves'] != null &&
-                  leaveAllocation['dept_name'] != null &&
-                  leaveAllocation['dept_name'] != false &&
-                  leaveAllocation['college_id'] != null &&
-                  leaveAllocation['college_id'] != false &&
-                  leaveAllocation['year'] != null &&
-                  leaveAllocation['year'] != false &&
-                  leaveAllocation['leave_type'] != null &&
-                  leaveAllocation['leave_type'] != false) {
-                if (kDebugMode) {
-                  print("andar");
-                  print(response.statusCode.toString());
-                  print("response.body");
-                }
-                var leaveAllocationId = leaveAllocation['id'];
-                var leaveAllocatedToFacultyId =
-                    leaveAllocation['faculty_name'][0];
-                var totalAllocatedLeaves =
-                    double.tryParse(leaveAllocation['no_leaves'].toString()) !=
-                            null
-                        ? double.parse(leaveAllocation['no_leaves'].toString())
-                        : double.parse("0");
-                var pendingLeaves = double.tryParse(
-                            leaveAllocation['pending_leaves'].toString()) !=
-                        null
-                    ? double.parse(leaveAllocation['pending_leaves'].toString())
-                    : double.parse("0");
-                var approvedLeaves = double.tryParse(
-                            leaveAllocation['approved_leaves'].toString()) !=
-                        null
-                    ? double.parse(
-                        leaveAllocation['approved_leaves'].toString())
-                    : double.parse("0");
-                var availableLeaves = double.tryParse(
-                            leaveAllocation['available_leaves'].toString()) !=
-                        null
-                    ? double.parse(
-                        leaveAllocation['available_leaves'].toString())
-                    : double.parse("0");
-                var deptId = leaveAllocation['dept_name'][0];
-                var yearName = leaveAllocation['year'];
-                var leaveTypeId = leaveAllocation['leave_type'][0];
-                var leaveTypeName = leaveAllocation['leave_type'][1];
-                var collegeId = leaveAllocation['college_id'][0];
+    //   if (res['message'].toString().toLowerCase() == 'success') {
+    //     var data = res['data'];
+    //     if (data != null) {
+    //       var leaveAllocations = data['leaveAllocation'];
+    //       // if (kDebugMode) {
+    //       //   log(response.statusCode.toString());
+    //       //   log(leaveAllocations.toString());
+    //       // }
+    //       if (leaveAllocations != null && leaveAllocations.isNotEmpty) {
+    //         for (var leaveAllocation in leaveAllocations) {
+    //           if (kDebugMode) {
+    //             print("updar");
+    //             var a = "leaveAllocation['id'] " +
+    //                 leaveAllocation['id'].runtimeType.toString() +
+    //                 "\nleaveAllocation['faculty_name'] ".toString() +
+    //                 leaveAllocation['faculty_name'].runtimeType.toString() +
+    //                 "\nleaveAllocation['no_leaves'] " +
+    //                 leaveAllocation['no_leaves'].runtimeType.toString() +
+    //                 "\nleaveAllocation['pending_leaves'] " +
+    //                 leaveAllocation['pending_leaves'].runtimeType.toString() +
+    //                 "\nleaveAllocation['approved_leaves'] " +
+    //                 leaveAllocation['approved_leaves'].runtimeType.toString() +
+    //                 "\nleaveAllocation['available_leaves'] " +
+    //                 leaveAllocation['available_leaves'].runtimeType.toString() +
+    //                 "\nleaveAllocation['dept_name'] " +
+    //                 leaveAllocation['dept_name'].runtimeType.toString() +
+    //                 "\nleaveAllocation['college_id'] " +
+    //                 leaveAllocation['college_id'].runtimeType.toString() +
+    //                 "\nleaveAllocation['year'] ".toString() +
+    //                 leaveAllocation['year'].runtimeType.toString() +
+    //                 "\nleaveAllocation['leave_type']".toString() +
+    //                 leaveAllocation['leave_type'].runtimeType.toString();
+    //             print(a);
+    //           }
+    //           if (leaveAllocation['id'] != null &&
+    //               leaveAllocation['faculty_name'] != null &&
+    //               leaveAllocation['faculty_name'] != false &&
+    //               // leaveAllocation['no_leaves'] != null &&
+    //               // leaveAllocation['pending_leaves'] &&
+    //               // leaveAllocation['approved_leaves'] != null &&
+    //               // leaveAllocation['available_leaves'] != null &&
+    //               leaveAllocation['dept_name'] != null &&
+    //               leaveAllocation['dept_name'] != false &&
+    //               leaveAllocation['college_id'] != null &&
+    //               leaveAllocation['college_id'] != false &&
+    //               leaveAllocation['year'] != null &&
+    //               leaveAllocation['year'] != false &&
+    //               leaveAllocation['leave_type'] != null &&
+    //               leaveAllocation['leave_type'] != false) {
+    //             if (kDebugMode) {
+    //               print("andar");
+    //               print(response.statusCode.toString());
+    //               print("response.body");
+    //             }
+    //             var leaveAllocationId = leaveAllocation['id'];
+    //             var leaveAllocatedToFacultyId =
+    //                 leaveAllocation['faculty_name'][0];
+    //             var totalAllocatedLeaves =
+    //                 double.tryParse(leaveAllocation['no_leaves'].toString()) !=
+    //                         null
+    //                     ? double.parse(leaveAllocation['no_leaves'].toString())
+    //                     : double.parse("0");
+    //             var pendingLeaves = double.tryParse(
+    //                         leaveAllocation['pending_leaves'].toString()) !=
+    //                     null
+    //                 ? double.parse(leaveAllocation['pending_leaves'].toString())
+    //                 : double.parse("0");
+    //             var approvedLeaves = double.tryParse(
+    //                         leaveAllocation['approved_leaves'].toString()) !=
+    //                     null
+    //                 ? double.parse(
+    //                     leaveAllocation['approved_leaves'].toString())
+    //                 : double.parse("0");
+    //             var availableLeaves = double.tryParse(
+    //                         leaveAllocation['available_leaves'].toString()) !=
+    //                     null
+    //                 ? double.parse(
+    //                     leaveAllocation['available_leaves'].toString())
+    //                 : double.parse("0");
+    //             var deptId = leaveAllocation['dept_name'][0];
+    //             var yearName = leaveAllocation['year'];
+    //             var leaveTypeId = leaveAllocation['leave_type'][0];
+    //             var leaveTypeName = leaveAllocation['leave_type'][1];
+    //             var collegeId = leaveAllocation['college_id'][0];
 
-                var dbEntry = <String, Object>{
-                  "leaveAllocationId": leaveAllocationId,
-                  "leaveAllocatedToFacultyId": leaveAllocatedToFacultyId,
-                  "totalAllocatedLeaves": totalAllocatedLeaves,
-                  "pendingLeaves": pendingLeaves,
-                  "approvedLeaves": approvedLeaves,
-                  "availableLeaves": availableLeaves,
-                  "deptId": deptId,
-                  "collegeId": collegeId,
-                  "yearName": yearName,
-                  "leaveTypeId": leaveTypeId,
-                  "leaveTypeName": leaveTypeName,
-                };
-                if (kDebugMode) {
-                  log("dbentry");
-                  log(dbEntry.toString());
-                }
-                await DBProvider.db
-                    .dynamicInsert("FacultyLeaveAllcoation", dbEntry);
-              }
-            }
-          }
-          var leaveTypes = data['leaveTypes'];
-          if (leaveTypes != null && leaveTypes.isNotEmpty) {
-            for (var leaveType in leaveTypes) {
-              if (kDebugMode) {
-                log(leaveType.toString());
-              }
-              var leaveTypeId = leaveType['id'];
-              var leaveTypeName = leaveType['name'];
-              var isHalf = leaveType['is_half'] == true ? "true" : "false";
-              if (kDebugMode) {
-                log(leaveType.toString());
-              }
-              await DBProvider.db
-                  .dynamicInsert("LeaveSession", <String, Object>{
-                "leaveTypeId": leaveTypeId,
-                "leaveTypeName": leaveTypeName,
-                "isHalf": isHalf,
-              });
-            }
-          }
-        }
-      }
-    }
+    //             var dbEntry = <String, Object>{
+    //               "leaveAllocationId": leaveAllocationId,
+    //               "leaveAllocatedToFacultyId": leaveAllocatedToFacultyId,
+    //               "totalAllocatedLeaves": totalAllocatedLeaves,
+    //               "pendingLeaves": pendingLeaves,
+    //               "approvedLeaves": approvedLeaves,
+    //               "availableLeaves": availableLeaves,
+    //               "deptId": deptId,
+    //               "collegeId": collegeId,
+    //               "yearName": yearName,
+    //               "leaveTypeId": leaveTypeId,
+    //               "leaveTypeName": leaveTypeName,
+    //             };
+    //             if (kDebugMode) {
+    //               log("dbentry");
+    //               log(dbEntry.toString());
+    //             }
+    //             await DBProvider.db
+    //                 .dynamicInsert("FacultyLeaveAllocation", dbEntry);
+    //           }
+    //         }
+    //       }
+    //       var leaveTypes = data['leaveTypes'];
+    //       if (leaveTypes != null && leaveTypes.isNotEmpty) {
+    //         for (var leaveType in leaveTypes) {
+    //           if (kDebugMode) {
+    //             log(leaveType.toString());
+    //           }
+    //           var leaveTypeId = leaveType['id'];
+    //           var leaveTypeName = leaveType['name'];
+    //           var isHalf = leaveType['is_half'] == true ? "true" : "false";
+    //           if (kDebugMode) {
+    //             log(leaveType.toString());
+    //           }
+    //           await DBProvider.db
+    //               .dynamicInsert("LeaveSession", <String, Object>{
+    //             "leaveTypeId": leaveTypeId,
+    //             "leaveTypeName": leaveTypeName,
+    //             "isHalf": isHalf,
+    //           });
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
 
     var thisYearName = DateFormat("yyyy").format(DateTime.parse(startDate));
     if (kDebugMode) {
       log(thisYearName);
+      log(dateDifference.toString());
+      log(dateDifference.runtimeType.toString());
     }
 
-    var query = "SELECT * FROM LeaveSession ";
-    "WHERE leaveTypeId = ("
+    if (kDebugMode) {
+      // var query1 = "SELECT * FROM LeaveSession;";
+      // var a = await DBProvider.db.dynamicRead(query1, []);
+      var query1 =
+          "SELECT leaveTypeId, leaveTypeName, availableLeaves, leaveAllocatedToFacultyId "
+          "FROM FacultyLeaveAllocation;";
+      var b = await DBProvider.db.dynamicRead(query1, []);
+      // log("all leave types");
+      // log(a.toString());
+      log('all allocation');
+      log(b.toString());
+      log(b[1]['availableLeaves'].runtimeType.toString());
+    }
+
+    var query = "SELECT * FROM LeaveSession "
+        "WHERE leaveTypeId = ("
         "SELECT leaveTypeId "
         "FROM FacultyLeaveAllocation "
-        "WHERE availableLeaves >= ? "
+        "WHERE availableLeaves >= ? AND "
         "yearName = ? "
         "AND leaveAllocatedToFacultyId=("
         "SELECT teacherId FROM Faculty "
@@ -926,7 +942,9 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
 
     if (leaveTypes != null && leaveTypes.isNotEmpty) {
       if (kDebugMode) {
+        log('leave tyoes');
         log(leaveTypes.toString());
+        log('leave tyoes');
       }
       return leaveTypes;
     }
@@ -958,6 +976,122 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
       if (leaveTypes != null && leaveTypes.isNotEmpty) {
         return leaveTypes;
       }
+    }
+  }
+}
+
+Future<dynamic> readFacultyLeaveRequestRecords() async {
+  try {
+    // "leaveId INTEGER,"
+    //     "leaveFacultyUserId INTEGER NOT NULL,"
+    //     "leaveFacultyUserName TEXT,"
+    //     "leaveFacultyDeptId INTEGER NOT NULL,"
+    //     "leaveFacultyDeptName TEXT,"
+    //     "leaveFacultyCollegeId INTEGER NOT NULL,"
+    //     "leaveFacultyCollegeName TEXT,"
+    //     "leaveTypeId INTEGER NOT NULL,"
+    //     "leaveTypeName INTEGER NOT NULL,"
+    //     "leaveFromDate TEXT NOT NULL,"
+    //     "leaveToDate TEXT NOT NULL,"
+    //     'leaveSession TEXT NOT NULL,'
+    //     "leaveDays TEXT NOT NULL,"
+    //     "leaveAppliedDate TEXT NOT NULL,"
+    //     "leaveReason TEXT NOT NULL,"
+    //     "leaveAttachement TEXT,"
+    //     "leaveStatus TEXT DEFAULT 'toapprove',";
+
+    var leaveRequests = [
+      {
+        "leaveFacultyUserId": 98,
+        "leaveFacultyUserName": "dramitgcd@gmail.com",
+        "leaveFacultyDeptId": 9,
+        "leaveFacultyDeptName": "Department of Chemistry",
+        "leaveFacultyCOllegeId": 13,
+        "leaveFacultyCollegeName": "Government College Daman",
+        "leaveTypeId": 1,
+        "leaveTypeName": "CL",
+        "leaveFromDate": "2022-05-20",
+        "leaveToDate": "2022-05-20",
+        "leaveSession": "second",
+        "leaveDays": "0.5",
+        "leaveAppliedDate": "2022-05-20",
+        "leaveReason": "Personal Emergency",
+        "leaveStatus": "approve",
+      },
+      {
+        "leaveFacultyUserId": 98,
+        "leaveFacultyUserName": "dramitgcd@gmail.com",
+        "leaveFacultyDeptId": 9,
+        "leaveFacultyDeptName": "Department of Chemistry",
+        "leaveFacultyCOllegeId": 13,
+        "leaveFacultyCollegeName": "Government College Daman",
+        "leaveTypeId": 1,
+        "leaveTypeName": "CL",
+        "leaveFromDate": "2022-05-24",
+        "leaveToDate": "2022-05-24",
+        "leaveSession": "first",
+        "leaveDays": "0.5",
+        "leaveAppliedDate": "2022-05-23",
+        "leaveReason": "Personal Emergency",
+        "leaveStatus": "approve",
+      },
+      {
+        "leaveFacultyUserId": 98,
+        "leaveFacultyUserName": "dramitgcd@gmail.com",
+        "leaveFacultyDeptId": 9,
+        "leaveFacultyDeptName": "Department of Chemistry",
+        "leaveFacultyCOllegeId": 13,
+        "leaveFacultyCollegeName": "Government College Daman",
+        "leaveTypeId": 1,
+        "leaveTypeName": "CL",
+        "leaveFromDate": "2022-05-26",
+        "leaveToDate": "2022-05-26",
+        "leaveSession": "full",
+        "leaveDays": "1",
+        "leaveAppliedDate": "2022-05-26",
+        "leaveReason": "Personal Emergency",
+        "leaveStatus": "reject",
+      },
+      {
+        "leaveFacultyUserId": 98,
+        "leaveFacultyUserName": "dramitgcd@gmail.com",
+        "leaveFacultyDeptId": 9,
+        "leaveFacultyDeptName": "Department of Chemistry",
+        "leaveFacultyCOllegeId": 13,
+        "leaveFacultyCollegeName": "Government College Daman",
+        "leaveTypeId": 2,
+        "leaveTypeName": "ML",
+        "leaveFromDate": "2022-05-28",
+        "leaveToDate": "2022-05-28",
+        "leaveSession": "full",
+        "leaveDays": "1",
+        "leaveAppliedDate": "2022-05-26",
+        "leaveReason": "Personal Emergency",
+        "leaveStatus": "toapprovep",
+      },
+      {
+        "leaveFacultyUserId": 98,
+        "leaveFacultyUserName": "dramitgcd@gmail.com",
+        "leaveFacultyDeptId": 9,
+        "leaveFacultyDeptName": "Department of Chemistry",
+        "leaveFacultyCOllegeId": 13,
+        "leaveFacultyCollegeName": "Government College Daman",
+        "leaveTypeId": 1,
+        "leaveTypeName": "ML",
+        "leaveFromDate": "2022-06-01",
+        "leaveToDate": "2022-06-01",
+        "leaveSession": "full",
+        "leaveDays": "1",
+        "leaveAppliedDate": "2022-05-26",
+        "leaveReason": "Personal Emergency",
+        "leaveStatus": "toapprove",
+      },
+    ];
+    return leaveRequests;
+  } catch (e) {
+    if (kDebugMode) {
+      log('faculty leace request error');
+      log(e.toString());
     }
   }
 }

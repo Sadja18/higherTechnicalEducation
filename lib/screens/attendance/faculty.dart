@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../widgets/common/dropdowns/course_select.dart';
 import '../../widgets/common/dropdowns/class_select.dart';
 import '../../widgets/common/dropdowns/subject_select.dart';
@@ -105,10 +106,10 @@ class _AttendanceScreenFacultyModeState
     var statusBarHeight = MediaQuery.of(context).padding.top;
     var appBarHeight = kToolbarHeight;
     return DefaultTabController(
-      length: 1,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Attendance"),
+          title: const Text("Student Attendance"),
           centerTitle: true,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -137,7 +138,14 @@ class _AttendanceScreenFacultyModeState
           bottom: const TabBar(
             tabs: [
               Text(
-                "Student",
+                "Mark",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                "View",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -341,6 +349,14 @@ class _AttendanceScreenFacultyModeState
                     yearId: selectedYearId,
                     semId: selectedSemId,
                   ),
+            Container(
+              decoration: const BoxDecoration(),
+              alignment: Alignment.center,
+              height: MediaQuery.of(context).size.height * 0.60,
+              child: SfCalendar(
+                view: CalendarView.month,
+              ),
+            ),
           ],
         ),
       ),

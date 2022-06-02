@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/leave/apply/form_widget.dart';
+import '../../widgets/leave/apply/form_widget.dart';
+import '../../widgets/leave/view/faculty_view_applied_leave.dart';
 
 class FacultyLeaveScreen extends StatelessWidget {
   static const routeName = "/screen-faculty-leave";
@@ -79,10 +80,7 @@ class FacultyLeaveScreen extends StatelessWidget {
               alignment: Alignment.center,
               child: const ApplyForLeaveWidget(userType: 'faculty'),
             ),
-            Container(
-              alignment: Alignment.center,
-              child: const Text("Calendar view leave Faculty"),
-            ),
+            FutureBuilderForFetchFacultyLeave(),
           ],
         ),
       ),
