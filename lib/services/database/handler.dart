@@ -176,6 +176,7 @@ class DBProvider {
         "collegeId INTEGER NOT NULL,"
         "collegeCode INTEGER NOT NULL,"
         'collegeName TEXT NOT NULL,'
+        'profilePic TEXT,'
         'UNIQUE(userId, collegeId)'
         ");";
   }

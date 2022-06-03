@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import '../../helpers/validators/login_field_validators.dart';
 import '../../models/uri_paths.dart';
 import '../../services/database/handler.dart';
 import '../../helpers/controllers/name_foramtter.dart';
@@ -722,6 +723,9 @@ Future<dynamic> sendMasterLoginRequest(
         var collegeName = data['com_name'];
         var collegeId = data['id'];
         var collegeCode = data['code'];
+        var profileImage = data['s_image'] != null && data['s_image'] != false
+            ? data['s_image']
+            : defaultMasterProfilePic;
 
         userTableEntry['userId'] = userId;
         userTableEntry['userName'] = userName;
@@ -729,6 +733,8 @@ Future<dynamic> sendMasterLoginRequest(
         userTableEntry['userType'] = userTypes['master']!;
         userTableEntry['isOnline'] = 1;
         userTableEntry['loginStatus'] = 1;
+
+        masterTableEntry['profilePic'] = profileImage;
 
         masterTableEntry['headName'] = headName;
         masterTableEntry['collegeName'] = collegeName;

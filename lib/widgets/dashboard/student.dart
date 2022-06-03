@@ -128,20 +128,23 @@ class _AttendanceSubjectWiseState extends State<AttendanceSubjectWise> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.grey,
-      ),
+          // color: Colors.grey,
+          ),
       width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.70,
       alignment: Alignment.topCenter,
       child: SfCircularChart(
-        title: ChartTitle(text: "Subject Attendance %"),
-        // legend: Legend(
-        //   isVisible: true,
-        //   isResponsive: true,
-        //   overflowMode: LegendItemOverflowMode.wrap,
-        // ),
+        title: ChartTitle(
+          text: "Subject Attendance %",
+        ),
+        legend: Legend(
+          isVisible: true,
+          isResponsive: true,
+          overflowMode: LegendItemOverflowMode.wrap,
+        ),
         tooltipBehavior: _toolTipBehaviorSubjectWise,
         series: <CircularSeries>[
-          PieSeries<AttendanceSubjectValler, String>(
+          DoughnutSeries<AttendanceSubjectValler, String>(
             dataSource: subjectsData,
             // pointColorMapper: (AttendanceSubjectValler data, _) => data.color,
             xValueMapper: (AttendanceSubjectValler data, _) => data.subjectName,

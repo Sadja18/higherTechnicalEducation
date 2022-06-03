@@ -530,7 +530,7 @@ class _MasterLeaveApproveTableWidgetState
         vertical: 6.0,
       ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.60,
       // decoration: BoxDecoration(
       //   border: Border.all(),
       // ),
@@ -569,7 +569,7 @@ class _MasterLeaveApproveTableWidgetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height * 0.70,
       decoration: const BoxDecoration(),
       alignment: Alignment.topCenter,
       child: SingleChildScrollView(

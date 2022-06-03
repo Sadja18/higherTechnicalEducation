@@ -105,38 +105,70 @@ Future<dynamic> getLoggedInUserName() async {
         log(userData[0]['userType'].runtimeType.toString());
       }
       var user = userData[0];
-      var userId = user['userId'];
-      var nameOfUser = "";
+      // var nameOfUser = "";
 
       switch (user['userType']) {
         case 1:
           var val = await DBProvider.db.dynamicRead(
-              "SELECT headName FROM Master "
+              "SELECT headName, profilePic, collegeId FROM Master "
               "WHERE userId = "
               "(SELECT userId FROM UserLoginSession WHERE loginStatus=1);",
               []);
-          nameOfUser = val[0]['headName'];
-          return nameOfUser;
+          if (val != null && val.isNotEmpty) {
+            var param = [val[0]['collegeId']];
+            var dbQuery = "SELECT collegeName FROM College WHERE collegeId=?";
+            var collegeNames = await DBProvider.db.dynamicRead(dbQuery, param);
+            var collegeName = collegeNames[0]['collegeName'];
+
+            String designation = "Head of Institution";
+            if (kDebugMode) {
+              log("select from master");
+              // log(val.toString());
+            }
+            return [val, 'master', designation, collegeName];
+          } else {
+            break;
+          }
         // case "1":
         //   return "master";
         case 2:
           var val = await DBProvider.db.dynamicRead(
-              "SELECT teacherName FROM Head "
+              "SELECT teacherName, profilePic, collegeId, deptName FROM Head "
               "WHERE userId="
               "(SELECT userId FROM UserLoginSession WHERE loginStatus=1);",
               []);
-          nameOfUser = val[0]['teacherName'];
-          return nameOfUser;
+          if (val != null && val.isNotEmpty) {
+            var param = [val[0]['collegeId']];
+            var dbQuery = "SELECT collegeName FROM College WHERE collegeId=?";
+            var collegeNames = await DBProvider.db.dynamicRead(dbQuery, param);
+            var collegeName = collegeNames[0]['collegeName'];
+
+            String designation = "Head of Department";
+            return [val, 'head', designation, collegeName];
+          } else {
+            break;
+          }
         // case "2":
         //   return "head";
         case 3:
           var val = await DBProvider.db.dynamicRead(
-              "SELECT teacherName FROM Faculty "
+              "SELECT teacherName, profilePic, collegeId, deptName FROM Faculty "
               "WHERE userId="
               "(SELECT userId FROM UserLoginSession WHERE loginStatus=1);",
               []);
-          nameOfUser = val[0]['teacherName'];
-          return nameOfUser;
+          if (val != null && val.isNotEmpty) {
+            var param = [val[0]['collegeId']];
+
+            var dbQuery = "SELECT collegeName FROM College WHERE collegeId=?";
+            var collegeNames = await DBProvider.db.dynamicRead(dbQuery, param);
+            var collegeName = collegeNames[0]['collegeName'];
+
+            String designation = "Teaching Staff";
+            return [val, 'faculty', designation, collegeName];
+            // return [val, 'faculty'];
+          } else {
+            break;
+          }
         // case "3":
         //   return "faculty";
         case 4:
@@ -149,31 +181,40 @@ Future<dynamic> getLoggedInUserName() async {
               "userId = "
               "(SELECT userId FROM UserLoginSession WHERE loginStatus = 1);",
               []);
-          nameOfUser = val[0]['parentName'];
-          return nameOfUser;
+          if (val != null && val.isNotEmpty) {
+            // val[0]['userType'] = 'parent';
+            return [val, 'parent'];
+          } else {
+            break;
+          }
         // case "5":
         //   return "parent";
         case 6:
           var val = await DBProvider.db.dynamicRead(
-              "SELECT studentName FROM Student "
+              "SELECT studentName, profilePic, courseId, collegeId FROM Student "
               "WHERE userId = (SELECT userId FROM UserLoginSession WHERE loginStatus=1);",
               []);
           if (kDebugMode) {
             // log(val.toString());
           }
-          nameOfUser = val[0]['studentName'];
-          return nameOfUser;
-        // case "6":
-        //   var val = await DBProvider.db.dynamicRead(
-        //     "SELECT studentName FROM Student WHERE userId = (SELECT userId FROM UserLoginSession WHERE loginStatus=1;)",
-        //     []);
-        // nameOfUser = val[0]['studentName'];
-        // if (kDebugMode) {
-        //   log(val.toString());
-        // }
-        // return nameOfUser;
+          if (val != null && val.isNotEmpty) {
+            var param = [val[0]['collegeId']];
+
+            var dbQuery = "SELECT collegeName FROM College WHERE collegeId=?";
+            var collegeNames = await DBProvider.db.dynamicRead(dbQuery, param);
+            var collegeName = collegeNames[0]['collegeName'];
+            var courseName = await DBProvider.db.dynamicRead(
+                "SELECT courseName "
+                "FROM Course "
+                "WHERE courseId=?",
+                [val[0]['courseId']]);
+            String designation = courseName[0]['courseName'];
+            return [val, 'student', designation, collegeName];
+          } else {
+            break;
+          }
         default:
-          return "";
+          return [];
       }
     }
   } catch (e) {

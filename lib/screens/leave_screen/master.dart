@@ -65,6 +65,8 @@ class _MasterApproveFacultyLeaveScreenState
         body: TabBarView(
           children: [
             Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               decoration: const BoxDecoration(),
               child: Column(
                 children: [

@@ -64,7 +64,7 @@ class _MasterStaffAttendanceScreenState
         body: TabBarView(
           children: [
             Container(
-              decoration: BoxDecoration(color: Colors.amber.shade100),
+              // decoration: BoxDecoration(color: Colors.amber.shade100),
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,

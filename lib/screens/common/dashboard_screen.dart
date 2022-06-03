@@ -1,9 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'dart:convert';
+import 'dart:developer';
 // import 'dart:developer';
 // import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../helpers/validators/login_field_validators.dart';
 // import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../widgets/common/buttons/logout.dart';
@@ -155,178 +158,125 @@ class DashboardScreen extends StatelessWidget {
 
   Widget homeHeader() {
     return FutureBuilder(
-        future: getUserProfilePic(),
-        builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-          if (snapshot.hasError == false &&
-              snapshot.hasData == true &&
-              snapshot.data != null &&
-              snapshot.data != "") {
-            // there was a profile pic
-            var profilePicString = snapshot.data;
-            return FutureBuilder(
-              future: getLoggedInUserName(),
-              builder: (BuildContext ctx, AsyncSnapshot snap) {
-                if (snap.hasError == false &&
-                    snap.hasData == true &&
-                    snap.data != null &&
-                    snap.data != "") {
-                  return SizedBox(
-                    width: MediaQuery.of(ctx).size.width * 0.80,
-                    child: Table(
-                      // columnWidths: const <int, TableColumnWidth>{
-                      // 0: FractionColumnWidth(0.50),
-                      // 1: FractionColumnWidth(0.50),
-                      // },
-                      defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
-                      children: [
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: Center(
-                                child: Text(
-                                  'Welcome, \n ${snap.data}',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          children: [
-                            TableCell(
-                              child: SizedBox(
-                                // decoration: BoxDecoration(
-                                //   color: Colors.red,
-                                // ),
-                                width: MediaQuery.of(ctx).size.width * 0.12,
-                                child: ClipOval(
-                                  child: Image(
-                                    image: Image.memory(const Base64Decoder()
-                                            .convert(profilePicString))
-                                        .image,
-                                    fit: BoxFit.fill,
-                                    height:
-                                        MediaQuery.of(ctx).size.height * 0.40,
-                                    width: MediaQuery.of(ctx).size.width * 0.05,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return const SizedBox(
-                    height: 0,
-                  );
-                }
-              },
-            );
-          } else {
-            // there was not a profile pic
-            return FutureBuilder(
-              future: getLoggedInUserName(),
-              builder: (BuildContext ctx, AsyncSnapshot snap) {
-                if (snap.hasError == false &&
-                    snap.hasData == true &&
-                    snap.data != null &&
-                    snap.data != "") {
-                  return Text(
-                    'Welcome, \n ${snap.data}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  );
-                } else {
-                  return const SizedBox(
-                    height: 0,
-                  );
-                }
-              },
-            );
+      future: getLoggedInUserName(),
+      builder: (BuildContext ctx, AsyncSnapshot snap) {
+        if (snap.hasError == false &&
+            snap.hasData == true &&
+            snap.data != null &&
+            snap.data.isNotEmpty) {
+          var records = snap.data;
+          var record = records[0];
+          var userType = records[1];
+          if (kDebugMode) {
+            log('hone header records');
+            log(records.toString());
           }
-        });
-    // return FutureBuilder(
-    //     future: getLoggedInUserName(),
-    //     builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-    //       // if(kDebugMode){}
-    //       if (snapshot.hasError ||
-    //           snapshot.hasData == false ||
-    //           snapshot.data.isEmpty ||
-    //           snapshot.data == "") {
-    //         return const SizedBox(
-    //           height: 0,
-    //         );
-    //       } else {
-    //         var nameOfUser = snapshot.data;
-    //         if (kDebugMode) {
-    //           log('nameOfUser $nameOfUser');
-    //         }
-    //         return Container(
-    //           alignment: Alignment.topCenter,
-    //           decoration: const BoxDecoration(
-    //             color: Colors.deepPurpleAccent,
-    //           ),
-    //           child: Table(
-    //             columnWidths: <int, TableColumnWidth>{
-    //               0: nameOfUser == "" || nameOfUser == null
-    //                   ? const FractionColumnWidth(0.00)
-    //                   : const FractionColumnWidth(0.50),
-    //               1: nameOfUser == "" || nameOfUser == null
-    //                   ? const FractionColumnWidth(1.00)
-    //                   : const FractionColumnWidth(0.50)
-    //             },
-    //             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-    //             children: [
-    //               TableRow(children: [
-    //                 TableCell(
-    //                   child: FutureBuilder(
-    //                       future: getUserProfilePic(),
-    //                       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-    //                         if (snapshot.hasData &&
-    //                             snapshot.data != null &&
-    //                             snapshot.data != "") {
-    //                           var profilePicString = snapshot.data;
-    //                           return Container(
-    //                             decoration: const BoxDecoration(),
-    //                             child: Image(
-    //                               image: Image.memory(const Base64Decoder()
-    //                                       .convert(profilePicString))
-    //                                   .image,
-    //                               fit: BoxFit.fill,
-    //                             ),
-    //                           );
-    //                         }
-    //                         return const SizedBox(
-    //                           height: 0,
-    //                         );
-    //                       }),
-    //                 ),
-    //                 TableCell(
-    //                   child: Text(
-    //                     'Welcome, \n $nameOfUser',
-    //                     style: const TextStyle(
-    //                       fontWeight: FontWeight.bold,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ]),
-    //             ],
-    //           ),
-    //         );
-    //       }
-    //     });
+          String designation = "";
+          String college = "";
+          String deptName = "";
+          var profilePicString = record[0]['profilePic'] != null &&
+                  record[0]['profilePic'].isNotEmpty
+              ? record[0]['profilePic']
+              : defaultMasterProfilePic;
+          var userName = "";
+          switch (userType) {
+            case 'student':
+              userName = record[0]['studentName'];
+              designation = "Course: " + records[2];
+              college = records[3].toString();
+              break;
+            case 'faculty':
+              userName = record[0]['teacherName'];
+              designation = records[2];
+              college = records[3].toString();
+              deptName = record[0]['deptName'];
+              break;
+            case 'head':
+              userName = record[0]['teacherName'];
+              designation = records[2];
+              college = records[3].toString();
+              deptName = record[0]['deptName'];
+              break;
+            case 'master':
+              userName = record[0]['headName'];
+              designation = records[2];
+              // designation = recods[1];
+              college = records[3].toString();
+              break;
+            default:
+              userName = "";
+          }
+
+          var displayString = userName + ",";
+          if (designation != "") {
+            displayString = displayString + '\n' + designation + ",";
+          }
+          if (deptName != "") {
+            displayString = displayString + '\nDept: ' + deptName + ",";
+          }
+          if (college != "") {
+            displayString = displayString + '\nCollege: ' + college;
+          }
+
+          return SizedBox(
+            width: MediaQuery.of(ctx).size.width * 0.80,
+            height: MediaQuery.of(ctx).size.height * 0.25,
+            child: Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: FractionColumnWidth(0.40),
+                1: FractionColumnWidth(0.60),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: SizedBox(
+                        // decoration: BoxDecoration(
+                        //   color: Colors.red,
+                        // ),
+                        width: MediaQuery.of(ctx).size.width * 0.12,
+                        child: ClipOval(
+                          child: Image(
+                            image: Image.memory(const Base64Decoder()
+                                    .convert(profilePicString))
+                                .image,
+                            fit: BoxFit.fill,
+                            height: MediaQuery.of(ctx).size.height * 0.25,
+                            width: MediaQuery.of(ctx).size.width * 0.05,
+                          ),
+                        ),
+                      ),
+                    ),
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Welcome, \n' + displayString,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox(
+            height: 0,
+          );
+        }
+      },
+    );
   }
 
   Widget rollerWidget(context) {
     // return FutureBuilder(builder: (BuildContext ctx, as))
     // return
-    var someVar = 123 + 12;
+    // var someVar = 123 + 12;
     // double overAll = 51;
     return FutureBuilder(
         future: whichUserLoggedIn(),
@@ -375,15 +325,16 @@ class DashboardScreen extends StatelessWidget {
                           return Expanded(
                             child: Container(
                               alignment: Alignment.topCenter,
-                              height: MediaQuery.of(context).size.height * 0.20,
+                              height: MediaQuery.of(context).size.height * 0.40,
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
-                                color: Colors.blueGrey.shade400,
+                                // color: Colors.blueGrey.shade400,
+                                border: Border.all(),
                               ),
                               child: Table(
                                 columnWidths: const {
-                                  0: FractionColumnWidth(0.40),
-                                  1: FractionColumnWidth(0.60),
+                                  0: FractionColumnWidth(1.00),
+                                  // 1: FractionColumnWidth(0.60),
                                 },
                                 defaultVerticalAlignment:
                                     TableCellVerticalAlignment.middle,
@@ -392,14 +343,23 @@ class DashboardScreen extends StatelessWidget {
                                     children: [
                                       TableCell(
                                         child: overall != null || overall != ""
-                                            ? AttendanceOverAllCircularChart(
-                                                subjectName: "Overall",
-                                                presentPercentage: overAll,
+                                            ? Container(
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  "Overall Attendance: $overAll %",
+                                                  style: const TextStyle(
+                                                      // fontWeight: FontWeight.bold,
+                                                      ),
+                                                ),
                                               )
                                             : const SizedBox(
                                                 height: 0,
                                               ),
                                       ),
+                                    ],
+                                  ),
+                                  TableRow(
+                                    children: [
                                       TableCell(
                                         child: values.keys.toList().length > 1
                                             ? AttendanceSubjectWise(
@@ -418,6 +378,333 @@ class DashboardScreen extends StatelessWidget {
                       }
                     },
                   );
+                case 1:
+                  // master logged in
+                  return FutureBuilder(
+                      builder: (BuildContext ctx, AsyncSnapshot snap) {
+                    return Container(
+                      alignment: Alignment.bottomCenter,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.60,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(),
+                            alignment: Alignment.center,
+                            child: Table(
+                              border: TableBorder.all(),
+                              columnWidths: const {
+                                0: FractionColumnWidth(0.80),
+                                1: FractionColumnWidth(0.20),
+                              },
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Pending Leave Requests",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          1.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Approved Leave Requests",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          0.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Rejected Leave Requests",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          0.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Depts Attendance to be taken",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          6.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Depts Attendance pending Sync",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          0.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+                case 2:
+                  return FutureBuilder(
+                      builder: (BuildContext ctx, AsyncSnapshot snap) {
+                    return Container(
+                      alignment: Alignment.bottomCenter,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.60,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: const BoxDecoration(),
+                            alignment: Alignment.center,
+                            child: Table(
+                              border: TableBorder.all(),
+                              columnWidths: const {
+                                0: FractionColumnWidth(0.80),
+                                1: FractionColumnWidth(0.20),
+                              },
+                              defaultVerticalAlignment:
+                                  TableCellVerticalAlignment.middle,
+                              children: [
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Pending Leave Requests",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          1.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Approved Leave Requests",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          0.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TableRow(
+                                  children: [
+                                    TableCell(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          left: 10.0,
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        child: const Text(
+                                          "Rejected Leave Requests",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    TableCell(
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          0.toString(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  });
+
+                case 3:
+                  return FutureBuilder(
+                      builder: (BuildContext c, AsyncSnapshot s) {
+                    var values = {
+                      "overall": ["0.63%"]
+                    };
+                    var overall = values['overall'];
+                    double overAll = 0;
+                    // ignore: unrelated_type_equality_checks
+                    if (overall != null && overall != '') {
+                      overAll = double.parse(
+                          overall[0].toString().split("%")[0].toString());
+                    }
+                    return Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        // height: MediaQuery.of(context).size.height * 0.20,
+                        margin: const EdgeInsets.only(
+                          top: 25.0,
+                        ),
+                        width: MediaQuery.of(context).size.width,
+                        decoration: const BoxDecoration(
+                            // color: Colors.blueGrey.shade400,
+                            ),
+                        child: Table(
+                          columnWidths: const {
+                            0: FractionColumnWidth(1),
+                          },
+                          defaultVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
+                          children: [
+                            TableRow(
+                              children: [
+                                TableCell(
+                                  // ignore: unrelated_type_equality_checks
+                                  child: overall != null || overall != ""
+                                      ? Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Overall Attendance: ${overAll * 100} %",
+                                            style: const TextStyle(
+                                                // fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                        )
+                                      : const SizedBox(
+                                          height: 0,
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                    ;
+                  });
                 default:
                   return const SizedBox(
                     height: 0,
@@ -467,8 +754,8 @@ class DashboardScreen extends StatelessWidget {
       body: Container(
         alignment: Alignment.topCenter,
         decoration: BoxDecoration(
-          color: Colors.blueGrey.shade100,
-        ),
+            // color: Colors.blueGrey.shade100,
+            ),
         child: Column(
           children: [
             homeHeader(),
