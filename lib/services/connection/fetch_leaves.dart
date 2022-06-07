@@ -346,6 +346,7 @@ Future<dynamic> getStudentLeaveRequestsFromServerHeadMode() async {
         }
         for (var leaveRequest in data) {
           var leaveId = leaveRequest['leaveId'];
+          var leaveStudentProfileId = leaveRequest['leaveStudentProfileId'];
           var leaveStudentUserId = leaveRequest['leaveStudentUserId'];
           var leaveStudentClassId = leaveRequest['leaveStudentClassId'];
           var leaveStudentClassName = leaveRequest['leaveStudentClassName'];
@@ -365,6 +366,7 @@ Future<dynamic> getStudentLeaveRequestsFromServerHeadMode() async {
 
           var dbEntry = <String, Object>{
             "leaveId": leaveId,
+            "leaveStudentProfileId": leaveStudentProfileId,
             "leaveStudentUserId": leaveStudentUserId,
             "leaveStudentClassId": leaveStudentClassId,
             "leaveStudentClassName": leaveStudentClassName,
@@ -379,12 +381,10 @@ Future<dynamic> getStudentLeaveRequestsFromServerHeadMode() async {
             "leaveAttachement": leaveAttachment,
             "leaveStatus": leaveStatus,
           };
-
           if (kDebugMode) {
             log("dbEntry");
             log(dbEntry.toString());
           }
-
           await DBProvider.db.dynamicInsert("StudentLeaveRequest", dbEntry);
         }
         // return leaveRequestList;
