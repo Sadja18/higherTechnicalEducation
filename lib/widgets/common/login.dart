@@ -179,7 +179,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           if (userNameValidation == 1) {
             loginStatus = await tryLogin(enteredUserName, enteredUserPassword);
             if (loginStatus == 1) {
-              Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
+              // Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
             } else {
               showAlertBox(
                   "Server Error occurred during login.Please retry later");

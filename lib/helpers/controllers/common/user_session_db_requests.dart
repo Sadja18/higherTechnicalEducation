@@ -57,7 +57,7 @@ Future<void> endUserSession() async {
 Future<dynamic> whichUserLoggedIn() async {
   try {
     var loggedInUserType = await DBProvider.db.dynamicRead(
-        "SELECT userType FROM UserLoginSession WHERE loginStatus=1", []);
+        "SELECT userType FROM UserLoginSession WHERE loginStatus=1;", []);
     if (kDebugMode) {
       log("user type which user ");
       log(loggedInUserType.toString());
@@ -93,16 +93,16 @@ Future<dynamic> getLoggedInUserName() async {
 
     var userData = await DBProvider.db.dynamicRead(query, params);
     if (kDebugMode) {
-      log("get loogged i  user");
-      log(userData.toString());
+      log("get loogged in user");
+      log(userData.runtimeType.toString());
     }
 
     if (userData.isNotEmpty) {
       if (kDebugMode) {
         // log(userData.toString());
         log('here');
-        log(userData[0]['userId'].runtimeType.toString());
-        log(userData[0]['userType'].runtimeType.toString());
+        log(userData[0].toString());
+        // log(userData[0]['userType'].runtimeType.toString());
       }
       var user = userData[0];
       // var nameOfUser = "";

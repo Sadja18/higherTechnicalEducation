@@ -225,6 +225,7 @@ class DBProvider {
   String _createStudentLeaveTable() {
     return "CREATE TABLE StudentLeaveRequest("
         "leaveId INTEGER,"
+        "leaveStudentProfileId INTEGER NOT NULL,"
         "leaveStudentUserId INTEGER NOT NULL,"
         "leaveStudentName TEXT,"
         "leaveStudentClassId INTEGER NOT NULL,"

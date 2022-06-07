@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import '../../../services/connection/faculty_mode_fetches.dart';
+import '../../../services/connection/faculty_mode_methods.dart';
 
 class SubjectSelector extends StatefulWidget {
   final int courseId;

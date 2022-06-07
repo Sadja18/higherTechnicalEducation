@@ -19,7 +19,7 @@ import '../../widgets/common/user_profile_card.dart';
 import '../../widgets/navigation_buttons/student.dart';
 import '../../widgets/dashboard/student.dart';
 import '../../helpers/controllers/common/user_session_db_requests.dart';
-import '../../services/connection/student_mode_fetches.dart';
+import '../../services/connection/student_mode_methods.dart';
 
 // import '../../services/database/common/tests.dart';
 // import 'package:charts_flutter/flutter.dart' as charts;
@@ -169,7 +169,7 @@ class DashboardScreen extends StatelessWidget {
           var userType = records[1];
           if (kDebugMode) {
             log('hone header records');
-            log(records.toString());
+            // log(records.toString());
           }
           String designation = "";
           String college = "";

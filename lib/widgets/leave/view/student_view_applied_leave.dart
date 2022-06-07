@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../../../services/connection/student_mode_fetches.dart';
+import '../../../services/connection/student_mode_methods.dart';
 
 class FutureBuilderForFetchStudentLeave extends StatefulWidget {
   const FutureBuilderForFetchStudentLeave({Key? key}) : super(key: key);
@@ -52,6 +52,15 @@ class CalendarViewWidget extends StatefulWidget {
 class _CalendarViewWidgetState extends State<CalendarViewWidget> {
   final CalendarController _controller = CalendarController();
 
+  String createSubject(startDate, endDate, leaveReason, className) {
+    var subject = "";
+    subject = subject + "From: $startDate" + "\n";
+    subject = subject + "To: $endDate" + "\n";
+    subject = subject + "Reason: $leaveReason" + "\n";
+    subject = subject + "\n" + "$className";
+    return subject;
+  }
+
   List<Leave> _getLeaves() {
     List<Leave> leaveViewData = <Leave>[];
 
@@ -64,7 +73,10 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
         DateTime startDateParsed = DateTime.parse(record['leaveFromDate']);
         DateTime endDateParsed =
             DateTime.parse("${record['leaveToDate']} 23:59:59");
-        String subject = record['leaveReason'];
+        String leaveReason = record['leaveReason'];
+        String className = record['leaveStudentClassName'];
+        String subject = createSubject(record['leaveFromDate'],
+            record['leaveToDate'], leaveReason, className);
         String leaveRequestStatus = record['leaveStatus'];
         Color backColor = Colors.white;
 
@@ -117,20 +129,21 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
         ),
         monthViewSettings: const MonthViewSettings(
           dayFormat: 'EE',
-          agendaItemHeight: 40.0,
+          agendaItemHeight: 180.0,
           showTrailingAndLeadingDates: false,
           showAgenda: true,
           agendaStyle: AgendaStyle(
             dayTextStyle: TextStyle(
-              color: Colors.blue,
+              // color: Colors.blue,
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
             ),
             dateTextStyle: TextStyle(
-                color: Colors.blue,
+                // color: Colors.blue,
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0),
             appointmentTextStyle: TextStyle(
+              overflow: TextOverflow.fade,
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
               color: Colors.white,

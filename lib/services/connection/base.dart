@@ -178,7 +178,6 @@ Future<dynamic> sendStudentLoginRequest(
           "isOnline": 1,
           "loginStatus": 1
         };
-        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
         // saveFlag = 1;
 
         var studentId = loginData['studentId'];
@@ -208,97 +207,125 @@ Future<dynamic> sendStudentLoginRequest(
         studentProfileEntry['userId'] = userId;
         studentProfileEntry['collegeId'] = collegeId;
 
-        var noDept = loginData['noDept'].toString();
         var year = loginData['year'];
         var semester = loginData['semester'];
         var course = loginData['course'];
-        var department = loginData['department'];
         var courseId = 0;
         var courseName = "";
 
-        var yearId = 0;
-        var yearName = "";
+        var yearId = year[0];
+        var yearName = year[1];
+        await DBProvider.db.dynamicInsert("Year", <String, Object>{
+          "yearId": yearId,
+          "yearName": yearName,
+        });
 
-        var semId = 0;
-        var semName = "";
+        var semId = semester[0];
+        var semName = semester[1];
+        await DBProvider.db.dynamicInsert("Semester", <String, Object>{
+          "yearId": yearId,
+          "semName": yearName,
+          "semId": semId,
+        });
 
         var deptId = 0;
         var deptName = "";
 
-        if (course != null && course != false) {
-          courseId = course[0];
-          courseName = course[1];
-          studentProfileEntry['courseId'] = courseId;
-
-          await DBProvider.db.dynamicInsert("Course", {
-            "courseId": courseId,
-            "courseName": courseName,
-            "noDept": noDept
-          });
-          if (loginData['class'] != null && loginData['class'] != false) {
-            var classId = loginData['class'][0];
-            var className = loginData['class'][1];
-
-            studentProfileEntry['classId'] = classId;
-            await DBProvider.db.dynamicInsert("Classes", {
-              "className": className,
-              "classId": classId,
-              'courseId': courseId
-            });
-            // saveFlag = 1;
-          } else {
-            if (noDept == 'true') {
-              saveFlag = 0;
-            }
-          }
-        }
-        if (year != false && year != null) {
-          yearId = year[0];
-          yearName = year[1];
-          studentProfileEntry['yearId'] = yearId;
-          if (semester != false && semester != null) {
-            semId = semester[0];
-            semName = semester[1];
-            studentProfileEntry['semId'] = semId;
-            await DBProvider.db.dynamicInsert("Semester",
-                {"semId": semId, "semName": semName, "yearId": yearId});
-            // saveFlag = 1;
-          } else {
-            saveFlag = 0;
-          }
-          await DBProvider.db
-              .dynamicInsert("Year", {"yearId": yearId, "yearName": yearName});
-          // saveFlag = 1;
-        } else {
-          saveFlag = 0;
-        }
-
-        if (department != false && department != null) {
-          deptId = department[0];
-          deptName = department[1];
-          studentProfileEntry['deptId'] = deptId;
-          await DBProvider.db.dynamicInsert("Dept", {
-            "deptId": deptId,
-            "deptName": deptName,
-            'collegeId': collegeId,
-          });
-          // saveFlag = 1;
-        } else {
-          saveFlag = 0;
-        }
-
         var profilePic = loginData['profilePic'];
         studentProfileEntry['profilePic'] = profilePic;
 
-        if (studentProfileEntry['yearId'] != null &&
-            studentProfileEntry['yearId'] != 0 &&
-            studentProfileEntry['courseId'] != null &&
-            studentProfileEntry['semId'] != 0 &&
-            studentProfileEntry['semId'] != null) {
-          await DBProvider.db.dynamicInsert("Student", studentProfileEntry);
+        if (course['no_dept'].toString().toLowerCase() == 'false') {
+          // course with dept and class
+
+          courseId = course['0'];
+          courseName = course['1'];
+          var courseCode = course['code'];
+          var courseDuration = course['duration'];
+          var dept = course['department_id'];
+          if (dept != null && dept != false) {
+            var deptId = dept[0];
+            var deptName = dept[1];
+
+            // first insert dept
+            await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+              "deptId": deptId,
+              "deptName": deptName,
+              "collegeId": collegeId,
+            });
+
+            // insert course
+            await DBProvider.db.dynamicInsert("Course", <String, Object>{
+              "courseId": courseId,
+              "courseName": courseName,
+              "courseCode": courseCode,
+              "courseDuration": courseDuration,
+              "noDept": course['no_dept'].toString(),
+              "collegeId": collegeId,
+              "deptId": deptId,
+              "deptName": deptName,
+            });
+
+            var classV = loginData['class_id'];
+
+            // insert class
+            await DBProvider.db.dynamicInsert("Classes", <String, Object>{
+              "classId": classV[0],
+              "className": classV[1],
+              "courseId": courseId,
+              "yearId": yearId,
+              "semId": semId
+            });
+            // insert student with class
+            studentProfileEntry['courseId'] = courseId;
+            studentProfileEntry['yearId'] = year[0];
+            studentProfileEntry['semId'] = semId;
+            studentProfileEntry['deptId'] = deptId;
+            studentProfileEntry['classId'] = classV[0];
+            await DBProvider.db.dynamicInsert("Student", studentProfileEntry);
+
+            await DBProvider.db
+                .dynamicInsert("UserLoginSession", userTableEntry);
+
+            return 1;
+          } else {
+            return 0;
+          }
         } else {
-          saveFlag = 0;
+          // course with dept
+
+          // insert course
+          courseId = course['0'];
+          courseName = course['1'];
+          var courseCode = course['code'];
+          var courseDuration = course['duration'];
+          await DBProvider.db.dynamicInsert("Course", <String, Object>{
+            "courseId": courseId,
+            "courseName": courseName,
+            "courseCode": courseCode,
+            "courseDuration": courseDuration,
+            "noDept": course['no_dept'].toString(),
+          });
+
+          // insert student without class
+          studentProfileEntry['courseId'] = courseId;
+          studentProfileEntry['yearId'] = year[0];
+          studentProfileEntry['semId'] = semId;
+          await DBProvider.db.dynamicInsert("Student", studentProfileEntry);
+
+          await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+
+          return 1;
         }
+
+        // if (studentProfileEntry['yearId'] != null &&
+        //     studentProfileEntry['yearId'] != 0 &&
+        //     studentProfileEntry['courseId'] != null &&
+        //     studentProfileEntry['semId'] != 0 &&
+        //     studentProfileEntry['semId'] != null) {
+        //   await DBProvider.db.dynamicInsert("Student", studentProfileEntry);
+        // } else {
+        //   saveFlag = 0;
+        // }
 
         if (kDebugMode) {
           log('userData');
@@ -332,7 +359,7 @@ Future<dynamic> sendStudentLoginRequest(
       }
     }
   }
-  return saveFlag;
+  // return 0;
 }
 
 Future<dynamic> sendParentLoginRequest(

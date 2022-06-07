@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../services/connection/faculty_mode_fetches.dart';
+import '../../../services/connection/faculty_mode_methods.dart';
 
 /// courseSelection returns three values:
 /// courseId and noDept and duration

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import '../../../services/connection/faculty_mode_fetches.dart';
+import '../../../services/connection/faculty_mode_methods.dart';
 
 class FutureBuilderForFetchFacultyLeave extends StatefulWidget {
   const FutureBuilderForFetchFacultyLeave({Key? key}) : super(key: key);

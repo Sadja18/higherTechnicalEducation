@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 
-import '../../../services/connection/faculty_mode_fetches.dart';
+import '../../../services/connection/faculty_mode_methods.dart';
 
 class FacultyModeStudentAttendanceTable extends StatefulWidget {
   final int courseId;

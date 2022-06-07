@@ -4,11 +4,13 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../services/connection/faculty_mode_fetches.dart';
+import '../../../helpers/validators/username_validators.dart';
+import '../../../services/connection/faculty_mode_methods.dart';
 import '../../../helpers/controllers/common/user_session_db_requests.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../../services/connection/student_mode_methods.dart';
 import '../../common/date_select.dart';
 
 class ApplyForLeaveWidget extends StatefulWidget {
@@ -23,90 +25,85 @@ class ApplyForLeaveWidget extends StatefulWidget {
 class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
   TextEditingController _reasonController = TextEditingController();
   final FocusNode _reasonNode = FocusNode();
-  final ImagePicker _picker = ImagePicker();
-  late File _image;
+  // final ImagePicker _picker = ImagePicker();
+  // late File _image;
   late var selectedLeaveType = {};
-  late var selectedLeaveSession;
-  String _image64Code = "";
+  late var selectedLeaveSession = "";
+  // String _image64Code = "";
   String _selectedEndDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String _selectedStartDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   double dateDiff = DateTime.now().difference(DateTime.now()).inHours / 24;
   // late List leaveTypesData;
 
-  void uploadedImagePreview() async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext ctx) {
-          return AlertDialog(
-            title: const SizedBox(
-              height: 0,
-            ),
-            titlePadding: const EdgeInsets.all(0),
-            // contentPadding: const EdgeInsets.all(0),
-            content: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.90,
-              width: MediaQuery.of(context).size.width,
-              child: SingleChildScrollView(
-                child: Image(
-                  image:
-                      Image.memory(const Base64Decoder().convert(_image64Code))
-                          .image,
-                  fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                ),
-              ),
-            ),
-          );
-        });
-  }
+  // void uploadedImagePreview() async {
+  //   return showDialog(
+  //       context: context,
+  //       builder: (BuildContext ctx) {
+  //         return AlertDialog(
+  //           title: const SizedBox(
+  //             height: 0,
+  //           ),
+  //           titlePadding: const EdgeInsets.all(0),
+  //           // contentPadding: const EdgeInsets.all(0),
+  //           content: SizedBox(
+  //             height: MediaQuery.of(context).size.height * 0.90,
+  //             width: MediaQuery.of(context).size.width,
+  //             child: SingleChildScrollView(
+  //               child: Image(
+  //                 image:
+  //                     Image.memory(const Base64Decoder().convert(_image64Code))
+  //                         .image,
+  //                 fit: BoxFit.fill,
+  //                 width: MediaQuery.of(context).size.width,
+  //                 height: MediaQuery.of(context).size.height,
+  //               ),
+  //             ),
+  //           ),
+  //         );
+  //       });
+  // }
 
-  Future getImageFromCamera() async {
-    var image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      if (image.path.isNotEmpty) {
-        setState(() {
-          _image = File(image.path);
-        });
-        List<int> imageBytes = await File(image.path).readAsBytes();
-        String img64 = base64Encode(imageBytes);
+  // Future getImageFromCamera() async {
+  //   var image = await _picker.pickImage(source: ImageSource.camera);
+  //   if (image != null) {
+  //     if (image.path.isNotEmpty) {
+  //       setState(() {
+  //         _image = File(image.path);
+  //       });
+  //       List<int> imageBytes = await File(image.path).readAsBytes();
+  //       String img64 = base64Encode(imageBytes);
+  //       if (img64.isNotEmpty && img64 != "") {
+  //         setState(() {
+  //           _image64Code = img64;
+  //         });
+  //       }
+  //     }
+  //     if (kDebugMode) {
+  //       print(_image64Code.toString());
+  //     }
+  //   }
+  // }
 
-        if (img64.isNotEmpty && img64 != "") {
-          setState(() {
-            _image64Code = img64;
-          });
-        }
-      }
-
-      if (kDebugMode) {
-        print(_image64Code.toString());
-      }
-    }
-  }
-
-  Future getImagefromGallery() async {
-    var image = await _picker.pickImage(source: ImageSource.gallery);
-
-    if (image != null) {
-      if (image.path.isNotEmpty) {
-        setState(() {
-          _image = File(image.path);
-        });
-        List<int> imageBytes = await File(image.path).readAsBytes();
-        String img64 = base64Encode(imageBytes);
-
-        if (img64.isNotEmpty && img64 != "") {
-          setState(() {
-            _image64Code = img64;
-          });
-        }
-      }
-
-      if (kDebugMode) {
-        print(_image64Code.toString());
-      }
-    }
-  }
+  // Future getImagefromGallery() async {
+  //   var image = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     if (image.path.isNotEmpty) {
+  //       setState(() {
+  //         _image = File(image.path);
+  //       });
+  //       List<int> imageBytes = await File(image.path).readAsBytes();
+  //       String img64 = base64Encode(imageBytes);
+  //       if (img64.isNotEmpty && img64 != "") {
+  //         setState(() {
+  //           _image64Code = img64;
+  //         });
+  //       }
+  //     }
+  //     if (kDebugMode) {
+  //       print(_image64Code.toString());
+  //     }
+  //   }
+  // }
 
   Widget tableViewField(String fieldName, Widget fieldWidget) {
     return Container(
@@ -183,115 +180,119 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
     dateDiffCalc();
   }
 
-  Widget showAttachment() {
-    return FutureBuilder(
-        future: whichUserLoggedIn(),
-        builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SizedBox(
-              height: 0,
-            );
-          } else {
-            if (snapshot.hasError ||
-                snapshot.hasData != true ||
-                snapshot.data == null ||
-                [1, 2, 3, 4, 5, 6].contains(snapshot.data) == false ||
-                snapshot.data == false) {
-              return const SizedBox(
-                height: 0,
-              );
-            } else {
-              var userType = snapshot.data;
-              switch (userType) {
-                case 6:
-                  return tableViewField(
-                    "Attachment:",
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Table(
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FractionColumnWidth(0.40),
-                          1: FractionColumnWidth(0.40)
-                        },
-                        children: [
-                          TableRow(
-                            children: [
-                              TableCell(
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 4.0,
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          getImagefromGallery();
-                                        },
-                                        child: const Icon(
-                                          Icons.browse_gallery_outlined,
-                                          size: 35,
-                                          color: Colors.purple,
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                        horizontal: 4.0,
-                                      ),
-                                      child: InkWell(
-                                        onTap: () {
-                                          getImageFromCamera();
-                                        },
-                                        child: const Icon(
-                                          Icons.add_a_photo_outlined,
-                                          size: 35,
-                                          color: Colors.purple,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              TableCell(
-                                child: (_image64Code == "")
-                                    ? const SizedBox(
-                                        height: 0,
-                                      )
-                                    : InkWell(
-                                        onTap: () {
-                                          if (kDebugMode) {
-                                            print("Show Preview");
-                                          }
-                                          uploadedImagePreview();
-                                        },
-                                        child: const Text(
-                                          "Preview",
-                                          style: TextStyle(
-                                            color: Colors.deepPurple,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                default:
-                  return const SizedBox(
-                    height: 0,
-                  );
-              }
-            }
-          }
-        });
-  }
+  // Widget showAttachment() {
+  //   return FutureBuilder(
+  //       future: whichUserLoggedIn(),
+  //       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return const SizedBox(
+  //             height: 0,
+  //           );
+  //         } else {
+  //           if (snapshot.hasError ||
+  //               snapshot.hasData != true ||
+  //               snapshot.data == null ||
+  //               [1, 2, 3, 4, 5, 6].contains(snapshot.data) == false ||
+  //               snapshot.data == false) {
+  //             return const SizedBox(
+  //               height: 0,
+  //             );
+  //           } else {
+  //             var userType = snapshot.data;
+  //             switch (userType) {
+  //               case 6:
+  //                 return tableViewField(
+  //                   "Attachment:",
+  //                   Container(
+  //                     alignment: Alignment.centerLeft,
+  //                     child: Table(
+  //                       columnWidths: const <int, TableColumnWidth>{
+  //                         0: FractionColumnWidth(0.40),
+  //                         1: FractionColumnWidth(0.40)
+  //                       },
+  //                       children: [
+  //                         TableRow(
+  //                           children: [
+  //                             TableCell(
+  //                               child: Row(
+  //                                 children: [
+  //                                   Container(
+  //                                     margin: const EdgeInsets.symmetric(
+  //                                       horizontal: 4.0,
+  //                                     ),
+  //                                     child: InkWell(
+  //                                       onTap: () {
+  //                                         getImagefromGallery();
+  //                                       },
+  //                                       child: const Icon(
+  //                                         Icons.browse_gallery_outlined,
+  //                                         size: 35,
+  //                                         color: Colors.purple,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                   Container(
+  //                                     margin: const EdgeInsets.symmetric(
+  //                                       horizontal: 4.0,
+  //                                     ),
+  //                                     child: InkWell(
+  //                                       onTap: () {
+  //                                         getImageFromCamera();
+  //                                       },
+  //                                       child: const Icon(
+  //                                         Icons.add_a_photo_outlined,
+  //                                         size: 35,
+  //                                         color: Colors.purple,
+  //                                       ),
+  //                                     ),
+  //                                   ),
+  //                                 ],
+  //                               ),
+  //                             ),
+  //                             TableCell(
+  //                               child: (_image64Code == "")
+  //                                   ? const SizedBox(
+  //                                       height: 0,
+  //                                     )
+  //                                   : InkWell(
+  //                                       onTap: () {
+  //                                         if (kDebugMode) {
+  //                                           print("Show Preview");
+  //                                         }
+  //                                         uploadedImagePreview();
+  //                                       },
+  //                                       child: const Text(
+  //                                         "Preview",
+  //                                         style: TextStyle(
+  //                                           color: Colors.deepPurple,
+  //                                         ),
+  //                                       ),
+  //                                     ),
+  //                             ),
+  //                           ],
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 );
+  //               default:
+  //                 return const SizedBox(
+  //                   height: 0,
+  //                 );
+  //             }
+  //           }
+  //         }
+  //       });
+  // }
 
   Widget showLeaveType() {
     return FutureBuilder(
       future: whichUserLoggedIn(),
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+        if (kDebugMode) {
+          log("apply leave widget");
+          log(snapshot.data.toString());
+        }
         if (snapshot.connectionState == ConnectionState.waiting ||
             snapshot.hasError ||
             snapshot.hasData != true ||
@@ -302,30 +303,69 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
             height: 0,
           );
         } else {
-          return tableViewField(
-              "Leave Type",
-              InkWell(
-                onTap: () {
-                  showLeaveSelectionDialog();
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.60,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "Select Leave Type",
-                      style: TextStyle(
-                        color: Colors.white,
+          return [3, 4].contains(snapshot.data)
+              ? Column(
+                  children: [
+                    tableViewField(
+                      "Leave Type",
+                      InkWell(
+                        onTap: () {
+                          showLeaveSelectionDialog();
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            width: MediaQuery.of(context).size.width * 0.60,
+                            alignment: Alignment.center,
+                            child: const Text(
+                              "Select Leave Type",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ));
+                    Container(
+                      alignment: Alignment.center,
+                      // width: ,
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        // columnWidths: const {
+                        //   0: FractionColumnWidth(0.50),
+                        //   1: FractionColumnWidth(0.50),
+                        // },
+                        children: [
+                          TableRow(
+                            children: [
+                              Text(
+                                selectedLeaveType.toString(),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              TableCell(
+                                child: Text(
+                                  selectedLeaveSession.toString(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              : const SizedBox(
+                  height: 0,
+                );
         }
       },
     );
@@ -429,27 +469,119 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
         builder: (BuildContext ctx) {
           return AlertDialog(
             title: const Center(child: Text("Invalid Entries")),
-            content: Center(child: Text(message)),
+            content: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width * 0.60,
+              height: MediaQuery.of(context).size.height * 0.20,
+              child: Text(message),
+            ),
           );
         });
   }
 
-  void showSuccessDialog() async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext _) {
-          Future.delayed(const Duration(seconds: 2), () {
-            Navigator.of(context).pop();
-          });
-          return const AlertDialog(
-            title: Text("Saving"),
-            content: SizedBox(
-              child: CircularProgressIndicator.adaptive(),
-            ),
-          );
-        });
+  void showSuccessDialogStudent() async {
+    // showDialog(
+    //     context: context,
+    //     builder: (BuildContext _) {
+    //       Future.delayed(const Duration(seconds: 2), () {
+    //         Navigator.of(context).pop();
+    //       });
+    //       return AlertDialog(
+    //         title: const Text("Saving"),
+    //         content: Container(
+    //           alignment: Alignment.center,
+    //           width: MediaQuery.of(context).size.width * 0.60,
+    //           height: MediaQuery.of(context).size.height * 0.20,
+    //           child: const CircularProgressIndicator.adaptive(),
+    //         ),
+    //       );
+    //     });
     // sleep(const Duration(seconds: 2));
     // Navigator.of(context).pop();
+    var leaveDateDifference = dateDiff + 1;
+    var saveResult = await saveStudentLeaveRequestToLocalDB(_selectedStartDate,
+        _selectedEndDate, leaveDateDifference, _reasonController.text);
+
+    if (saveResult == null || saveResult == "issue") {
+      showDialog(
+          context: context,
+          builder: (BuildContext _) {
+            // Future.delayed(const Duration(seconds: 2), () {
+            //   Navigator.of(context).pop();
+            // });
+            return AlertDialog(
+              title: const Text("Error Saving leave Request"),
+              content: Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width * 0.60,
+                height: MediaQuery.of(context).size.height * 0.20,
+                child: const Text(
+                    "Invalid User Session. Please logout and re-login"),
+              ),
+            );
+          });
+    } else {
+      setState(() {
+        _reasonController.clear();
+      });
+      showDialog(
+          context: context,
+          builder: (BuildContext _) {
+            // Future.delayed(const Duration(seconds: 2), () {
+            //   Navigator.of(context).pop();
+            // });
+            return AlertDialog(
+              title: const Text("Request saved locally"),
+              content: Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width * 0.60,
+                height: MediaQuery.of(context).size.height * 0.20,
+                child: const Text(
+                    "Please use the sync button on Dashboard to upload to server"),
+              ),
+            );
+          });
+    }
+
+    // Navigator.of(context).pop();
+  }
+
+  // pre submit validation
+  void preSubmitValidation() async {
+    var message = "";
+
+    if (DateTime.parse(_selectedEndDate)
+        .isBefore(DateTime.parse(_selectedStartDate))) {
+      message = "To date should be after From Date";
+      showAlertDialog(message);
+    } else {
+      if (_reasonController.text.isEmpty) {
+        message = "Reason should not be empty";
+        showAlertDialog(message);
+      } else {
+        var whichUserLoggedInCurrently = await whichUserLoggedIn();
+        if ([3, 4].contains(whichUserLoggedInCurrently)) {
+          // means teaching or non-teaching staff logged in
+          // check if leave type and session is selected
+          if (selectedLeaveSession.isEmpty || selectedLeaveType.isEmpty) {
+            if (selectedLeaveType.isEmpty) {
+              showAlertDialog("Please select a leave type");
+            } else {
+              showAlertDialog("Please select a leave session");
+            }
+          } else {
+            showAlertDialog("All entries acceptable");
+          }
+        } else {
+          if (whichUserLoggedInCurrently == 6) {
+            // student logged in
+            // date and reason validation is enough
+            // so show a success dialog to submit to local db
+            showSuccessDialogStudent();
+          }
+        }
+      }
+    }
   }
 
   @override
@@ -521,7 +653,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
                   ),
                 )),
             // showDays(),
-            showAttachment(),
+            // showAttachment(),
             Container(
               margin: const EdgeInsets.symmetric(
                 vertical: 15.0,
@@ -546,39 +678,9 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
                 ),
                 onTap: () {
                   if (kDebugMode) {
-                    print("reason submitted");
-                    // var reason = _reasonController.text;
-                    // print(reason);
-                    log(dateDiff.toString());
-                    log(selectedLeaveSession.toString());
-                    log(selectedLeaveType.toString());
-                    log(DateTime.parse(_selectedEndDate)
-                        .isBefore(DateTime.parse(_selectedStartDate))
-                        .toString());
-                    log(_reasonController.text.isEmpty.toString());
-                    log(selectedLeaveType.isEmpty.toString());
-                    log((selectedLeaveSession == "").toString());
+                    log("ctreate a future for leave type validation");
                   }
-                  var message = "";
-
-                  if (DateTime.parse(_selectedEndDate)
-                      .isBefore(DateTime.parse(_selectedStartDate))) {
-                    message = "To date should be after From Date";
-                    showAlertDialog(message);
-                  } else {
-                    if (_reasonController.text.isEmpty) {
-                      message = "Reason should not be empty";
-                      showAlertDialog(message);
-                    } else {
-                      if (selectedLeaveType.isEmpty ||
-                          selectedLeaveSession == "") {
-                        message = "Please select a leave type";
-                        showAlertDialog(message);
-                      } else {
-                        showSuccessDialog();
-                      }
-                    }
-                  }
+                  preSubmitValidation();
                 },
               ),
             ),
@@ -700,7 +802,7 @@ class _LeaveTypeDropdownState extends State<LeaveTypeDropdown> {
                     children: [
                       DropdownButton(
                         // value: selectedLeaveSessionName,
-                        hint: const Text("Select Duration"),
+                        hint: const Text("Select Session"),
                         items: leaveSessions
                             .map(
                               (e) => DropdownMenuItem(

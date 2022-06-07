@@ -10,6 +10,10 @@ RegExp emailRegex = RegExp(
 /// 9876565643; parent@1234
 RegExp phoneRegex = RegExp(r'^[6-9]\d{9}|\d{10}|\d{11}$', multiLine: false);
 
+RegExp base64EncodeRegex = RegExp(
+    r'^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$',
+    multiLine: true);
+
 /// return value == 1 means, the entered user name is a valid phone number
 int checkIfUserNameIsPhone(String enteredUserName) {
   if (phoneRegex.hasMatch(enteredUserName)) {
