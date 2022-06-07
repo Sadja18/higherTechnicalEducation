@@ -97,21 +97,22 @@ class _MasterApproveFacultyLeaveScreenState
                           future: getFacultyLeaveRequestsFromServerMasterMode(
                               selectedDeptId),
                           builder: (BuildContext ctx, AsyncSnapshot snapshot) {
-                            if (snapshot.hasError ||
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator.adaptive(),
+                              );
+                            } else if (snapshot.hasError ||
                                 snapshot.hasData == false ||
                                 snapshot.data.isEmpty) {
                               return const SizedBox(
                                 child: Text("No Leave Requests"),
                               );
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator.adaptive(),
-                              );
                             } else {
                               var leaveRequests = snapshot.data;
                               return MasterLeaveApproveTableWidget(
-                                  leaveRequests: leaveRequests);
+                                leaveRequests: leaveRequests,
+                              );
                             }
                           },
                         ),
