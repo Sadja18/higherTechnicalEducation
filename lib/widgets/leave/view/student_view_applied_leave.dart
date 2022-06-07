@@ -134,12 +134,12 @@ class _CalendarViewWidgetState extends State<CalendarViewWidget> {
           showAgenda: true,
           agendaStyle: AgendaStyle(
             dayTextStyle: TextStyle(
-              // color: Colors.blue,
+              color: Colors.blue,
               fontWeight: FontWeight.bold,
               fontSize: 20.0,
             ),
             dateTextStyle: TextStyle(
-                // color: Colors.blue,
+                color: Colors.blue,
                 fontWeight: FontWeight.bold,
                 fontSize: 20.0),
             appointmentTextStyle: TextStyle(

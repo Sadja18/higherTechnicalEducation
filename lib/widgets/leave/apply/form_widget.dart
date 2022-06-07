@@ -32,7 +32,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
   // String _image64Code = "";
   String _selectedEndDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
   String _selectedStartDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  double dateDiff = DateTime.now().difference(DateTime.now()).inHours / 24;
+  // double dateDiff = DateTime.now().difference(DateTime.now()).inHours / 24;
   // late List leaveTypesData;
 
   // void uploadedImagePreview() async {
@@ -159,9 +159,9 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
     var dateDifference = (to.difference(from).inHours / 24);
     // if(dateDifference)
     dateDifference = dateDifference + 1;
-    setState(() {
-      dateDiff = dateDifference;
-    });
+    // setState(() {
+    //   dateDiff = dateDifference;
+    // });
     return dateDifference;
   }
 
@@ -169,7 +169,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
     setState(() {
       _selectedStartDate = selectedDate!;
     });
-    dateDiffCalc();
+    // dateDiffCalc();
     // getALlLeaveAllocationsForCurrentFacultyVoidMode();
   }
 
@@ -177,7 +177,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
     setState(() {
       _selectedEndDate = selectedDate!;
     });
-    dateDiffCalc();
+    // dateDiffCalc();
   }
 
   // Widget showAttachment() {
@@ -428,7 +428,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
 
   Future<dynamic> getALlLeaveAllocationsForCurrentFacultyVoidMode() async {
     var startDate = _selectedStartDate;
-    var dateDifference = dateDiff + 1;
+    var dateDifference = dateDiffCalc();
     var data =
         await getLeaveAllocationsForCurrentFaculty(startDate, dateDifference);
     if (data != null && data.isNotEmpty) {
@@ -480,25 +480,10 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
   }
 
   void showSuccessDialogStudent() async {
-    // showDialog(
-    //     context: context,
-    //     builder: (BuildContext _) {
-    //       Future.delayed(const Duration(seconds: 2), () {
-    //         Navigator.of(context).pop();
-    //       });
-    //       return AlertDialog(
-    //         title: const Text("Saving"),
-    //         content: Container(
-    //           alignment: Alignment.center,
-    //           width: MediaQuery.of(context).size.width * 0.60,
-    //           height: MediaQuery.of(context).size.height * 0.20,
-    //           child: const CircularProgressIndicator.adaptive(),
-    //         ),
-    //       );
-    //     });
-    // sleep(const Duration(seconds: 2));
-    // Navigator.of(context).pop();
-    var leaveDateDifference = dateDiff + 1;
+    var leaveDateDifference = dateDiffCalc();
+    if (kDebugMode) {
+      log(leaveDateDifference.toString());
+    }
     var saveResult = await saveStudentLeaveRequestToLocalDB(_selectedStartDate,
         _selectedEndDate, leaveDateDifference, _reasonController.text);
 
@@ -679,6 +664,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
                 onTap: () {
                   if (kDebugMode) {
                     log("ctreate a future for leave type validation");
+                    // log(dateDiff.toString());
                   }
                   preSubmitValidation();
                 },
