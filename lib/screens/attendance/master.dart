@@ -18,10 +18,12 @@ class MasterStaffAttendanceScreen extends StatefulWidget {
 class _MasterStaffAttendanceScreenState
     extends State<MasterStaffAttendanceScreen> {
   late int selectedDeptId = 0;
+  int recall = 0;
 
   void deptSelector(int selectionDeptId) {
     setState(() {
       selectedDeptId = selectionDeptId;
+      recall = 1;
     });
     if (kDebugMode) {
       log("selection: $selectedDeptId");
@@ -57,11 +59,31 @@ class _MasterStaffAttendanceScreenState
               ),
             ),
           ),
-          bottom: const TabBar(
-            tabs: [Text("Teaching"), Text("Non-Teaching")],
+          // ignore: prefer_const_constructors
+          bottom: TabBar(
+            physics: NeverScrollableScrollPhysics(),
+            unselectedLabelColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: const Color.fromARGB(255, 82, 99, 255),
+            ),
+            tabs: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.30,
+                alignment: Alignment.center,
+                child: const Text("Teaching"),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.30,
+                alignment: Alignment.center,
+                child: const Text("Non-Teaching"),
+              ),
+            ],
           ),
         ),
         body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             Container(
               // decoration: BoxDecoration(color: Colors.amber.shade100),
@@ -73,10 +95,22 @@ class _MasterStaffAttendanceScreenState
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    DropdownDeptSelector(
-                      deptSelector: deptSelector,
+                    Container(
+                      margin: const EdgeInsets.only(
+                          // top: 10.0,
+                          ),
+                      // width: MediaQuery.of(context).size.width * 0.95,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          20.0,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: DropdownDeptSelector(
+                        deptSelector: deptSelector,
+                      ),
                     ),
-                    (selectedDeptId == 0)
+                    (selectedDeptId == 0 && recall == 0)
                         ? const SizedBox(
                             height: 0,
                           )
@@ -98,6 +132,7 @@ class _MasterStaffAttendanceScreenState
                                   // log(staffData.toString());
                                 }
                                 return StaffAttendanceWidget(
+                                  key: ObjectKey(staffData),
                                   members: staffData,
                                 );
                               }

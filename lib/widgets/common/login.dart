@@ -99,7 +99,8 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
               log(loginStatus.toString());
             }
             if (loginStatus == 1) {
-              Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(DashboardScreen.routeName);
             } else {
               alertMessage0 = "Login failed.";
               showAlertBox(alertMessage0);

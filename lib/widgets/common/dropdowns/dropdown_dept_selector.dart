@@ -61,8 +61,9 @@ class _DropdownDeptSelectorState extends State<DropdownDeptSelector> {
                 deptSelectionHandler: deptSelectionHandler,
               );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox(
-                child: CircularProgressIndicator.adaptive(),
+              return Container(
+                alignment: Alignment.center,
+                child: const CircularProgressIndicator.adaptive(),
               );
             }
             return const Text("");
@@ -97,9 +98,18 @@ class _dropDownSubWidgetState extends State<dropDownSubWidget> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery.of(context).size.width * 0.95,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          20.0,
+        ),
+      ),
       child: DropdownButton(
         dropdownColor: Colors.deepPurple,
+        borderRadius: BorderRadius.circular(
+          10.0,
+        ),
+        elevation: 8,
         value: selectedDeptName,
         items: widget.deptList.map<DropdownMenuItem<String>>((e) {
           return DropdownMenuItem(

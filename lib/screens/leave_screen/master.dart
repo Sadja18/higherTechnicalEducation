@@ -55,14 +55,30 @@ class _MasterApproveFacultyLeaveScreenState
               ),
             ),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
+            physics: const NeverScrollableScrollPhysics(),
+            unselectedLabelColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: const Color.fromARGB(255, 82, 99, 255),
+            ),
             tabs: [
-              Text('Teaching'),
-              Text('Non-Teaching'),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.30,
+                alignment: Alignment.center,
+                child: const Text('Teaching'),
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width * 0.30,
+                alignment: Alignment.center,
+                child: const Text('Non-Teaching'),
+              ),
             ],
           ),
         ),
         body: TabBarView(
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
@@ -89,7 +105,7 @@ class _MasterApproveFacultyLeaveScreenState
                               );
                             } else if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const SizedBox(
+                              return const Center(
                                 child: CircularProgressIndicator.adaptive(),
                               );
                             } else {

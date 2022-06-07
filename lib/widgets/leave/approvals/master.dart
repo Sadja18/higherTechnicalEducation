@@ -105,9 +105,9 @@ class _MasterLeaveApproveTableWidgetState
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
-            titlePadding: const EdgeInsets.all(0),
+            titlePadding: const EdgeInsets.all(6.0),
             contentPadding: const EdgeInsets.all(
-              2.0,
+              6.0,
             ),
             title: dialogTitle(staffId),
             content: Container(

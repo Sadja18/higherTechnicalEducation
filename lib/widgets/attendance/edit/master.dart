@@ -129,6 +129,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
 
   Widget rowsTitleBuilder(rowIndex) {
     return InkWell(
+      // splashColor: Colors.purple,
       onTap: () {
         var currentEmpId = members[rowIndex]['employeeId'];
         if (kDebugMode) {
@@ -140,18 +141,32 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
         });
       },
       child: Card(
+        borderOnForeground: true,
         color: getRowColor(rowIndex),
+        shape: RoundedRectangleBorder(
+          // side: Border.symmetric(vertical: BorderSide.none),
+          borderRadius: BorderRadius.circular(
+            10.0,
+          ),
+        ),
         shadowColor: Colors.pinkAccent,
         elevation: 16.0,
         child: Container(
-          margin: const EdgeInsets.symmetric(
-            vertical: 5.0,
+          margin: const EdgeInsets.only(
+            top: 5.0,
           ),
           alignment: Alignment.center,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
             color: getRowColor(rowIndex),
+            // border: Border.all(
+            //   color: Colors.white,
+            //   width: 3.0,
+            // ),
+            // borderRadius: BorderRadius.circular(
+            //   10.0,
+            // ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -178,12 +193,18 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   Widget leaveStickyTable() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.674,
+      height: MediaQuery.of(context).size.height * 0.65,
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(
         top: 5.0,
+        bottom: 0,
       ),
-      decoration: BoxDecoration(color: Colors.blueGrey.shade100),
+      decoration: BoxDecoration(
+        color: Colors.blueAccent.shade100,
+        borderRadius: BorderRadius.circular(
+          10.0,
+        ),
+      ),
       child: StickyHeadersTable(
         initialScrollOffsetX: 0.0,
         initialScrollOffsetY: verticalRowScrollOffset(),
@@ -246,8 +267,8 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
             contentPadding: const EdgeInsets.all(0),
             content: Container(
               alignment: Alignment.topCenter,
-              width: MediaQuery.of(context).size.width * 0.80,
-              height: MediaQuery.of(context).size.height * 0.70,
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.height * 0.40,
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Table(
@@ -279,6 +300,90 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
                 ),
               ),
             ),
+            actions: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Card(
+                  color: Colors.red,
+                  elevation: 10.0,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(
+                        10.0,
+                      ),
+                    ),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    absenteeList = [];
+                    rowsTapped = [];
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: Card(
+                  color: Colors.blue,
+                  elevation: 10.0,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(
+                        10.0,
+                      ),
+                    ),
+                    child: const Text(
+                      "Reset",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  // Navigator.of(context).pop();
+                  if (kDebugMode) {
+                    log("Save data to db");
+                  }
+                },
+                child: Card(
+                  color: Colors.green,
+                  elevation: 10.0,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(
+                        10.0,
+                      ),
+                    ),
+                    child: const Text(
+                      "Confirm",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           );
         });
   }
@@ -312,21 +417,32 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
               }
               onSubmitPreview();
             },
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.05,
-              alignment: Alignment.topCenter,
-              decoration: const BoxDecoration(
-                color: Colors.purpleAccent,
+            child: Card(
+              elevation: 18.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  10.0,
+                ),
               ),
-              // margin: const EdgeInsets.symmetric(
-              //   vertical: 5.0,
-              // ),
-              child: const Text(
-                "Submit",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.60,
+                height: MediaQuery.of(context).size.height * 0.05,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.purpleAccent,
+                  borderRadius: BorderRadius.circular(
+                    10.0,
+                  ),
+                ),
+                // margin: const EdgeInsets.symmetric(
+                //   vertical: 5.0,
+                // ),
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
