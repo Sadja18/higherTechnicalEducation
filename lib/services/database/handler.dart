@@ -161,7 +161,7 @@ class DBProvider {
         "userId INTEGER NOT NULL,"
         "teacherName TEXT,"
         "deptId INTEGER NOT NULL,"
-        "deptName INTEGER NOT NULL,"
+        "deptName TEXT NOT NULL,"
         "collegeId INTEGER NOT NULL,"
         "collegeName TEXT,"
         'profilePic TEXT,'

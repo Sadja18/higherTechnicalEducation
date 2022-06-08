@@ -5,10 +5,15 @@ import 'package:flutter/material.dart';
 import '../../../services/connection/fetch_leaves.dart';
 import '../../../widgets/leave/approvals/head.dart';
 
-class HeadLeaveScreen extends StatelessWidget {
+class HeadLeaveScreen extends StatefulWidget {
   static const routeName = "/head-mode-leave-screen";
   const HeadLeaveScreen({Key? key}) : super(key: key);
 
+  @override
+  State<HeadLeaveScreen> createState() => _HeadLeaveScreenState();
+}
+
+class _HeadLeaveScreenState extends State<HeadLeaveScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -226,14 +231,19 @@ class _HeadModeApproveFacultyLeaveState
         ),
         body: Container(
           alignment: Alignment.topCenter,
-          height: MediaQuery.of(context).size.height * 0.75,
+          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
+          decoration: const BoxDecoration(
+              // color: Colors.green,
+              ),
           child: FutureBuilder(
             future: getFacultyLeaveRequestsFromServerHeadMode(),
             builder: (BuildContext ctx, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox(
-                  child: CircularProgressIndicator.adaptive(),
+                return const Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
                 );
               } else if (snapshot.hasError ||
                   snapshot.hasData == false ||
@@ -247,7 +257,7 @@ class _HeadModeApproveFacultyLeaveState
                   // print("faculty leaves");
                   if (kDebugMode) {
                     log("faculty leabcehvaskjeraavb,jervh");
-                    log(leaveRequests.toString());
+                    // log(leaveRequests.toString());
                   }
                 }
                 return ApproveLeaveWidgetHead(

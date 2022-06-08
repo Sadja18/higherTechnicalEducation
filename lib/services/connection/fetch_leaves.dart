@@ -161,81 +161,111 @@ Future<dynamic> getFacultyLeaveRequestsFromServerMasterMode(
 
 Future<dynamic> getFacultyLeaveRequestsFromServerHeadMode() async {
   try {
-    Future.delayed(Duration(seconds: 6));
-    var userName = 'chemgcd@gmail.com';
-    var userPassword = 'depthod@1234';
-    var str = "1";
-    if (kDebugMode) {
-      log('sending head fetch leave faculty request');
-    }
-    var response = await http.post(
-      Uri.parse('$baseUriLocal$headUriStart$headUriFetchFacultyLeave'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'userName': userName,
-        'userPassword': userPassword,
-        'dbname': 'college',
-        'str': str
-      }),
-    );
+    // Future.delayed(Duration(seconds: 6));
+    var dbQuery = "SELECT * FROM UserLoginSession "
+        "WHERE loginStatus=1;";
+    var userCredentials = await DBProvider.db.dynamicRead(dbQuery, []);
 
-    if (response.statusCode == 200) {
+    if (userCredentials != null && userCredentials.isNotEmpty) {
+      var user = userCredentials[0];
+      var userName = user['userName'];
+      var userPassword = user['userPassword'];
+      var str = '1';
       if (kDebugMode) {
-        log(response.body);
+        log('sending head fetch leave faculty request');
       }
-      var resp = jsonDecode(response.body);
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var data = resp['data'];
-        var leaveRequestList = [];
-        for (var leaveRequest in data) {
-          var leaveId = leaveRequest['id'];
-          var leaveTypeId = leaveRequest['name'][0];
-          var leaveTypeName = leaveRequest['name'][1];
-          var leaveSession = leaveRequest['leave_session'];
-          var leaveFacultyUserId = leaveRequest['staff_id'][0];
-          var leaveFacultyUserName = leaveRequest['staff_id'][1];
-          var leaveReason = leaveRequest['reason'];
-          var leaveRequestStatus = leaveRequest['state'];
-          var leaveFacultyDeptId = leaveRequest['dept_id'][0];
-          var leaveFacultyDeptName = leaveRequest['dept_id'][1];
-          var leaveFacultyCollegeId = leaveRequest['college_id'][0];
-          var leaveFacultyCollegeName = leaveRequest['college_id'][1];
-          var leaveFromDate = leaveRequest['start_date'];
-          var leaveToDate = leaveRequest['end_date'];
-          var leaveDays = leaveRequest['days'].toString();
-          var leaveAppliedDate = leaveRequest['app_date'];
+      // var response = await http.post(
+      //   Uri.parse('$baseUriLocal$headUriStart$headUriFetchFacultyLeave'),
+      //   headers: <String, String>{
+      //     'Content-Type': 'application/json; charset=UTF-8',
+      //   },
+      //   body: jsonEncode(<String, String>{
+      //     'userName': userName,
+      //     'userPassword': userPassword,
+      //     'dbname': 'college',
+      //     'str': str
+      //   }),
+      // );
 
-          Map<String, Object> facultyLeaveRequestEntry = {
-            "leaveId": leaveId,
-            "leaveFacultyUserId": leaveFacultyUserId,
-            "leaveFacultyUserName": leaveFacultyUserName,
-            "leaveFacultyDeptId": leaveFacultyDeptId,
-            "leaveFacultyDeptName": leaveFacultyDeptName,
-            "leaveFacultyCollegeId": leaveFacultyCollegeId,
-            "leaveFacultyCollegeName": leaveFacultyCollegeName,
-            "leaveTypeId": leaveTypeId,
-            "leaveTypeName": leaveTypeName,
-            "leaveFromDate": leaveFromDate,
-            "leaveToDate": leaveToDate,
-            'leaveSession': leaveSession,
-            "leaveDays": leaveDays,
-            "leaveAppliedDate": leaveAppliedDate,
-            "leaveReason": leaveReason,
-            "leaveStatus": leaveRequestStatus
-          };
+      // if (response.statusCode == 200) {
+      //   if (kDebugMode) {
+      //     log(response.body);
+      //   }
+      //   var resp = jsonDecode(response.body);
+      //   if (resp['message'].toString().toLowerCase() == 'success') {
+      //     var data = resp['data'];
+      //     var leaveRequestList = [];
+      //     for (var leaveRequest in data) {
+      //       var leaveId = leaveRequest['id'];
+      //       var leaveTypeId = leaveRequest['name'][0];
+      //       var leaveTypeName = leaveRequest['name'][1];
+      //       var leaveSession = leaveRequest['leave_session'];
+      //       var leaveFacultyUserId = leaveRequest['staff_id'][0];
+      //       var leaveFacultyUserName = leaveRequest['staff_id'][1];
+      //       var leaveReason = leaveRequest['reason'];
+      //       var leaveRequestStatus = leaveRequest['state'];
+      //       var leaveFacultyDeptId = leaveRequest['dept_id'][0];
+      //       var leaveFacultyDeptName = leaveRequest['dept_id'][1];
+      //       var leaveFacultyCollegeId = leaveRequest['college_id'][0];
+      //       var leaveFacultyCollegeName = leaveRequest['college_id'][1];
+      //       var leaveFromDate = leaveRequest['start_date'];
+      //       var leaveToDate = leaveRequest['end_date'];
+      //       var leaveDays = leaveRequest['days'].toString();
+      //       var leaveAppliedDate = leaveRequest['app_date'];
 
-          await DBProvider.db
-              .dynamicInsert("FacultytLeaveRequest", facultyLeaveRequestEntry);
-          leaveRequestList.add(facultyLeaveRequestEntry);
-        }
-        return leaveRequestList;
-      } else {
-        return [];
+      //       Map<String, Object> facultyLeaveRequestEntry = {
+      //         "leaveId": leaveId,
+      //         "leaveFacultyUserId": leaveFacultyUserId,
+      //         "leaveFacultyUserName": leaveFacultyUserName,
+      //         "leaveFacultyDeptId": leaveFacultyDeptId,
+      //         "leaveFacultyDeptName": leaveFacultyDeptName,
+      //         "leaveFacultyCollegeId": leaveFacultyCollegeId,
+      //         "leaveFacultyCollegeName": leaveFacultyCollegeName,
+      //         "leaveTypeId": leaveTypeId,
+      //         "leaveTypeName": leaveTypeName,
+      //         "leaveFromDate": leaveFromDate,
+      //         "leaveToDate": leaveToDate,
+      //         'leaveSession': leaveSession,
+      //         "leaveDays": leaveDays,
+      //         "leaveAppliedDate": leaveAppliedDate,
+      //         "leaveReason": leaveReason,
+      //         "leaveStatus": leaveRequestStatus
+      //       };
+
+      //       await DBProvider.db
+      //           .dynamicInsert("FacultytLeaveRequest", facultyLeaveRequestEntry);
+      //       leaveRequestList.add(facultyLeaveRequestEntry);
+      //     }
+      //   }
+      // }
+      var query = "SELECT * "
+          "FROM FacultytLeaveRequest "
+          "WHERE leaveStatus=? "
+          "AND "
+          "leaveFacultyDeptId=("
+          "SELECT deptId FROM Head "
+          "WHERE Head.userId=("
+          "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+          ")"
+          ") "
+          "AND "
+          "leaveFacultyCollegeId=("
+          "SELECT collegeId FROM Head "
+          "WHERE Head.userId=("
+          "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+          ")"
+          ")"
+          ";";
+      var params = ['toapprove'];
+      var records = await DBProvider.db.dynamicRead(query, params);
+      if (kDebugMode) {
+        log('faculty leave request fetch approve leave screen');
+        // log(records.toString());
       }
-    } else {
-      return [];
+
+      if (records != null && records.isNotEmpty) {
+        return records;
+      }
     }
   } catch (e) {
     if (kDebugMode) {
@@ -244,7 +274,30 @@ Future<dynamic> getFacultyLeaveRequestsFromServerHeadMode() async {
     }
 
     if (e is SocketException) {
-      return [];
+      var query = "SELECT * "
+          "FROM FacultytLeaveRequest "
+          "WHERE leaveStatus=? "
+          "AND "
+          "leaveFacultyDeptId=("
+          "SELECT deptId FROM Head "
+          "WHERE Head.userId=("
+          "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+          ")"
+          ") "
+          "AND "
+          "leaveFacultyCollegeId=("
+          "SELECT collegeId FROM Head "
+          "WHERE Head.userId=("
+          "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+          ")"
+          ")"
+          ";";
+      var params = ['toapprove'];
+      var records = await DBProvider.db.dynamicRead(query, params);
+      if (kDebugMode) {
+        log('faculty leave request fetch approve leave screen');
+        log(records.toString());
+      }
     }
   }
 }

@@ -534,11 +534,11 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
     return Container(
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.symmetric(
-        vertical: 6.0,
+        vertical: 3.0,
       ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.55,
-      decoration: BoxDecoration(
+      height: MediaQuery.of(context).size.height * 0.80,
+      decoration: const BoxDecoration(
           // border: Border.all(),
           ),
       child: StickyHeadersTable(
@@ -577,7 +577,7 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
     return Container(
       decoration: const BoxDecoration(),
       alignment: Alignment.topCenter,
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -595,7 +595,7 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
               shadowColor: Colors.blueGrey,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.55,
-                alignment: Alignment.topCenter,
+                alignment: Alignment.bottomCenter,
                 decoration: const BoxDecoration(
                   color: Colors.purpleAccent,
                 ),
@@ -898,277 +898,282 @@ class _ApproveStudentLeaveHeadWidgetState
   }
 
   Widget rowsTitleBuilder(rowIndex) {
-    return InkWell(
-      onTap: () {
-        if (kDebugMode) {
-          print(rowIndex);
-          print(leaveRequests.toString());
-          print(widget.leaveRequests.toString());
-        }
-        showUserInputDialog(rowIndex);
-      },
-      child: Card(
-        color: getBgColor(rowIndex),
-        elevation: 18.0,
-        shadowColor: Colors.pinkAccent,
-        borderOnForeground: true,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: getBgColor(rowIndex),
-            borderRadius: BorderRadius.circular(
-              12.0,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.80,
+      child: InkWell(
+        onTap: () {
+          if (kDebugMode) {
+            print(rowIndex);
+            print(leaveRequests.toString());
+            print(widget.leaveRequests.toString());
+          }
+          showUserInputDialog(rowIndex);
+        },
+        child: Card(
+          color: getBgColor(rowIndex),
+          elevation: 18.0,
+          shadowColor: Colors.pinkAccent,
+          borderOnForeground: true,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: getBgColor(rowIndex),
+              borderRadius: BorderRadius.circular(
+                12.0,
+              ),
             ),
-          ),
-          child: Table(
-            columnWidths: const <int, TableColumnWidth>{
-              0: FractionColumnWidth(0.50),
-              1: FractionColumnWidth(0.50),
-            },
-            children: [
-              TableRow(
-                children: [
-                  /// staff name
-                  TableCell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        1 == 2
-                            ? "Student Name"
-                            : leaveRequests[rowIndex]['leaveStudentName']
-                                .toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+            child: Table(
+              columnWidths: const <int, TableColumnWidth>{
+                0: FractionColumnWidth(0.50),
+                1: FractionColumnWidth(0.50),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    /// staff name
+                    TableCell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          1 == 2
+                              ? "Student Name"
+                              : leaveRequests[rowIndex]['leaveStudentName']
+                                  .toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
 
-                  /// student dept name
-                  TableCell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        1 == 2
-                            ? "Student Dept"
-                            : leaveRequests[rowIndex]['leaveStudentDeptName']
-                                .toString(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                    /// student dept name
+                    TableCell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          1 == 2
+                              ? "Student Dept"
+                              : leaveRequests[rowIndex]['leaveStudentDeptName']
+                                  .toString(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              TableRow(
-                children: [
-                  /// leave type Name
-                  TableCell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Table(
-                        columnWidths: const <int, TableColumnWidth>{
-                          // 0: FractionColumnWidth(0.50),
-                          // 0: FractionColumnWidth(0.50),
-                        },
-                        children: [
-                          TableRow(
-                            children: [
-                              // TableCell(
-                              //   child: Container(
-                              //     width: MediaQuery.of(context).size.width,
-                              //     alignment: Alignment.centerLeft,
-                              //     child: const Text(
-                              //       "Class: ",
-                              //       style: TextStyle(
-                              //         fontWeight: FontWeight.bold,
-                              //         color: Colors.white,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    /// leave type Name
+                    TableCell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Table(
+                          columnWidths: const <int, TableColumnWidth>{
+                            // 0: FractionColumnWidth(0.50),
+                            // 0: FractionColumnWidth(0.50),
+                          },
+                          children: [
+                            TableRow(
+                              children: [
+                                // TableCell(
+                                //   child: Container(
+                                //     width: MediaQuery.of(context).size.width,
+                                //     alignment: Alignment.centerLeft,
+                                //     child: const Text(
+                                //       "Class: ",
+                                //       style: TextStyle(
+                                //         fontWeight: FontWeight.bold,
+                                //         color: Colors.white,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
 
-                              TableCell(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    1 == 2
-                                        ? "Class Name"
-                                        : leaveRequests[rowIndex]
-                                                ['leaveStudentClassName']
-                                            .toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                TableCell(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      1 == 2
+                                          ? "Class Name"
+                                          : leaveRequests[rowIndex]
+                                                  ['leaveStudentClassName']
+                                              .toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  ///  number of days
-                  TableCell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Table(
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FractionColumnWidth(0.50),
-                          1: FractionColumnWidth(0.50),
-                        },
-                        children: [
-                          TableRow(
-                            children: [
-                              TableCell(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: const Text(
-                                    "Days: ",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                    ///  number of days
+                    TableCell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Table(
+                          columnWidths: const <int, TableColumnWidth>{
+                            0: FractionColumnWidth(0.50),
+                            1: FractionColumnWidth(0.50),
+                          },
+                          children: [
+                            TableRow(
+                              children: [
+                                TableCell(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: const Text(
+                                      "Days: ",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    1 == 2
-                                        ? "Days"
-                                        : leaveRequests[rowIndex]['leaveDays']
-                                            .toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                TableCell(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      1 == 2
+                                          ? "Days"
+                                          : leaveRequests[rowIndex]['leaveDays']
+                                              .toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              TableRow(
-                children: [
-                  TableCell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Table(
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FractionColumnWidth(0.40),
-                          1: FractionColumnWidth(0.60),
-                        },
-                        children: [
-                          TableRow(
-                            children: [
-                              TableCell(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: const Text(
-                                    "From: ",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Table(
+                          columnWidths: const <int, TableColumnWidth>{
+                            0: FractionColumnWidth(0.40),
+                            1: FractionColumnWidth(0.60),
+                          },
+                          children: [
+                            TableRow(
+                              children: [
+                                TableCell(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: const Text(
+                                      "From: ",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    1 == 2
-                                        ? "From"
-                                        : dateFormatter(leaveRequests[rowIndex]
-                                            ['leaveFromDate']),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                TableCell(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Text(
+                                      1 == 2
+                                          ? "From"
+                                          : dateFormatter(
+                                              leaveRequests[rowIndex]
+                                                  ['leaveFromDate']),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  TableCell(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      alignment: Alignment.centerLeft,
-                      child: Table(
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FractionColumnWidth(0.40),
-                          1: FractionColumnWidth(0.60),
-                        },
-                        children: [
-                          TableRow(
-                            children: [
-                              TableCell(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: const Text(
-                                    "To: ",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                    TableCell(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        alignment: Alignment.centerLeft,
+                        child: Table(
+                          columnWidths: const <int, TableColumnWidth>{
+                            0: FractionColumnWidth(0.40),
+                            1: FractionColumnWidth(0.60),
+                          },
+                          children: [
+                            TableRow(
+                              children: [
+                                TableCell(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: const Text(
+                                      "To: ",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              TableCell(
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Text(
-                                    1 == 2
-                                        ? "End"
-                                        : leaveRequests[rowIndex]['leaveToDate']
-                                            .toString(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                TableCell(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Text(
+                                      1 == 2
+                                          ? "End"
+                                          : leaveRequests[rowIndex]
+                                                  ['leaveToDate']
+                                              .toString(),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -1178,13 +1183,11 @@ class _ApproveStudentLeaveHeadWidgetState
   Widget leaveStickyTable() {
     return Container(
       alignment: Alignment.topCenter,
-      margin: const EdgeInsets.symmetric(
-        vertical: 6.0,
-      ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.80,
+      height: MediaQuery.of(context).size.height * 0.90,
       decoration: BoxDecoration(
         border: Border.all(),
+        color: Colors.red,
       ),
       child: StickyHeadersTable(
         initialScrollOffsetX: 0.0,
@@ -1220,36 +1223,43 @@ class _ApproveStudentLeaveHeadWidgetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(),
+      decoration: BoxDecoration(
+        color: Colors.deepOrangeAccent,
+        border: Border.all(),
+      ),
       alignment: Alignment.topCenter,
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.start,
         children: [
           leaveStickyTable(),
-          InkWell(
-            onTap: () {
-              if (kDebugMode) {
-                log('sync to api');
-              }
-            },
-            child: Card(
-              elevation: 18.0,
-              borderOnForeground: true,
-              color: Colors.purple,
-              shadowColor: Colors.blueGrey,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.40,
-                height: MediaQuery.of(context).size.height * 0.05,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Colors.purpleAccent,
-                ),
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+          Container(
+            height: MediaQuery.of(context).size.height * 0.05,
+            width: MediaQuery.of(context).size.width * 0.40,
+            alignment: Alignment.bottomCenter,
+            decoration: const BoxDecoration(
+              color: Colors.purpleAccent,
+            ),
+            child: InkWell(
+              onTap: () {
+                if (kDebugMode) {
+                  log('sync to api');
+                }
+              },
+              child: Card(
+                elevation: 18.0,
+                borderOnForeground: true,
+                color: Colors.purple,
+                shadowColor: Colors.blueGrey,
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

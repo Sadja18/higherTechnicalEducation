@@ -609,7 +609,7 @@ Future<dynamic> sendHeadLoginRequest(
       body: jsonEncode(requestBodyMap),
     );
     if (kDebugMode) {
-      log('master login ${response.statusCode}');
+      log('head login ${response.statusCode}');
     }
     if (response.statusCode != 200) {
       if (kDebugMode) {
@@ -657,8 +657,19 @@ Future<dynamic> sendHeadLoginRequest(
           "collegeName": collegeName,
           "profilePic": profilePic,
         };
-        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
         await DBProvider.db.dynamicInsert("Head", headTableEntry);
+
+        await DBProvider.db.dynamicInsert("College", <String, Object>{
+          "collegeId": collegeId,
+          "collegeName": collegeName,
+        });
+        await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+          "collegeId": collegeId,
+          "deptName": deptName,
+          "deptId": deptId,
+        });
+
+        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
         saveFlag = 1;
       } else {
         saveFlag = 0;

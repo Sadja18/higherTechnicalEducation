@@ -212,19 +212,19 @@ class DashboardScreen extends StatelessWidget {
             displayString = displayString + '\n' + designation + ",";
           }
           if (deptName != "") {
-            displayString = displayString + '\nDept: ' + deptName + ",";
+            displayString = displayString + '\n' + deptName + ",";
           }
           if (college != "") {
-            displayString = displayString + '\nCollege: ' + college;
+            displayString = displayString + '\n' + college;
           }
 
           return SizedBox(
-            width: MediaQuery.of(ctx).size.width * 0.80,
+            width: MediaQuery.of(ctx).size.width * 0.99,
             height: MediaQuery.of(ctx).size.height * 0.25,
             child: Table(
               columnWidths: const <int, TableColumnWidth>{
-                0: FractionColumnWidth(0.40),
-                1: FractionColumnWidth(0.60),
+                0: FractionColumnWidth(0.30),
+                1: FractionColumnWidth(0.70),
               },
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
               children: [
@@ -254,7 +254,7 @@ class DashboardScreen extends StatelessWidget {
                         child: Text(
                           'Welcome, \n' + displayString,
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.normal,
                           ),
                         ),
                       ),

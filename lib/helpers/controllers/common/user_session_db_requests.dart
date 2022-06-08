@@ -120,7 +120,7 @@ Future<dynamic> getLoggedInUserName() async {
             var collegeNames = await DBProvider.db.dynamicRead(dbQuery, param);
             var collegeName = collegeNames[0]['collegeName'];
 
-            String designation = "Head of Institution";
+            String designation = "HoI";
             if (kDebugMode) {
               log("select from master");
               // log(val.toString());
@@ -133,17 +133,27 @@ Future<dynamic> getLoggedInUserName() async {
         //   return "master";
         case 2:
           var val = await DBProvider.db.dynamicRead(
-              "SELECT teacherName, profilePic, collegeId, deptName FROM Head "
+              "SELECT profilePic, teacherName, collegeId, deptName FROM Head "
               "WHERE userId="
               "(SELECT userId FROM UserLoginSession WHERE loginStatus=1);",
               []);
+          if (kDebugMode) {
+            log("head");
+            // log(val.toString());
+            log("haed");
+          }
           if (val != null && val.isNotEmpty) {
             var param = [val[0]['collegeId']];
             var dbQuery = "SELECT collegeName FROM College WHERE collegeId=?";
             var collegeNames = await DBProvider.db.dynamicRead(dbQuery, param);
+            if (kDebugMode) {
+              log('cl');
+              // log(collegeNames.toString());
+              log('ccl');
+            }
             var collegeName = collegeNames[0]['collegeName'];
 
-            String designation = "Head of Department";
+            String designation = "HoD";
             return [val, 'head', designation, collegeName];
           } else {
             break;
