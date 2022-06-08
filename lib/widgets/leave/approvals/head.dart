@@ -899,7 +899,7 @@ class _ApproveStudentLeaveHeadWidgetState
 
   Widget rowsTitleBuilder(rowIndex) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.80,
+      width: MediaQuery.of(context).size.width,
       child: InkWell(
         onTap: () {
           if (kDebugMode) {
@@ -1184,10 +1184,10 @@ class _ApproveStudentLeaveHeadWidgetState
     return Container(
       alignment: Alignment.topCenter,
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.90,
+      height: MediaQuery.of(context).size.height * 0.80,
       decoration: BoxDecoration(
         border: Border.all(),
-        color: Colors.red,
+        // color: Colors.red,
       ),
       child: StickyHeadersTable(
         initialScrollOffsetX: 0.0,
@@ -1224,48 +1224,60 @@ class _ApproveStudentLeaveHeadWidgetState
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.deepOrangeAccent,
+        // color: Colors.deepOrangeAccent,
         border: Border.all(),
       ),
       alignment: Alignment.topCenter,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
-      child: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          leaveStickyTable(),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.05,
-            width: MediaQuery.of(context).size.width * 0.40,
-            alignment: Alignment.bottomCenter,
-            decoration: const BoxDecoration(
-              color: Colors.purpleAccent,
-            ),
-            child: InkWell(
-              onTap: () {
-                if (kDebugMode) {
-                  log('sync to api');
-                }
-              },
-              child: Card(
-                elevation: 18.0,
-                borderOnForeground: true,
-                color: Colors.purple,
-                shadowColor: Colors.blueGrey,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: const Text(
-                    "Submit",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            leaveStickyTable(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: MediaQuery.of(context).size.width * 0.40,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 6.0,
+                ),
+                child: InkWell(
+                  onTap: () {
+                    if (kDebugMode) {
+                      log('sync to api');
+                    }
+                  },
+                  child: Card(
+                    elevation: 18.0,
+                    borderOnForeground: true,
+                    color: Colors.purple,
+                    shadowColor: Colors.blueGrey,
+                    child: Container(
+                      // height: MediaQuery.of(context).size.height * 0.08,
+                      // width: MediaQuery.of(context).size.width * 0.40,
+                      alignment: Alignment.center,
+                      // decoration: BoxDecoration(
+                      //   borderRadius: BorderRadius.circular(
+                      //     10.0,
+                      //   ),
+                      //   color: Colors.purpleAccent,
+                      // ),
+
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
