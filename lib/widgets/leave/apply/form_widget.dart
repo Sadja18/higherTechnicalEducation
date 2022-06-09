@@ -285,6 +285,24 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
   //       });
   // }
 
+  String leaveSessionStringValue(String selectedLeaveSession) {
+    var name = "";
+    switch (selectedLeaveSession) {
+      case "full":
+        name = "Full Day";
+        break;
+      case "first":
+        name = "First Half";
+        break;
+      case "second":
+        name = "Second Half";
+        break;
+      default:
+        name = "";
+    }
+    return name;
+  }
+
   Widget showLeaveType() {
     return FutureBuilder(
       future: whichUserLoggedIn(),
@@ -331,36 +349,50 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
                         ),
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.center,
-                      // width: ,
-                      child: Table(
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        // columnWidths: const {
-                        //   0: FractionColumnWidth(0.50),
-                        //   1: FractionColumnWidth(0.50),
-                        // },
-                        children: [
-                          TableRow(
-                            children: [
-                              Text(
-                                selectedLeaveType.toString(),
+                    (selectedLeaveType.isNotEmpty)
+                        ? tableViewField(
+                            "",
+                            Container(
+                              alignment: Alignment.center,
+                              // width: ,
+                              child: Table(
+                                defaultVerticalAlignment:
+                                    TableCellVerticalAlignment.middle,
+                                columnWidths: const {
+                                  0: FractionColumnWidth(0.70),
+                                  1: FractionColumnWidth(0.30),
+                                },
+                                children: [
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            selectedLeaveType['leaveTypeName']
+                                                .toString(),
+                                          ),
+                                        ),
+                                      ),
+                                      TableCell(
+                                        child: Center(
+                                          child: Text(
+                                            leaveSessionStringValue(
+                                              selectedLeaveSession.toString(),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                          )
+                        : const SizedBox(
+                            height: 0,
+                            width: 0,
                           ),
-                          TableRow(
-                            children: [
-                              TableCell(
-                                child: Text(
-                                  selectedLeaveSession.toString(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
                   ],
                 )
               : const SizedBox(
@@ -607,36 +639,37 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
             ),
             showLeaveType(),
             tableViewField(
-                textFieldName(),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          width: 3,
-                          color: Colors.blue,
-                        ),
-                        borderRadius: BorderRadius.circular(15),
+              textFieldName(),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 3,
+                        color: Colors.blue,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          width: 3,
-                          color: Colors.purple,
-                        ),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                      borderRadius: BorderRadius.circular(15),
                     ),
-                    controller: _reasonController,
-                    focusNode: _reasonNode,
-                    onChanged: (value) {
-                      if (kDebugMode) {
-                        print("value change reason");
-                        print(value.toString());
-                      }
-                    },
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        width: 3,
+                        color: Colors.purple,
+                      ),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
-                )),
+                  controller: _reasonController,
+                  focusNode: _reasonNode,
+                  onChanged: (value) {
+                    if (kDebugMode) {
+                      print("value change reason");
+                      print(value.toString());
+                    }
+                  },
+                ),
+              ),
+            ),
             // showDays(),
             // showAttachment(),
             Container(

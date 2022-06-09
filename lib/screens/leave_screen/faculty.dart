@@ -8,10 +8,13 @@ class FacultyLeaveScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var appBarHeight = kToolbarHeight;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          leading: const BackButton(),
           centerTitle: true,
           title: const Text(
             "Leave",
@@ -72,6 +75,168 @@ class FacultyLeaveScreen extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+        endDrawer: Container(
+          alignment: Alignment.center,
+          width: MediaQuery.of(context).size.width * 0.78,
+          margin: EdgeInsets.only(top: statusBarHeight + appBarHeight + 1),
+          height: MediaQuery.of(context).size.height * 0.25,
+          child: Drawer(
+            backgroundColor: Colors.white,
+            child: Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: const {
+                0: FractionColumnWidth(0.70),
+                1: FractionColumnWidth(0.25),
+              },
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(),
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        child: const Text("Pending Approval by HoD"),
+                      ),
+                    ),
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            14.0,
+                          ),
+                          color: Colors.blue,
+                        ),
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.90,
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        child: const Text("     "),
+                      ),
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(),
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        width: MediaQuery.of(context).size.width,
+                        child: const Text("Pending Approval by HoI"),
+                      ),
+                    ),
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            14.0,
+                          ),
+                          color: Colors.purple,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.90,
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        child: const Text("     "),
+                      ),
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        decoration: const BoxDecoration(),
+                        width: MediaQuery.of(context).size.width,
+                        child: const Text("Approved by HoI"),
+                      ),
+                    ),
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            14.0,
+                          ),
+                          color: Colors.green,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.90,
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        child: const Text("     "),
+                      ),
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        decoration: const BoxDecoration(),
+                        width: MediaQuery.of(context).size.width,
+                        child: const Text("Rejected"),
+                      ),
+                    ),
+                    TableCell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 3.0,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.white,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            14.0,
+                          ),
+                          color: Colors.red,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.90,
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        child: const Text("     "),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         body: TabBarView(

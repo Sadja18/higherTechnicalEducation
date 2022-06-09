@@ -17,6 +17,7 @@ const facultyUriFetchSubjectsForYearIdSemId = '/fetchsubjects.php';
 const facultyUriFetchStudentsForYearIdSemId = '/fetchstudents.php';
 const facultyUriFetchYearSem = '/fetchyearsem.php';
 const facultyLeaveAllocations = "/fetchleaveallocation.php";
+const facultyLeaveFetch = "/fetchfacultyleave.php";
 
 const headUriStart = '/api/head';
 const headUriLogin = '/login.php';

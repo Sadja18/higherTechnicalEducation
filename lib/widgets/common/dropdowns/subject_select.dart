@@ -108,15 +108,16 @@ class _SubjectSelectionState extends State<SubjectSelection> {
 
   void handleSubjectSelection() async {
     if (kDebugMode) {
-      print("selected subject name $selectedSubjectName");
+      log("selected subject name $selectedSubjectName");
     }
 
     var subjectDetails = await getSubjectDetails(
         selectedSubjectName, widget.yearId, widget.semId);
     if (kDebugMode) {
+      log("subject details handle selection");
       log(subjectDetails.toString());
     }
-    if (subjectDetails.isNotEmpty) {
+    if (subjectDetails != null && subjectDetails.isNotEmpty) {
       widget.subjectSelection(subjectDetails['subjectId'], widget.courseId,
           widget.yearId, widget.semId);
     }
@@ -173,8 +174,8 @@ class _SubjectSelectionState extends State<SubjectSelection> {
               selectedSubjectName = selection.toString();
             });
             if (kDebugMode) {
-              print("Selected course");
-              print(selection.toString());
+              log("Selected subject in dropdown child");
+              log(selection.toString());
             }
 
             handleSubjectSelection();

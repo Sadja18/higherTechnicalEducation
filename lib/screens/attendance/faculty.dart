@@ -27,7 +27,7 @@ class _AttendanceScreenFacultyModeState
   int selectedClassId = 0;
   int selectedYearId = 0;
   int selectedSemId = 0;
-  int selectedSubjectId = 0;
+  // int selectedSubjectId = 0;
   String selectedLectureDuration = "0";
   final FocusNode _durationFocusNode = FocusNode();
 
@@ -79,13 +79,6 @@ class _AttendanceScreenFacultyModeState
     });
   }
 
-  void subjectSelection(int subjectId, int courseId, int yearId, int semId) {
-    setState(() {
-      selectedSubjectId = subjectId;
-      // selectedLectureDuration = "1";
-    });
-  }
-
   @override
   void initState() {
     setState(() {
@@ -109,6 +102,7 @@ class _AttendanceScreenFacultyModeState
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          leading: const BackButton(),
           title: const Text("Student Attendance"),
           centerTitle: true,
           flexibleSpace: Container(
@@ -121,20 +115,6 @@ class _AttendanceScreenFacultyModeState
               ),
             ),
           ),
-          actions: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context)
-                    .popAndPushNamed(DashboardScreen.routeName);
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.home_outlined,
-                ),
-              ),
-            ),
-          ],
           bottom: const TabBar(
             tabs: [
               Text(
@@ -154,201 +134,12 @@ class _AttendanceScreenFacultyModeState
             ],
           ),
         ),
-        drawer: Container(
-          margin: EdgeInsets.only(top: statusBarHeight + appBarHeight + 1),
-          alignment: Alignment.topCenter,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              // const Text("Student Attendance"),
-              CourseSelector(
-                courseSelection: courseSelection,
-              ),
-              (selectedCourseId == 0)
-                  ? const SizedBox(
-                      height: 0,
-                    )
-                  : (selectedNoDept == 'no')
-                      ? ClassSelector(
-                          // key: ObjectKey(
-                          // "$selectedCourseId $selectedClassId"),
-                          courseId: selectedCourseId,
-                          classSelection: classSelection,
-                        )
-                      : SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Table(
-                            columnWidths: const {
-                              0: FractionColumnWidth(0.50),
-                            },
-                            defaultVerticalAlignment:
-                                TableCellVerticalAlignment.middle,
-                            children: [
-                              TableRow(
-                                children: [
-                                  TableCell(
-                                    child: YearDropdown(
-                                        yearSelection: yearSelection),
-                                  ),
-                                ],
-                              ),
-                              (selectedYearId == 0)
-                                  ? const TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: SizedBox(
-                                            height: 0,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : TableRow(
-                                      children: [
-                                        TableCell(
-                                          child: SemDrodown(
-                                            semSelection: semSelection,
-                                            yearId: selectedYearId,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                            ],
-                          ),
-                        ),
-              (selectedCourseId == 0 ||
-                      selectedYearId == 0 ||
-                      selectedSemId == 0)
-                  ? const SizedBox(
-                      height: 0,
-                    )
-                  : SubjectSelector(
-                      // key: ObjectKey("$selectedCourseId"),
-                      courseId: selectedCourseId,
-                      yearId: selectedYearId,
-                      semId: selectedSemId,
-                      subjectSelection: subjectSelection,
-                    ),
-              (selectedCourseId == 0 ||
-                      selectedYearId == 0 ||
-                      selectedSemId == 0 ||
-                      selectedSubjectId == 0)
-                  ? const SizedBox(
-                      height: 0,
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                        color: Colors.purpleAccent,
-                      ),
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 3.0,
-                      ),
-                      child: Table(
-                        columnWidths: const {
-                          0: FractionColumnWidth(0.50),
-                          1: FractionColumnWidth(0.50),
-                        },
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        children: [
-                          TableRow(
-                            children: [
-                              TableCell(
-                                child: Center(
-                                  child: Text(
-                                    "Duration: ",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              TableCell(
-                                child: Center(
-                                  child: TextFormField(
-                                    // initialValue: selectedLectureDuration,
-                                    textAlign: TextAlign.center,
-                                    controller: TextEditingController(
-                                        text: selectedLectureDuration),
-                                    keyboardType: TextInputType.number,
-                                    focusNode: _durationFocusNode,
-                                    decoration: InputDecoration(
-                                      alignLabelWithHint: true,
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.greenAccent,
-                                        ),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                      hintText: "Duration",
-                                    ),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                    onChanged: (value) {
-                                      if (int.tryParse(value.toString()) !=
-                                          null) {
-                                        setState(() {
-                                          setState(() {
-                                            selectedLectureDuration =
-                                                value.toString();
-                                          });
-                                        });
-                                      }
-                                      _durationFocusNode.unfocus();
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.30,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 8.0,
-                  ),
-                  child: Icon(
-                    Icons.cancel_outlined,
-                    size: 35,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
         body: TabBarView(
           children: [
-            (selectedCourseId == 0 ||
-                    selectedYearId == 0 ||
-                    selectedSemId == 0 ||
-                    selectedSubjectId == 0 ||
-                    selectedLectureDuration == "0")
-                ? const SizedBox(
-                    height: 0,
-                  )
-                : FacultyModeStudentAttendanceTable(
-                    courseId: selectedCourseId,
-                    yearId: selectedYearId,
-                    semId: selectedSemId,
-                  ),
+            Container(
+              alignment: Alignment.center,
+              child: const Text("Reconstructing"),
+            ),
             Container(
               decoration: const BoxDecoration(),
               alignment: Alignment.center,
