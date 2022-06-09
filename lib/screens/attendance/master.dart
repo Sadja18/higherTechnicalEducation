@@ -90,56 +90,52 @@ class _MasterStaffAttendanceScreenState
               alignment: Alignment.topCenter,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                          // top: 10.0,
-                          ),
-                      // width: MediaQuery.of(context).size.width * 0.95,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          20.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(
+                        // top: 10.0,
                         ),
-                      ),
-                      alignment: Alignment.center,
-                      child: DropdownDeptSelector(
-                        deptSelector: deptSelector,
+                    // width: MediaQuery.of(context).size.width * 0.95,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        20.0,
                       ),
                     ),
-                    (selectedDeptId == 0 && recall == 0)
-                        ? const SizedBox(
-                            height: 0,
-                          )
-                        : FutureBuilder(
-                            future: getFacultyDataFromDatabaseMasterMode(
-                                selectedDeptId),
-                            builder:
-                                (BuildContext ctx, AsyncSnapshot snapshot) {
-                              if (snapshot.hasError ||
-                                  snapshot.hasData == false ||
-                                  snapshot.data == null ||
-                                  snapshot.data.isEmpty) {
-                                return const SizedBox(
-                                  child: Text("NO Staff members data found"),
-                                );
-                              } else {
-                                var staffData = snapshot.data;
-                                if (kDebugMode) {
-                                  // log(staffData.toString());
-                                }
-                                return StaffAttendanceWidget(
-                                  key: ObjectKey(staffData),
-                                  members: staffData,
-                                );
+                    alignment: Alignment.center,
+                    child: DropdownDeptSelector(
+                      deptSelector: deptSelector,
+                    ),
+                  ),
+                  (selectedDeptId == 0 && recall == 0)
+                      ? const SizedBox(
+                          height: 0,
+                        )
+                      : FutureBuilder(
+                          future: getFacultyDataFromDatabaseMasterMode(
+                              selectedDeptId),
+                          builder: (BuildContext ctx, AsyncSnapshot snapshot) {
+                            if (snapshot.hasError ||
+                                snapshot.hasData == false ||
+                                snapshot.data == null ||
+                                snapshot.data.isEmpty) {
+                              return const SizedBox(
+                                child: Text("NO Staff members data found"),
+                              );
+                            } else {
+                              var staffData = snapshot.data;
+                              if (kDebugMode) {
+                                // log(staffData.toString());
                               }
-                            },
-                          ),
-                  ],
-                ),
+                              return StaffAttendanceWidget(
+                                key: ObjectKey(staffData),
+                                members: staffData,
+                              );
+                            }
+                          },
+                        ),
+                ],
               ),
             ),
             Container(

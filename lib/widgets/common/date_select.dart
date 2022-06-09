@@ -39,7 +39,7 @@ class _DateShowNewState extends State<DateShowNew> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(),
-      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      // margin: const EdgeInsets.symmetric(vertical: 4.0),
       child: OutlinedButton(
         onPressed: () => _selectDate(context),
         child: Text(

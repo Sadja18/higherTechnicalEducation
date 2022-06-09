@@ -196,6 +196,7 @@ class DBProvider {
         'classId INTEGER,'
         'deptId INTEGER,'
         "absentStudentList TEXT,"
+        "isSynced TEXT DEFAULT 'no',"
         "UNIQUE(attendanceDate, courseId, collegeId, teacherId, yearId, semId)"
         ");";
   }
@@ -239,6 +240,7 @@ class DBProvider {
         "leaveReason TEXT NOT NULL,"
         "leaveAttachement TEXT,"
         "leaveStatus TEXT DEFAULT 'draft',"
+        "isSynced TEXT DEFAULT 'no',"
         "UNIQUE(leaveStudentUserId, leaveFromDate, leaveToDate)"
         ");";
   }
@@ -268,7 +270,7 @@ class DBProvider {
   }
 
   String _createFacultyLeaveTable() {
-    return "CREATE TABLE FacultytLeaveRequest("
+    return "CREATE TABLE FacultyLeaveRequest("
         "leaveId INTEGER,"
         "leaveFacultyUserId INTEGER NOT NULL,"
         "leaveFacultyUserName TEXT,"
@@ -286,6 +288,7 @@ class DBProvider {
         "leaveReason TEXT NOT NULL,"
         "leaveAttachement TEXT,"
         "leaveStatus TEXT DEFAULT 'toapprove',"
+        "isSynced TEXT DEFAULT 'no',"
         "UNIQUE(leaveFacultyUserId, leaveFromDate, leaveToDate)"
         ");";
   }

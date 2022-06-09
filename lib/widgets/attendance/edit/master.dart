@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
+import '../../common/date_select.dart';
 import '../../common/image_assist.dart';
 
 class StaffAttendanceWidget extends StatefulWidget {
@@ -19,6 +21,27 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   int currentRowIndex = 0;
   Map absenteeMemberData = {};
   List rowsTapped = [];
+
+  /// since the database stores date in fullYear-fullMonth-fullDate format
+  /// we need a formatter to enable it
+  final DateFormat format = DateFormat('yyyy-MM-dd');
+
+  // a variable to store the selected date
+  String? _selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
+  // reverse call back to store the selected Date
+  void dateSelector(String? selectDate) {
+    setState(() {
+      _selectedDate = selectDate.toString();
+      currentRowIndex = 0;
+      rowsTapped = [];
+      absenteeMemberData = {};
+    });
+    if (kDebugMode) {
+      print('reverse date callback');
+    }
+  }
+  // reverse call back to store the selected Date end
 
   ScrollController verticalBodyController =
       ScrollController(initialScrollOffset: 0.0);
@@ -193,14 +216,14 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   Widget leaveStickyTable() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.65,
+      height: MediaQuery.of(context).size.height * 0.50,
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(
-        top: 5.0,
+        top: 0.0,
         bottom: 0,
       ),
       decoration: BoxDecoration(
-        color: Colors.blueAccent.shade100,
+        // color: Colors.blueAccent.shade100,
         borderRadius: BorderRadius.circular(
           10.0,
         ),
@@ -401,42 +424,270 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
     super.initState();
   }
 
+  int getAbsenteeCount() {
+    int count = 0;
+    for (var key in absenteeMemberData.keys.toList()) {
+      if (absenteeMemberData[key]) {
+        count = count + 1;
+      }
+    }
+    return count;
+  }
+
+  void showAbsenteesDialogPreview() async {
+    var absentees = [];
+
+    for (var empId in absenteeMemberData.keys.toList()) {
+      if (absenteeMemberData[empId]) {
+        for (var member in members) {
+          if (member['employeeId'] == empId) {
+            var empName = member['employeeName'];
+
+            absentees.add([empId, member['teacherName']]);
+          }
+        }
+      }
+    }
+    List<Widget> cells = [
+      Table(
+        columnWidths: const {
+          0: FractionColumnWidth(0.30),
+          1: FractionColumnWidth(0.60),
+        },
+        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+        children: const [
+          TableRow(
+            children: [
+              TableCell(
+                child: Text(
+                  "Emp Id",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              TableCell(
+                child: Text(
+                  "Emp Name",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ];
+
+    for (var e in absentees) {
+      cells.add(
+        Table(
+          columnWidths: const {
+            0: FractionColumnWidth(0.30),
+            1: FractionColumnWidth(0.60),
+          },
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: [
+            TableRow(
+              children: [
+                TableCell(
+                  child: Center(
+                    child: Text(
+                      e[0].toString(),
+                    ),
+                  ),
+                ),
+                TableCell(
+                  child: Center(
+                    child: Text(
+                      e[1].toString(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    return showDialog(
+        context: context,
+        builder: (BuildContext _) {
+          return AlertDialog(
+            title: const Text("Absent Staff Members"),
+            content: Container(
+              height: MediaQuery.of(context).size.height * 0.40,
+              width: MediaQuery.of(context).size.width * 0.60,
+              decoration: const BoxDecoration(
+                  // color: Colors.red,
+                  ),
+              alignment: Alignment.topCenter,
+              child: (absentees.isNotEmpty)
+                  ? SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: cells,
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 0,
+                    ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topCenter,
-      decoration: BoxDecoration(),
+      height: MediaQuery.of(context).size.height * 0.73,
+      decoration: const BoxDecoration(
+          // color: Colors.red,
+          ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Container(
+            decoration: const BoxDecoration(),
+            alignment: Alignment.topCenter,
+            margin: const EdgeInsets.symmetric(
+              horizontal: 0.0,
+              vertical: 0.0,
+            ),
+            child: Table(
+              columnWidths: const {
+                0: FractionColumnWidth(1),
+              },
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: DateShowNew(
+                        dateSelector: dateSelector,
+                      ),
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          child: Table(
+                            columnWidths: const {
+                              0: FractionColumnWidth(0.30),
+                              1: FractionColumnWidth(0.30),
+                              2: FractionColumnWidth(0.30),
+                            },
+                            children: [
+                              TableRow(
+                                children: [
+                                  TableCell(
+                                    child: tableViewField(
+                                      "T:",
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.30,
+                                        decoration: const BoxDecoration(
+                                            // color: Colors.blue,
+                                            ),
+                                        child: Text(
+                                          members.length.toString(),
+                                          style: const TextStyle(
+                                            color: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TableCell(
+                                    child: tableViewField(
+                                      "P:",
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.30,
+                                        decoration: const BoxDecoration(),
+                                        child: Text(
+                                          (members.length - getAbsenteeCount())
+                                              .toString(),
+                                          style: const TextStyle(
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  TableCell(
+                                    child: InkWell(
+                                      onTap: () {
+                                        showAbsenteesDialogPreview();
+                                      },
+                                      child: tableViewField(
+                                        "A:",
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.30,
+                                          decoration: const BoxDecoration(),
+                                          child: Text(
+                                            getAbsenteeCount().toString(),
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           leaveStickyTable(),
           InkWell(
             onTap: () {
-              if (kDebugMode) {
-                print('attendance submit');
-              }
               onSubmitPreview();
             },
             child: Card(
               elevation: 18.0,
+              color: Colors.purpleAccent,
+              borderOnForeground: true,
+              semanticContainer: true,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(
-                  10.0,
+                  14.0,
                 ),
               ),
               child: Container(
-                width: MediaQuery.of(context).size.width * 0.60,
-                height: MediaQuery.of(context).size.height * 0.05,
-                alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.purpleAccent,
                   borderRadius: BorderRadius.circular(
-                    10.0,
+                    14.0,
                   ),
                 ),
-                // margin: const EdgeInsets.symmetric(
-                //   vertical: 5.0,
-                // ),
+                width: MediaQuery.of(context).size.width * 0.30,
+                height: MediaQuery.of(context).size.height * 0.05,
+                alignment: Alignment.center,
                 child: const Text(
                   "Submit",
                   style: TextStyle(
@@ -446,7 +697,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

@@ -788,12 +788,13 @@ Future<dynamic> sendMasterLoginRequest(
           log(masterTableEntry.toString());
         }
 
-        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
         await DBProvider.db.dynamicInsert("Master", masterTableEntry);
         await DBProvider.db.dynamicInsert("College", <String, Object>{
           "collegeId": collegeId,
           "collegeName": collegeName
         });
+        await DBProvider.db.dynamicInsert("UserLoginSession", userTableEntry);
+
         saveFlag = 1;
       } else {
         saveFlag = 0;

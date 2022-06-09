@@ -182,8 +182,8 @@ class _MasterLeaveApproveTableWidgetState
               ),
             ),
             actions: [
-              TextButton(
-                onPressed: () {
+              InkWell(
+                onTap: () {
                   if (kDebugMode) {
                     print("Approve");
                   }
@@ -192,15 +192,27 @@ class _MasterLeaveApproveTableWidgetState
                     leaveRequests[staffId]['leaveStatus'] = 'approve';
                   });
                 },
-                child: const Text(
-                  "Approve",
-                  style: TextStyle(
-                    color: Colors.green,
+                child: Card(
+                  elevation: 18.0,
+                  color: Colors.green,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.30,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(
+                      right: 5.0,
+                      left: 0,
+                    ),
+                    child: const Text(
+                      "Approve",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
+              InkWell(
+                onTap: () {
                   if (kDebugMode) {
                     print("Reject");
                   }
@@ -209,10 +221,21 @@ class _MasterLeaveApproveTableWidgetState
                     leaveRequests[staffId]['leaveStatus'] = 'reject';
                   });
                 },
-                child: const Text(
-                  "Reject",
-                  style: TextStyle(
-                    color: Colors.red,
+                child: Card(
+                  elevation: 18.0,
+                  color: Colors.red,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.30,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(
+                      right: 5.0,
+                    ),
+                    child: const Text(
+                      "Reject",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -579,18 +602,32 @@ class _MasterLeaveApproveTableWidgetState
             leaveStickyTable(),
             InkWell(
               onTap: () {},
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.purpleAccent,
+              child: Card(
+                elevation: 18.0,
+                color: Colors.purpleAccent,
+                borderOnForeground: true,
+                semanticContainer: true,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    14.0,
+                  ),
                 ),
-                width: MediaQuery.of(context).size.width * 0.30,
-                height: MediaQuery.of(context).size.height * 0.05,
-                alignment: Alignment.center,
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.purpleAccent,
+                    borderRadius: BorderRadius.circular(
+                      14.0,
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.30,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "Submit",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

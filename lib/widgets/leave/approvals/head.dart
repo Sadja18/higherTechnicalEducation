@@ -1263,7 +1263,6 @@ class _ApproveStudentLeaveHeadWidgetState
                       //   ),
                       //   color: Colors.purpleAccent,
                       // ),
-
                       child: const Text(
                         "Submit",
                         style: TextStyle(
