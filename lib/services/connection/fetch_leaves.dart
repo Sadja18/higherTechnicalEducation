@@ -366,48 +366,54 @@ Future<dynamic> getFacultyLeaveRequestsFromServerHeadMode() async {
 
 Future<dynamic> getStudentProfilesFromServerHeadMode() async {
   try {
-    var userName = 'chemgcd@gmail.com';
-    var userPassword = 'depthod@1234';
-    var str = "1";
-    if (kDebugMode) {
-      log('sending head fetch leave faculty request');
-    }
-    var response = await http.post(
-      Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentProfiles'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'userName': userName,
-        'userPassword': userPassword,
-        'dbname': 'college',
-        'str': str
-      }),
-    );
-    if (response.statusCode == 200) {
-      var resp = jsonDecode(response.body);
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var data = resp['data'];
+    var dbQuery = "SELECT * FROM UserLoginSession WHERE loginStatus=1;";
+    var params = [];
+    var userCredentials = await DBProvider.db.dynamicRead(dbQuery, params);
 
-        for (var student in data) {
-          var studentId = student['id'];
-          var fName = student['stu_name'];
-          var mName = student['middle'];
-          var lName = student['last'];
-          var studentCode = student['student_code'];
-          var course = student['course_id'];
-          var noDept = student['no_dept'];
-          var profilePic = student['photo'];
-          var enrolNo = student['enrol_no'];
-          var rollNo = student['roll_no'];
-          var year = student['year'];
-          var colYear = student['colyear'];
-          var semester = student['semester'];
-          var classVal = student['class_id'];
-          var department = student['dept_id'];
-          var college = student['college_id'];
-          var pId = student['pid'];
-          var userId = student['user_id'];
+    if (userCredentials != null && userCredentials.isNotEmpty) {
+      if (kDebugMode) {
+        log('sending head fetch leave faculty request');
+      }
+      var userName = userCredentials[0]['userName'];
+      var userPassword = userCredentials[0]['userPassword'];
+      var str = "1";
+      var response = await http.post(
+        Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentProfiles'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'userName': userName,
+          'userPassword': userPassword,
+          'dbname': 'college',
+          'str': str
+        }),
+      );
+      if (response.statusCode == 200) {
+        var resp = jsonDecode(response.body);
+        if (resp['message'].toString().toLowerCase() == 'success') {
+          var data = resp['data'];
+
+          for (var student in data) {
+            var studentId = student['id'];
+            var fName = student['stu_name'];
+            var mName = student['middle'];
+            var lName = student['last'];
+            var studentCode = student['student_code'];
+            var course = student['course_id'];
+            var noDept = student['no_dept'];
+            var profilePic = student['photo'];
+            var enrolNo = student['enrol_no'];
+            var rollNo = student['roll_no'];
+            var year = student['year'];
+            var colYear = student['colyear'];
+            var semester = student['semester'];
+            var classVal = student['class_id'];
+            var department = student['dept_id'];
+            var college = student['college_id'];
+            var pId = student['pid'];
+            var userId = student['user_id'];
+          }
         }
       }
     }
@@ -421,93 +427,101 @@ Future<dynamic> getStudentProfilesFromServerHeadMode() async {
 
 Future<dynamic> getStudentLeaveRequestsFromServerHeadMode() async {
   try {
-    Future.delayed(Duration(seconds: 3));
-    var userName = 'chemgcd@gmail.com';
-    var userPassword = 'depthod@1234';
-    var str = "1";
-    if (kDebugMode) {
-      log('sending head fetch student leave requests');
-    }
-    var response = await http.post(
-      Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentLeave'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'userName': userName,
-        'userPassword': userPassword,
-        'dbname': 'college',
-        "collegeId": "13",
-        'str': str
-      }),
-    );
-    if (kDebugMode) {
-      log('student leave requests u=in head mode');
-      log(response.statusCode.toString());
-    }
+    var dbQuery = "SELECT * FROM UserLoginSession WHERE loginStatus=1;";
+    var params = [];
+    var userCredentials = await DBProvider.db.dynamicRead(dbQuery, params);
 
-    if (response.statusCode == 200) {
+    if (userCredentials != null && userCredentials.isNotEmpty) {
+      if (kDebugMode) {
+        log('sending head fetch leave faculty request');
+      }
+      var userName = userCredentials[0]['userName'];
+      var userPassword = userCredentials[0]['userPassword'];
+      var str = "1";
       if (kDebugMode) {
         log('sending head fetch student leave requests');
-        // log(response.body);
       }
-      var resp = jsonDecode(response.body);
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var data = resp['data'];
-        var leaveRequestList = [];
-        if (kDebugMode) {
-          log("sucesdagsrjbs,j");
-          log(leaveRequestList.toString());
-        }
-        for (var leaveRequest in data) {
-          var leaveId = leaveRequest['leaveId'];
-          var leaveStudentProfileId = leaveRequest['leaveStudentProfileId'];
-          var leaveStudentUserId = leaveRequest['leaveStudentUserId'];
-          var leaveStudentClassId = leaveRequest['leaveStudentClassId'];
-          var leaveStudentClassName = leaveRequest['leaveStudentClassName'];
-          var leaveStudentDeptId = leaveRequest['leaveStudentDeptId'];
-          var leaveStudentDeptName = leaveRequest['leaveStudentDeptName'];
-          var leaveStudentCollegeId = leaveRequest['leaveStudentCollegeId'];
-          var fName = leaveRequest['leaveStudentFirstName'];
-          var mName = leaveRequest['leaveStudentMiddleName'];
-          var lName = leaveRequest['leaveStudentLastName'];
-          var leaveStudentName = fName + " " + mName + " " + lName;
-          var leaveFromDate = leaveRequest['leaveFromDate'];
-          var leaveToDate = leaveRequest['leaveToDate'];
-          var leaveReason = leaveRequest['leaveReason'];
-          var leaveDays = leaveRequest['leaveDays'];
-          var leaveAttachment = leaveRequest['leaveAttachment'];
-          var leaveStatus = leaveRequest['leaveStatus'];
+      var response = await http.post(
+        Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentLeave'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'userName': userName,
+          'userPassword': userPassword,
+          'dbname': 'college',
+          "collegeId": "13",
+          'str': str
+        }),
+      );
+      if (kDebugMode) {
+        log('student leave requests u=in head mode');
+        log(response.statusCode.toString());
+      }
 
-          var dbEntry = <String, Object>{
-            "leaveId": leaveId,
-            "leaveStudentProfileId": leaveStudentProfileId,
-            "leaveStudentUserId": leaveStudentUserId,
-            "leaveStudentClassId": leaveStudentClassId,
-            "leaveStudentClassName": leaveStudentClassName,
-            "leaveStudentDeptId": leaveStudentDeptId,
-            "leaveStudentDeptName": leaveStudentDeptName,
-            "leaveStudentCollegeId": leaveStudentCollegeId,
-            "leaveStudentName": leaveStudentName,
-            "leaveFromDate": leaveFromDate,
-            "leaveToDate": leaveToDate,
-            "leaveReason": leaveReason,
-            "leaveDays": leaveDays,
-            "leaveAttachement": leaveAttachment,
-            "leaveStatus": leaveStatus,
-          };
-          if (kDebugMode) {
-            log("dbEntry");
-            log(dbEntry.toString());
-          }
-          await DBProvider.db.dynamicInsert("StudentLeaveRequest", dbEntry);
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          log('sending head fetch student leave requests');
+          // log(response.body);
         }
-        // return leaveRequestList;
+        var resp = jsonDecode(response.body);
+        if (resp['message'].toString().toLowerCase() == 'success') {
+          var data = resp['data'];
+          var leaveRequestList = [];
+          if (kDebugMode) {
+            log("sucesdagsrjbs,j");
+            log(leaveRequestList.toString());
+          }
+          for (var leaveRequest in data) {
+            var leaveId = leaveRequest['leaveId'];
+            var leaveStudentProfileId = leaveRequest['leaveStudentProfileId'];
+            var leaveStudentUserId = leaveRequest['leaveStudentUserId'];
+            var leaveStudentClassId = leaveRequest['leaveStudentClassId'];
+            var leaveStudentClassName = leaveRequest['leaveStudentClassName'];
+            var leaveStudentDeptId = leaveRequest['leaveStudentDeptId'];
+            var leaveStudentDeptName = leaveRequest['leaveStudentDeptName'];
+            var leaveStudentCollegeId = leaveRequest['leaveStudentCollegeId'];
+            var fName = leaveRequest['leaveStudentFirstName'];
+            var mName = leaveRequest['leaveStudentMiddleName'];
+            var lName = leaveRequest['leaveStudentLastName'];
+            var leaveStudentName = fName + " " + mName + " " + lName;
+            var leaveFromDate = leaveRequest['leaveFromDate'];
+            var leaveToDate = leaveRequest['leaveToDate'];
+            var leaveReason = leaveRequest['leaveReason'];
+            var leaveDays = leaveRequest['leaveDays'];
+            var leaveAttachment = leaveRequest['leaveAttachment'];
+            var leaveStatus = leaveRequest['leaveStatus'];
+
+            var dbEntry = <String, Object>{
+              "leaveId": leaveId,
+              "leaveStudentProfileId": leaveStudentProfileId,
+              "leaveStudentUserId": leaveStudentUserId,
+              "leaveStudentClassId": leaveStudentClassId,
+              "leaveStudentClassName": leaveStudentClassName,
+              "leaveStudentDeptId": leaveStudentDeptId,
+              "leaveStudentDeptName": leaveStudentDeptName,
+              "leaveStudentCollegeId": leaveStudentCollegeId,
+              "leaveStudentName": leaveStudentName,
+              "leaveFromDate": leaveFromDate,
+              "leaveToDate": leaveToDate,
+              "leaveReason": leaveReason,
+              "leaveDays": leaveDays,
+              "leaveAttachement": leaveAttachment,
+              "leaveStatus": leaveStatus,
+            };
+            if (kDebugMode) {
+              log("dbEntry");
+              log(dbEntry.toString());
+            }
+            await DBProvider.db.dynamicInsert("StudentLeaveRequest", dbEntry);
+          }
+          // return leaveRequestList;
+        }
       }
     }
 
-    var params = ['toapprove'];
-    var dbQuery = "SELECT * FROM StudentLeaveRequest "
+    var params1 = ['toapprove'];
+    var dbQuery1 = "SELECT * FROM StudentLeaveRequest "
         "WHERE "
         "leaveStudentDeptId=(SELECT deptId FROM Head "
         "WHERE userId = (SELECT userId FROM UserLoginSession WHERE loginStatus=1)) "
@@ -517,7 +531,7 @@ Future<dynamic> getStudentLeaveRequestsFromServerHeadMode() async {
         "AND "
         "leaveStatus=?;";
 
-    var leaveOptions = await DBProvider.db.dynamicRead(dbQuery, params);
+    var leaveOptions = await DBProvider.db.dynamicRead(dbQuery1, params1);
 
     if (leaveOptions != null && leaveOptions.isNotEmpty) {
       if (kDebugMode) {

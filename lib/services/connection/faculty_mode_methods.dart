@@ -10,6 +10,24 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../models/uri_paths.dart';
 
+Future<dynamic> getFacultyCredential() async {
+  try {
+    var dbQuery = "SELECT "
+        "UserLoginSession.userName, UserLoginSession.userPassword, "
+        "Faculty.deptId, Faculty.collegeId "
+        "FROM UserLoginSession "
+        "INNER JOIN Faculty ON Faculty.userId=UserLoginSession.userId "
+        "WHERE UserLoginSession.loginStatus=1;";
+    var params = [];
+    var credential = await DBProvider.db.dynamicRead(dbQuery, params);
+    return credential;
+  } catch (e) {
+    if (kDebugMode) {
+      log(e.toString());
+    }
+  }
+}
+
 Future<dynamic> getCoursesFromServerFacultyMode() async {
   try {
     var userName = "dramitgcd@gmail.com";
@@ -18,6 +36,12 @@ Future<dynamic> getCoursesFromServerFacultyMode() async {
     var collegeId = "13";
     var deptId = "9";
     var str = "1";
+
+    var credential = await getFacultyCredential();
+
+    if (kDebugMode) {
+      log(credential.toString());
+    }
 
     Map<String, String> requestBodyMap = {
       "userName": userName,
@@ -748,6 +772,11 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
     if (kDebugMode) {
       print("fetychingnbvskv,js");
     }
+    var credential = await getFacultyCredential();
+
+    if (kDebugMode) {
+      log(credential.toString());
+    }
 
     Map<String, Object> requestBodyMap = {
       "userName": "dramitgcd@gmail.com",
@@ -982,116 +1011,133 @@ Future<dynamic> getLeaveAllocationsForCurrentFaculty(
 
 Future<dynamic> readFacultyLeaveRequestRecords() async {
   try {
-    // "leaveId INTEGER,"
-    //     "leaveFacultyUserId INTEGER NOT NULL,"
-    //     "leaveFacultyUserName TEXT,"
-    //     "leaveFacultyDeptId INTEGER NOT NULL,"
-    //     "leaveFacultyDeptName TEXT,"
-    //     "leaveFacultyCollegeId INTEGER NOT NULL,"
-    //     "leaveFacultyCollegeName TEXT,"
-    //     "leaveTypeId INTEGER NOT NULL,"
-    //     "leaveTypeName INTEGER NOT NULL,"
-    //     "leaveFromDate TEXT NOT NULL,"
-    //     "leaveToDate TEXT NOT NULL,"
-    //     'leaveSession TEXT NOT NULL,'
-    //     "leaveDays TEXT NOT NULL,"
-    //     "leaveAppliedDate TEXT NOT NULL,"
-    //     "leaveReason TEXT NOT NULL,"
-    //     "leaveAttachement TEXT,"
-    //     "leaveStatus TEXT DEFAULT 'toapprove',";
+    var credential = await getFacultyCredential();
 
-    var leaveRequests = [
-      {
-        "leaveFacultyUserId": 98,
-        "leaveFacultyUserName": "dramitgcd@gmail.com",
-        "leaveFacultyDeptId": 9,
-        "leaveFacultyDeptName": "Department of Chemistry",
-        "leaveFacultyCOllegeId": 13,
-        "leaveFacultyCollegeName": "Government College Daman",
-        "leaveTypeId": 1,
-        "leaveTypeName": "CL",
-        "leaveFromDate": "2022-05-20",
-        "leaveToDate": "2022-05-20",
-        "leaveSession": "second",
-        "leaveDays": "0.5",
-        "leaveAppliedDate": "2022-05-20",
-        "leaveReason": "Personal Emergency",
-        "leaveStatus": "approve",
-      },
-      {
-        "leaveFacultyUserId": 98,
-        "leaveFacultyUserName": "dramitgcd@gmail.com",
-        "leaveFacultyDeptId": 9,
-        "leaveFacultyDeptName": "Department of Chemistry",
-        "leaveFacultyCOllegeId": 13,
-        "leaveFacultyCollegeName": "Government College Daman",
-        "leaveTypeId": 1,
-        "leaveTypeName": "CL",
-        "leaveFromDate": "2022-05-24",
-        "leaveToDate": "2022-05-24",
-        "leaveSession": "first",
-        "leaveDays": "0.5",
-        "leaveAppliedDate": "2022-05-23",
-        "leaveReason": "Personal Emergency",
-        "leaveStatus": "approve",
-      },
-      {
-        "leaveFacultyUserId": 98,
-        "leaveFacultyUserName": "dramitgcd@gmail.com",
-        "leaveFacultyDeptId": 9,
-        "leaveFacultyDeptName": "Department of Chemistry",
-        "leaveFacultyCOllegeId": 13,
-        "leaveFacultyCollegeName": "Government College Daman",
-        "leaveTypeId": 1,
-        "leaveTypeName": "CL",
-        "leaveFromDate": "2022-05-26",
-        "leaveToDate": "2022-05-26",
-        "leaveSession": "full",
-        "leaveDays": "1",
-        "leaveAppliedDate": "2022-05-26",
-        "leaveReason": "Personal Emergency",
-        "leaveStatus": "reject",
-      },
-      {
-        "leaveFacultyUserId": 98,
-        "leaveFacultyUserName": "dramitgcd@gmail.com",
-        "leaveFacultyDeptId": 9,
-        "leaveFacultyDeptName": "Department of Chemistry",
-        "leaveFacultyCOllegeId": 13,
-        "leaveFacultyCollegeName": "Government College Daman",
-        "leaveTypeId": 2,
-        "leaveTypeName": "ML",
-        "leaveFromDate": "2022-05-28",
-        "leaveToDate": "2022-05-28",
-        "leaveSession": "full",
-        "leaveDays": "1",
-        "leaveAppliedDate": "2022-05-26",
-        "leaveReason": "Personal Emergency",
-        "leaveStatus": "toapprovep",
-      },
-      {
-        "leaveFacultyUserId": 98,
-        "leaveFacultyUserName": "dramitgcd@gmail.com",
-        "leaveFacultyDeptId": 9,
-        "leaveFacultyDeptName": "Department of Chemistry",
-        "leaveFacultyCOllegeId": 13,
-        "leaveFacultyCollegeName": "Government College Daman",
-        "leaveTypeId": 1,
-        "leaveTypeName": "ML",
-        "leaveFromDate": "2022-06-01",
-        "leaveToDate": "2022-06-01",
-        "leaveSession": "full",
-        "leaveDays": "1",
-        "leaveAppliedDate": "2022-05-26",
-        "leaveReason": "Personal Emergency",
-        "leaveStatus": "toapprove",
-      },
-    ];
-    return leaveRequests;
+    if (kDebugMode) {
+      log("faculty credentials");
+      log(credential.toString());
+    }
+
+    if (credential != null && credential.isNotEmpty) {
+      var userName = credential[0]['userName'];
+      var userPassword = credential[0]['userPassword'];
+      var deptId = credential[0]['deptId'].toString();
+      var collegeId = credential[0]['collegeId'].toString();
+      var dbname = 'college';
+      var str = "1";
+      var requestBody = <String, String>{
+        "userName": userName,
+        "userPassword": userPassword,
+        "dbname": dbname,
+        "str": str,
+        "collegeId": collegeId,
+        "deptId": deptId,
+      };
+      if (kDebugMode) {
+        log('fetching fculty leave status fac mode');
+      }
+      var response = await http.post(
+        Uri.parse("$baseUriLocal$facultyUriStart"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (kDebugMode) {
+        log('fetch requezgjhsgcsvcmbvdsmvs');
+        log(response.statusCode.toString());
+      }
+
+      if (response.statusCode == 200) {
+        String dbQuery1 = "SELECT "
+            "UserLoginSession.userId,"
+            "Faculty.teacherName,"
+            "Faculty.deptId, Faculty.deptName,"
+            "Faculty.collegeId, Faculty.collegeName "
+            "FROM UserLoginSession "
+            "INNER JOIN Faculty ON Faculty.userId = UserLoginSession.userId "
+            "WHERE UserLoginSession.loginStatus=1;";
+        var params1 = [];
+
+        var essentialBaseData =
+            await DBProvider.db.dynamicRead(dbQuery1, params1);
+
+        if (essentialBaseData != null && essentialBaseData.isNotEmpty) {
+          var baseData = <String, Object>{
+            "leaveFacultyUserId": essentialBaseData[0]['userId'],
+            "leaveFacultyUserName": essentialBaseData[0]['teacherName'],
+            "leaveFacultyDeptId": essentialBaseData[0]['deptId'],
+            "leaveFacultyDeptName": essentialBaseData[0]['deptName'],
+            "leaveFacultyCollegeId": essentialBaseData[0]['collegeId'],
+            "leaveFacultyCollegeName": essentialBaseData[0]['collegeName'],
+          };
+          var res = jsonDecode(response.body);
+
+          if (res['message'].toString().toLowerCase() == 'success') {
+            var data = res['data'];
+            for (var leaveRequest in data) {
+              var leaveId = leaveRequest['id'];
+              var leaveTypeId = leaveRequest['name'][0];
+              var leaveTypeName = leaveRequest['name'][1];
+              var leaveSession = leaveRequest['leave_session'];
+              var leaveFromDate = leaveRequest['start_date'];
+              var leaveToDate = leaveRequest['end_date'];
+              var leaveDays = leaveRequest['days'];
+              var leaveAppliedDate = leaveRequest['app_date'];
+              var leaveReason = leaveRequest['reason'];
+              var leaveStatus = leaveRequest['state'];
+              var isSynced = "yes";
+
+              Map<String, Object> dbEntry = baseData;
+              dbEntry['leaveId'] = leaveId;
+              dbEntry['leaveTypeId'] = leaveTypeId;
+              dbEntry['leaveTypeName'] = leaveTypeName;
+              dbEntry['leaveSession'] = leaveSession;
+              dbEntry['leaveFromDate'] = leaveFromDate;
+              dbEntry['leaveToDate'] = leaveToDate;
+              dbEntry['leaveDays'] = leaveDays;
+              dbEntry['leaveAppliedDate'] = leaveAppliedDate;
+              dbEntry['leaveReason'] = leaveReason;
+              dbEntry['leaveStatus'] = leaveStatus;
+              dbEntry['isSynced'] = isSynced;
+              await DBProvider.db.dynamicInsert("FacultyLeaveRequest", dbEntry);
+            }
+          }
+        }
+      }
+
+      var dbQueryLeave = "SELECT * FROM FacultyLeaveRequest "
+          "WHERE FacultyLeaveUserId=("
+          "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+          ");";
+      var params1 = [];
+
+      var leaveRequests =
+          await DBProvider.db.dynamicRead(dbQueryLeave, params1);
+
+      if (leaveRequests != null && leaveRequests.isNotEmpty) {
+        return leaveRequests;
+      }
+    }
   } catch (e) {
     if (kDebugMode) {
       log('faculty leace request error');
       log(e.toString());
+    }
+    if (e is SocketException) {
+      var dbQueryLeave = "SELECT * FROM FacultyLeaveRequest "
+          "WHERE FacultyLeaveUserId=("
+          "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+          ");";
+      var params1 = [];
+
+      var leaveRequests =
+          await DBProvider.db.dynamicRead(dbQueryLeave, params1);
+
+      if (leaveRequests != null && leaveRequests.isNotEmpty) {
+        return leaveRequests;
+      }
     }
   }
 }

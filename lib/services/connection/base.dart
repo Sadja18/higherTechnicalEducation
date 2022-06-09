@@ -21,17 +21,11 @@ const Map<String, Object> userTypes = {
 };
 Future<dynamic> isOnline() async {
   try {
-    // String userName = "pplgovt-dmn-dd@nic.in";
-    // String userPassword = 'collegeadmin@1234';
-    //
-
     var response =
         await http.get(Uri.parse('$baseUriLocal/checkIfOnline.php?get=1'));
 
     if (response.statusCode == 200) {
       var respBody = jsonDecode(response.body);
-      String userName = "pplgovt-dmn-dd@nic.in";
-      String userPassword = 'collegeadmin@1234';
 
       // String collegeId = '13';
 
@@ -851,33 +845,37 @@ Future<dynamic> sendMasterLoginRequest(
 
 Future<dynamic> fetchStudentProfilesHeadMode() async {
   try {
-    var userName = 'chemgcd@gmai.com';
-    var userPassword = 'depthod@1234';
     var dbname = 'college';
     var str = "1";
 
-    var requestBodyMap = {
-      "userName": userName,
-      "userPassword": userPassword,
-      "dbname": dbname,
-      'str': str,
-    };
-
-    if (kDebugMode) {
-      log('head mode student profile fetch');
-    }
-
-    var response = await http.post(
-      Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentProfiles'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBodyMap),
-    );
-    if (kDebugMode) {
-      log('head mode student profile fetch response');
-      log(response.statusCode.toString());
-      log(response.body);
+    var dbQuery = "SELECT * FROM UserSessionLogin WHERE loginStatus=1;";
+    var params = [];
+    var userCredentials = await DBProvider.db.dynamicRead(dbQuery, params);
+    if (userCredentials != null && userCredentials.isNotEmpty) {
+      var user = userCredentials[0];
+      var userName = user['userName'];
+      var userPassword = user['userPassword'];
+      var requestBodyMap = {
+        "userName": userName,
+        "userPassword": userPassword,
+        "dbname": dbname,
+        'str': str,
+      };
+      if (kDebugMode) {
+        log('head mode student profile fetch');
+      }
+      var response = await http.post(
+        Uri.parse('$baseUriLocal$headUriStart$headUriFetchStudentProfiles'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBodyMap),
+      );
+      if (kDebugMode) {
+        log('head mode student profile fetch response');
+        log(response.statusCode.toString());
+        log(response.body);
+      }
     }
   } catch (e) {
     if (kDebugMode) {
