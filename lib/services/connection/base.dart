@@ -46,87 +46,111 @@ Future<dynamic> isOnline() async {
 
 Future<dynamic> getDepartmentDataFromServerMasterMode() async {
   try {
-    String userName = "pplgovt-dmn-dd@nic.in";
-    String userPassword = 'collegeadmin@1234';
+    var dbQuery = "SELECT * FROM UserLoginSession WHERE loginStatus=1;";
+    var params = [];
+    var userCredentials = await DBProvider.db.dynamicRead(dbQuery, params);
+    if (userCredentials != null && userCredentials.isNotEmpty) {
+      var user = userCredentials[0];
+      var userName = user['userName'];
+      var userPassword = user['userPassword'];
 
-    int collegeId = 13;
+      String dbQuery1 = "SELECT collegeId FROM Master WHERE "
+          "userId = ("
+          "SELECT userId FROM userLoginSession WHERE loginStatus=1"
+          ");";
 
-    var requestBodyMap = {
-      "userName": userName,
-      "userPassword": userPassword,
-      "dbname": dbname,
-      "collegeId": collegeId,
-      "str": str,
-    };
+      var college = await DBProvider.db.dynamicRead(dbQuery1, params);
+      var collegeId = college[0]['collegeId'];
+      var requestBodyMap = {
+        "userName": userName,
+        "userPassword": userPassword,
+        "dbname": dbname,
+        "collegeId": collegeId,
+        "str": str,
+      };
 
-    var response = await http.post(
-      Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchFacultyProfile'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(requestBodyMap),
-    );
+      var response = await http.post(
+        Uri.parse('$baseUriLocal$masterUriStart$masterUriFetchFacultyProfile'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(requestBodyMap),
+      );
 
-    if (response.statusCode == 200) {
-      if (kDebugMode) {
-        log(response.body);
-      }
+      if (response.statusCode == 200) {
+        if (kDebugMode) {
+          log(response.body);
+        }
 
-      var resp = jsonDecode(response.body);
-      if (resp['message'].toString().toLowerCase() == 'success') {
-        var data = resp['data'];
+        var resp = jsonDecode(response.body);
+        if (resp['message'].toString().toLowerCase() == 'success') {
+          var data = resp['data'];
 
-        for (var faculty in data) {
-          var teacherId = faculty['id'];
-          var userId = faculty['user_id'][0];
-          var teacherName = faculty['name'];
-          var teacherCode = faculty['teacher_code'];
-          var employeeId = faculty['employee_id'][0];
-          var isHoD = faculty['is_hod'] == true ? 'yes' : 'no';
-          var deptId = faculty['dept_id'][0];
-          var deptName = faculty['dept_id'][1];
-          var profilePic = faculty['image'];
-          var collegeId = faculty['college_id'][0];
-          var collegeName = faculty['college_id'][1];
+          for (var faculty in data) {
+            var teacherId = faculty['id'];
+            var userId = faculty['user_id'][0];
+            var teacherName = faculty['name'];
+            var teacherCode = faculty['teacher_code'];
+            var employeeId = faculty['employee_id'][0];
+            var isHoD = faculty['is_hod'] == true ? 'yes' : 'no';
+            var deptId = faculty['dept_id'][0];
+            var deptName = faculty['dept_id'][1];
+            var profilePic = faculty['image'];
+            var collegeId = faculty['college_id'][0];
+            var collegeName = faculty['college_id'][1];
 
-          await DBProvider.db.dynamicInsert("College", <String, Object>{
-            "collegeId": collegeId,
-            "collegeName": collegeName,
-          });
-          await DBProvider.db.dynamicInsert("Dept", <String, Object>{
-            "deptId": deptId,
-            "deptName": deptName,
-            "collegeId": collegeId,
-          });
-          await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
-            "teacherId": teacherId,
-            "userId": userId,
-            "teacherName": teacherName,
-            "teacherCode": teacherCode,
-            "employeeId": employeeId,
-            "isHoD": isHoD,
-            "deptId": deptId,
-            "deptName": deptName,
-            "profilePic": profilePic,
-            "collegeId": collegeId,
-            "collegeName": collegeName,
-          });
+            await DBProvider.db.dynamicInsert("College", <String, Object>{
+              "collegeId": collegeId,
+              "collegeName": collegeName,
+            });
+            await DBProvider.db.dynamicInsert("Dept", <String, Object>{
+              "deptId": deptId,
+              "deptName": deptName,
+              "collegeId": collegeId,
+            });
+            await DBProvider.db.dynamicInsert("Faculty", <String, Object>{
+              "teacherId": teacherId,
+              "userId": userId,
+              "teacherName": teacherName,
+              "teacherCode": teacherCode,
+              "employeeId": employeeId,
+              "isHoD": isHoD,
+              "deptId": deptId,
+              "deptName": deptName,
+              "profilePic": profilePic,
+              "collegeId": collegeId,
+              "collegeName": collegeName,
+            });
+          }
         }
       }
-    }
-    var depts = await DBProvider.db.dynamicRead(
-        "SELECT * FROM Dept"
-        " WHERE collegeId = (SELECT collegeId FROM master WHERE userId = "
-        "(SELECT userId FROM UserLoginSession WHERE loginStatus=1));",
-        []);
-    if (depts.isNotEmpty) {
-      var deptList = depts.toList();
-      return deptList;
+      var depts = await DBProvider.db.dynamicRead(
+          "SELECT * FROM Dept"
+          " WHERE collegeId = (SELECT collegeId FROM master WHERE userId = "
+          "(SELECT userId FROM UserLoginSession WHERE loginStatus=1));",
+          []);
+      if (depts != null && depts.isNotEmpty) {
+        var deptList = depts.toList();
+        return deptList;
+      }
     }
   } catch (e) {
     if (kDebugMode) {
       log('dept fetch error');
       log(e.toString());
+      log("scheck hgvkjs");
+      log((e is SocketException).toString());
+    }
+    if (e is SocketException) {
+      var depts = await DBProvider.db.dynamicRead(
+          "SELECT * FROM Dept"
+          " WHERE collegeId = (SELECT collegeId FROM master WHERE userId = "
+          "(SELECT userId FROM UserLoginSession WHERE loginStatus=1));",
+          []);
+      if (depts != null && depts.isNotEmpty) {
+        var deptList = depts.toList();
+        return deptList;
+      }
     }
   }
 }

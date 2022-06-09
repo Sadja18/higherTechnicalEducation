@@ -12,9 +12,9 @@ Future<dynamic> getFacultyDataFromDatabaseMasterMode(int deptId) async {
     var response = await DBProvider.db
         .dynamicRead("SELECT * FROM Faculty WHERE deptId=?;", [deptId]);
     if (kDebugMode) {
-      log(response.toString());
+      log("master mode faculty attendance response.toString()");
     }
-    if (response.isNotEmpty) {
+    if (response != null && response.isNotEmpty) {
       var data = response.toList();
       return data;
     } else {
