@@ -31,54 +31,6 @@ class _AttendanceScreenFacultyModeState
   String selectedLectureDuration = "0";
   final FocusNode _durationFocusNode = FocusNode();
 
-  void courseSelection(int courseId, String noDept, String courseDuration) {
-    // if(kDebugMode){
-
-    // }
-    setState(() {
-      selectedCourseId = courseId;
-      selectedCourseDuration = courseDuration;
-      selectedNoDept = noDept;
-      // selectedClassId = 0;
-      // selectedSemId = 0;
-      // selectedYearId = 0;
-      // selectedSubjectId = 0;
-      // selectedLectureDuration = "1";
-    });
-  }
-
-  void classSelection(int classId, int yearId, int semId) {
-    if (kDebugMode) {
-      log('call back values');
-      log('$classId $yearId $semId');
-    }
-    setState(() {
-      selectedClassId = classId;
-      selectedYearId = yearId;
-      selectedSemId = semId;
-      // selectedSubjectId = 0;
-      // selectedLectureDuration = "1";
-    });
-  }
-
-  void yearSelection(int yearId) {
-    setState(() {
-      selectedYearId = yearId;
-      // selectedClassId = 0;
-      // selectedSemId = 0;
-      // selectedSubjectId = 0;
-      // selectedLectureDuration = "1";
-    });
-  }
-
-  void semSelection(int semId) {
-    setState(() {
-      selectedSemId = semId;
-      // selectedSubjectId = 0;
-      // selectedLectureDuration = "1";
-    });
-  }
-
   @override
   void initState() {
     setState(() {
