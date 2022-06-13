@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 
 import '../../../services/connection/faculty_mode_methods.dart';
@@ -441,123 +442,123 @@ class _StudentAttendanceViewState extends State<StudentAttendanceView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      decoration: BoxDecoration(
-        color: Colors.blueGrey.shade100,
-      ),
-      alignment: Alignment.center,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.08,
-              margin: const EdgeInsets.symmetric(
-                vertical: 3.0,
-              ),
-              child: Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                columnWidths: const {
-                  0: FractionColumnWidth(0.30),
-                  1: FractionColumnWidth(0.30),
-                  2: FractionColumnWidth(0.30),
-                },
-                children: [
-                  TableRow(
-                    children: [
-                      TableCell(
-                        child: Text(
-                          "Total: ${students.length}",
-                          style: const TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                      TableCell(
-                        child: Text(
-                          "Present: ${students.length - absenteeStudentIds.length}",
-                          style: const TextStyle(
-                            color: Colors.green,
-                          ),
-                        ),
-                      ),
-                      TableCell(
-                        child: InkWell(
-                          onTap: () {
-                            if (absenteeStudentIds.isNotEmpty) {
-                              showAbsentStudentsPreview();
-                            }
-                          },
-                          child: Text(
-                            "Absent: ${absenteeStudentIds.length}",
-                            style: const TextStyle(
-                              color: Colors.red,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return Expanded(
+      child: Column(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.08,
+            margin: const EdgeInsets.symmetric(
+              vertical: 3.0,
             ),
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.60,
-              child: StickyHeadersTable(
-                cellDimensions: CellDimensions.variableColumnWidthAndRowHeight(
-                  columnWidths: [],
-                  rowHeights:
-                      List<double>.generate(students.length, (int index) => 90),
-                  stickyLegendWidth: MediaQuery.of(context).size.width,
-                  stickyLegendHeight: 0,
-                ),
-                initialScrollOffsetX: 0.0,
-                initialScrollOffsetY: verticalRowScrollOffset(),
-                scrollControllers: scrollControllers(),
-                columnsLength: 0,
-                rowsLength: students.length,
-                columnsTitleBuilder: (i) => const SizedBox(
-                  height: 0,
-                ),
-                rowsTitleBuilder: rowsTitleBuilder,
-                contentCellBuilder: (i, j) => const SizedBox(
-                  height: 0,
-                ),
-                legendCell: const SizedBox(
-                  height: 0,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                showAbsentStudentsPreviewSubmit();
+            child: Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              columnWidths: const {
+                0: FractionColumnWidth(0.30),
+                1: FractionColumnWidth(0.30),
+                2: FractionColumnWidth(0.30),
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.purpleAccent.shade200,
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                      child: Text(
+                        "Total: ${students.length}",
+                        style: const TextStyle(
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    TableCell(
+                      child: Text(
+                        "Present: ${students.length - absenteeStudentIds.length}",
+                        style: const TextStyle(
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                    TableCell(
+                      child: InkWell(
+                        onTap: () {
+                          if (absenteeStudentIds.isNotEmpty) {
+                            showAbsentStudentsPreview();
+                          }
+                        },
+                        child: Text(
+                          "Absent: ${absenteeStudentIds.length}",
+                          style: const TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(
-                  vertical: 3.0,
-                ),
-                width: MediaQuery.of(context).size.width * 0.40,
-                height: MediaQuery.of(context).size.height * 0.05,
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                    color: Colors.white,
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.45,
+            child: StickyHeadersTable(
+              cellDimensions: CellDimensions.variableColumnWidthAndRowHeight(
+                columnWidths: [],
+                rowHeights:
+                    List<double>.generate(students.length, (int index) => 90),
+                stickyLegendWidth: MediaQuery.of(context).size.width,
+                stickyLegendHeight: 0,
+              ),
+              initialScrollOffsetX: 0.0,
+              initialScrollOffsetY: verticalRowScrollOffset(),
+              scrollControllers: scrollControllers(),
+              columnsLength: 0,
+              rowsLength: students.length,
+              columnsTitleBuilder: (i) => const SizedBox(
+                height: 0,
+              ),
+              rowsTitleBuilder: rowsTitleBuilder,
+              contentCellBuilder: (i, j) => const SizedBox(
+                height: 0,
+              ),
+              legendCell: const SizedBox(
+                height: 0,
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              showAbsentStudentsPreviewSubmit();
+            },
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.06,
+              child: Card(
+                elevation: 18.0,
+                color: Colors.purpleAccent.shade200,
+                shadowColor: Colors.redAccent.shade100,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.purpleAccent.shade200,
+                    borderRadius: BorderRadius.circular(14.0),
+                  ),
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 3.0,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.40,
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -575,6 +576,9 @@ class StudentRow extends StatelessWidget {
     required this.studentId,
     required this.rowColor,
   }) : super(key: key);
+  String nameFormat(studentName) {
+    return toBeginningOfSentenceCase(studentName).toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -604,7 +608,7 @@ class StudentRow extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            studentName,
+                            nameFormat(studentName),
                             style: const TextStyle(
                               color: Colors.white,
                             ),

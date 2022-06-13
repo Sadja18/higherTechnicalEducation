@@ -8,8 +8,10 @@ import '../../../services/connection/faculty_mode_methods.dart';
 /// courseId and noDept and duration
 class CourseSelector extends StatefulWidget {
   final Function(int, String, String) courseSelection;
-  const CourseSelector({Key? key, required this.courseSelection})
-      : super(key: key);
+  const CourseSelector({
+    Key? key,
+    required this.courseSelection,
+  }) : super(key: key);
 
   @override
   State<CourseSelector> createState() => _CourseSelectorState();
@@ -50,7 +52,7 @@ class _CourseSelectorState extends State<CourseSelector> {
           var courses = snapshot.data;
           if (kDebugMode) {
             print("object courses");
-            print(courses.toString());
+            print(courses.runtimeType.toString());
           }
           return CourseDropdown(
             courses: courses,
@@ -71,9 +73,11 @@ class _CourseSelectorState extends State<CourseSelector> {
 class CourseDropdown extends StatefulWidget {
   final List courses;
   final Function(int, String, String) courseSelection;
-  const CourseDropdown(
-      {Key? key, required this.courses, required this.courseSelection})
-      : super(key: key);
+  const CourseDropdown({
+    Key? key,
+    required this.courses,
+    required this.courseSelection,
+  }) : super(key: key);
 
   @override
   State<CourseDropdown> createState() => _CourseDropdownState();
@@ -86,6 +90,7 @@ class _CourseDropdownState extends State<CourseDropdown> {
   void handleSelection() async {
     var res = await getCourseDetails("Faculty", selectedCourseCode);
     if (kDebugMode) {
+      log('selected ');
       log(res.toString());
     }
 

@@ -21,6 +21,9 @@ class _ClassSelectorState extends State<ClassSelector> {
 
   @override
   void initState() {
+    if (kDebugMode) {
+      log("class selection course Id ${widget.courseId}");
+    }
     setState(() {
       courseId = widget.courseId;
     });
@@ -47,9 +50,10 @@ class _ClassSelectorState extends State<ClassSelector> {
                 snapshot.data.isNotEmpty) {
               var classes = snapshot.data;
               return ClassSelection(
-                  courseId: courseId,
-                  classSelection: widget.classSelection,
-                  classNames: classes);
+                courseId: courseId,
+                classSelection: widget.classSelection,
+                classNames: classes,
+              );
             } else {
               return const Text("No classes for this course found");
             }
@@ -86,12 +90,12 @@ class _ClassSelectionState extends State<ClassSelection> {
 
   void handleClassSelection() async {
     if (kDebugMode) {
-      print("selected class name $selectedClassName");
+      log("selected class name $selectedClassName");
     }
 
     var classDetails =
         await getClassDetails(widget.courseId, selectedClassName);
-    if (classDetails.isNotEmpty) {
+    if (classDetails != null && classDetails.isNotEmpty) {
       if (kDebugMode) {
         log('selected classDetail');
         log(classDetails.toString());
@@ -151,10 +155,6 @@ class _ClassSelectionState extends State<ClassSelection> {
             setState(() {
               selectedClassName = selection.toString();
             });
-            if (kDebugMode) {
-              print("Selected class");
-              print(selection.toString());
-            }
             handleClassSelection();
           }),
     );

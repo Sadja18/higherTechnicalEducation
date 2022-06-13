@@ -42,11 +42,7 @@ class _SubjectSelectorState extends State<SubjectSelector> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getSubjectsForCourseIdYearIdSemIdFrom(
-        widget.courseId,
-        widget.yearId,
-        widget.semId,
-      ),
+      future: subjectFuture,
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
@@ -173,10 +169,6 @@ class _SubjectSelectionState extends State<SubjectSelection> {
             setState(() {
               selectedSubjectName = selection.toString();
             });
-            if (kDebugMode) {
-              log("Selected subject in dropdown child");
-              log(selection.toString());
-            }
 
             handleSubjectSelection();
           }),
