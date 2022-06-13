@@ -1223,3 +1223,79 @@ Future<dynamic> readFacultyLeaveRequestRecords() async {
     }
   }
 }
+
+Future<void> saveStudentAttendance(
+  String attendanceDate,
+  String submissionDate,
+  int subjectId,
+  int classId,
+  String numLectureHours,
+  int semId,
+  int yearId,
+  int courseId,
+  dynamic absentStudentIdList,
+) async {
+  try {
+    if (kDebugMode) {
+      log("saving attendance faculty mode student");
+    }
+    var dbQuery1 = "SELECT teacherId, collegeId "
+        "FROM Faculty "
+        "WHERE userId = ("
+        "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+        ");";
+    var params1 = [];
+
+    var college = await DBProvider.db.dynamicRead(dbQuery1, params1);
+    if (college != null && college.isNotEmpty) {
+      var collegeId = college[0]['collegeId'];
+      var teacherId = college[0]['teacherId'];
+      // var classId = null;
+      var deptId = 0;
+
+      var dbQuery2 = "SELECT noDept, deptId FROM Course WHERE courseId = ?;";
+      var params2 = [courseId];
+
+      var course = await DBProvider.db.dynamicRead(dbQuery2, params2);
+
+      if (course != null && course.isNotEmpty) {
+        if (course[0]['noDept'] == 'no') {
+          deptId = course[0]['deptId'];
+        }
+      }
+      var absenteeString = jsonEncode(absentStudentIdList);
+
+      var dbEntry = <String, Object>{
+        "attendanceDate": attendanceDate,
+        "courseId": courseId,
+        "collegeId": collegeId,
+        "teacherId": teacherId,
+        "numLectureHours": numLectureHours,
+        "submissionDate": submissionDate,
+        "subjectId": subjectId,
+        "yearId": yearId,
+        "semId": semId,
+        "absentStudentList": absenteeString
+      };
+
+      if (deptId != 0 && classId != 0) {
+        dbEntry['classId'] = classId;
+        dbEntry['deptId'] = deptId;
+      }
+      await DBProvider.db.dynamicInsert("StudentAttendance", dbEntry);
+      // var credential = await getFacultyCredential();
+
+      // if (credential != null && credential.isNotEmpty) {
+      //   var userName = credential[0]['userName'];
+      //   var userPassword = credential[0]['userPassword'];
+      //   var deptId = credential[0]['deptId'].toString();
+      //   var absenteeString
+      // }
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log("error saving student attendance");
+      log(e.toString());
+    }
+  }
+}

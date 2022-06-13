@@ -10,14 +10,24 @@ import 'package:table_sticky_headers/table_sticky_headers.dart';
 import '../../../services/connection/faculty_mode_methods.dart';
 
 class FacultyModeStudentAttendanceTable extends StatefulWidget {
+  final int subjectId;
+  final String lectureDuration;
   final int courseId;
   final int yearId;
   final int semId;
+  final String attendanceDate;
+  final int classId;
+  final VoidCallback comeBackToParentCallBack;
   const FacultyModeStudentAttendanceTable({
     Key? key,
     required this.courseId,
     required this.yearId,
     required this.semId,
+    required this.subjectId,
+    required this.lectureDuration,
+    required this.attendanceDate,
+    required this.classId,
+    required this.comeBackToParentCallBack,
   }) : super(key: key);
 
   @override
@@ -61,8 +71,15 @@ class _FacultyModeStudentAttendanceTableState
             return SizedBox(
               height: MediaQuery.of(context).size.height * 0.60,
               child: StudentAttendanceView(
-                students: students,
-              ),
+                  subjectId: widget.subjectId,
+                  semId: widget.semId,
+                  yearId: widget.yearId,
+                  courseId: widget.courseId,
+                  classId: widget.classId,
+                  attendanceDate: widget.attendanceDate,
+                  lectureDuration: widget.lectureDuration,
+                  students: students,
+                  comeBackToParentCallBack: widget.comeBackToParentCallBack),
             );
           }
         }
@@ -73,8 +90,26 @@ class _FacultyModeStudentAttendanceTableState
 
 class StudentAttendanceView extends StatefulWidget {
   final List students;
-  const StudentAttendanceView({Key? key, required this.students})
-      : super(key: key);
+  final int subjectId;
+  final int courseId;
+  final int yearId;
+  final int semId;
+  final int classId;
+  final String lectureDuration;
+  final String attendanceDate;
+  final VoidCallback comeBackToParentCallBack;
+  const StudentAttendanceView({
+    Key? key,
+    required this.students,
+    required this.subjectId,
+    required this.courseId,
+    required this.yearId,
+    required this.semId,
+    required this.classId,
+    required this.lectureDuration,
+    required this.attendanceDate,
+    required this.comeBackToParentCallBack,
+  }) : super(key: key);
 
   @override
   State<StudentAttendanceView> createState() => _StudentAttendanceViewState();
@@ -256,12 +291,55 @@ class _StudentAttendanceViewState extends State<StudentAttendanceView> {
         });
   }
 
+  void showLoader(submissionDate) {
+    showDialog(
+        context: context,
+        builder: (BuildContext _) {
+          return const AlertDialog(
+            title: Text("Saving student attendance records"),
+            content: SizedBox(
+              child: CircularProgressIndicator.adaptive(),
+            ),
+          );
+        });
+    saveStudentAttendance(
+      widget.attendanceDate,
+      submissionDate,
+      widget.subjectId,
+      widget.classId,
+      widget.lectureDuration,
+      widget.semId,
+      widget.yearId,
+      widget.courseId,
+      absenteeStudentIds,
+    );
+    Navigator.of(context).pop();
+    showDialog(
+        context: context,
+        builder: (BuildContext _) {
+          return const AlertDialog(
+            title: Text("Saved the student attendance successfully"),
+            content: SizedBox(
+              height: 0,
+              width: 0,
+            ),
+          );
+        });
+    widget.comeBackToParentCallBack();
+  }
+
   void showAbsentStudentsPreviewSubmit() async {
     return showDialog(
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
-            title: Center(child: const Text("Absent Students")),
+            // ignore: unnecessary_null_comparison
+            title: (absenteeStudentIds != null && absenteeStudentIds.isNotEmpty)
+                ? Center(child: const Text("Absent Students"))
+                : const SizedBox(
+                    height: 0,
+                    width: 0,
+                  ),
             contentPadding: absenteeStudentIds.isEmpty
                 ? const EdgeInsets.all(0)
                 : const EdgeInsets.symmetric(
@@ -334,13 +412,6 @@ class _StudentAttendanceViewState extends State<StudentAttendanceView> {
                                     }
                                   }
                                   return Table(
-                                    // border: TableBorder(
-                                    //   horizontalInside: BorderSide(
-                                    //     width: 1,
-                                    //     color: Colors.blue,
-                                    //     style: BorderStyle.solid,
-                                    //   ),
-                                    // ),
                                     defaultVerticalAlignment:
                                         TableCellVerticalAlignment.middle,
                                     columnWidths: const {
@@ -400,6 +471,17 @@ class _StudentAttendanceViewState extends State<StudentAttendanceView> {
                       ),
                       TableCell(
                         child: InkWell(
+                          onTap: () {
+                            if (kDebugMode) {
+                              log('saving to local db');
+                            }
+                            var submissionDate =
+                                DateFormat('yyyy-MM-dd hh:mm:ss')
+                                    .format(DateTime.now());
+                            // Navigator.of(context).pop();
+
+                            showLoader(submissionDate);
+                          },
                           child: Container(
                             alignment: Alignment.centerRight,
                             margin: const EdgeInsets.symmetric(

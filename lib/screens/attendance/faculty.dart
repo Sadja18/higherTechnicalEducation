@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:higher/widgets/common/date_select.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import '../../widgets/common/dropdowns/course_select.dart';
 import '../../widgets/common/dropdowns/class_select.dart';
@@ -31,6 +33,14 @@ class _AttendanceScreenFacultyModeState
   int selectedCourseDuration = 0;
   String selectedLectureDuration = "0";
   int selectFinalize = 0;
+
+  /// since the database stores date in fullYear-fullMonth-fullDate format
+  /// we need a formatter to enable it
+  final DateFormat format = DateFormat('yyyy-MM-dd');
+
+  // a variable to store the selected date
+  String? _selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
   void reset() {
     setState(() {
       selectedCourseId = 0;
@@ -40,8 +50,27 @@ class _AttendanceScreenFacultyModeState
       selectedSemId = 0;
       selectedYearId = 0;
       selectedSubjectId = 0;
+      selectFinalize = 0;
     });
   }
+
+  void comeToParentOnAttendanceSubmit() {
+    reset();
+  }
+
+  // reverse call back to store the selected Date
+  void dateSelector(String? selectDate) {
+    setState(() {
+      _selectedDate = selectDate.toString();
+      // currentRowIndex = 0;
+      // rowsTapped = [];
+      // absenteeMemberData = {};
+    });
+    if (kDebugMode) {
+      print('reverse date callback');
+    }
+  }
+  // reverse call back to store the selected Date end
 
   void courseSelection(int courseId, String noDept, String courseDurtaion) {
     setState(() {
@@ -148,6 +177,17 @@ class _AttendanceScreenFacultyModeState
                               padding: const EdgeInsets.all(8.0),
                               child: Table(
                                 children: [
+                                  /// selector for date
+                                  TableRow(
+                                    children: [
+                                      TableCell(
+                                        child: DateShowNew(
+                                          dateSelector: dateSelector,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
                                   /// selector for course
                                   TableRow(
                                     children: [
@@ -392,9 +432,15 @@ class _AttendanceScreenFacultyModeState
                             width: 0,
                           )
                         : FacultyModeStudentAttendanceTable(
+                            lectureDuration: selectedLectureDuration,
+                            subjectId: selectedSubjectId,
                             courseId: selectedCourseId,
                             semId: selectedSemId,
                             yearId: selectedYearId,
+                            attendanceDate: _selectedDate.toString(),
+                            classId: selectedClassId,
+                            comeBackToParentCallBack:
+                                comeToParentOnAttendanceSubmit,
                           ),
                   ],
                 ),
