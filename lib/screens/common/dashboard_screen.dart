@@ -687,7 +687,7 @@ class DashboardScreen extends StatelessWidget {
                                       ? Container(
                                           alignment: Alignment.center,
                                           child: Text(
-                                            "Overall Attendance: ${overAll * 100} %",
+                                            "Your Attendance: ${overAll * 100} %",
                                             style: const TextStyle(
                                                 // fontWeight: FontWeight.bold,
                                                 ),
