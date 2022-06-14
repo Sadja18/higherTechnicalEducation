@@ -59,3 +59,10 @@ Data and Features Accessible grouped by access group:
 
 A faculty who is also an Head needs to use both of his accounts separately.
 
+
+///
+Leave apply faculty mode application not saved locally. Work on this feature
+
+/// 
+Head mode leave approve
+update Button of dialog box on student approve and faculty approve

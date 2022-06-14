@@ -1253,7 +1253,8 @@ Future<void> saveStudentAttendance(
       // var classId = null;
       var deptId = 0;
 
-      var dbQuery2 = "SELECT noDept, deptId FROM Course WHERE courseId = ?;";
+      var dbQuery2 =
+          "SELECT courseName, noDept, deptId FROM Course WHERE courseId = ?;";
       var params2 = [courseId];
 
       var course = await DBProvider.db.dynamicRead(dbQuery2, params2);
@@ -1265,21 +1266,60 @@ Future<void> saveStudentAttendance(
       }
       var absenteeString = jsonEncode(absentStudentIdList);
 
+      // get courseName;
+      var courseName = course[0]['courseName'];
+
+      // get subjectName
+      var subject = await DBProvider.db.dynamicRead(
+          "SELECT subjectName "
+          "FROM Subject "
+          "WHERE subjectId=?",
+          [subjectId]);
+      var subjectName = subject[0]['subjectName'];
+
+      // get yearName
+      var year = await DBProvider.db.dynamicRead(
+          "SELECT yearName "
+          "FROM Year "
+          "WHERE yearId=?",
+          [yearId]);
+      var yearName = year[0]['yearName'];
+
+      // get semName
+      var sem = await DBProvider.db.dynamicRead(
+          "SELECT semName "
+          "FROM Semester "
+          "WHERE semId = ?",
+          [semId]);
+      var semName = sem[0]['semName'];
+
       var dbEntry = <String, Object>{
         "attendanceDate": attendanceDate,
         "courseId": courseId,
+        "courseName": courseName,
         "collegeId": collegeId,
         "teacherId": teacherId,
         "numLectureHours": numLectureHours,
         "submissionDate": submissionDate,
         "subjectId": subjectId,
+        "subjectName": subjectName,
         "yearId": yearId,
+        "yearName": yearName,
         "semId": semId,
+        "semName": semName,
         "absentStudentList": absenteeString
       };
 
       if (deptId != 0 && classId != 0) {
         dbEntry['classId'] = classId;
+
+        var classe = await DBProvider.db.dynamicRead(
+            "SELECT className "
+            "FROM Classes "
+            "WHERE classId=?",
+            [classId]);
+        var className = classe[0]['className'];
+        dbEntry['className'] = className;
         dbEntry['deptId'] = deptId;
       }
       await DBProvider.db.dynamicInsert("StudentAttendance", dbEntry);
@@ -1295,6 +1335,33 @@ Future<void> saveStudentAttendance(
   } catch (e) {
     if (kDebugMode) {
       log("error saving student attendance");
+      log(e.toString());
+    }
+  }
+}
+
+Future<dynamic> readStudentAttendanceRecordsFromDB() async {
+  try {
+    var dbQuery = "SELECT * FROM StudentAttendance "
+        "WHERE teacherId = ("
+        "SELECT teacherId FROM Faculty WHERE userId = ("
+        "SELECT userId FROM UserLoginSession WHERE loginStatus=1"
+        ")"
+        ")"
+        ";";
+    var params = [];
+    var records = await DBProvider.db.dynamicRead(dbQuery, params);
+
+    if (kDebugMode) {
+      log("read operation done student attendance");
+      log(records.toString());
+    }
+    if (records != null && records.isNotEmpty) {
+      return records;
+    }
+  } catch (e) {
+    if (kDebugMode) {
+      log("error in reading student attendance records from the local db ");
       log(e.toString());
     }
   }

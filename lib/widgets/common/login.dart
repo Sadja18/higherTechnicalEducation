@@ -180,6 +180,7 @@ class _UserLoginWidgetState extends State<UserLoginWidget> {
           if (userNameValidation == 1) {
             loginStatus = await tryLogin(enteredUserName, enteredUserPassword);
             if (loginStatus == 1) {
+              // ignore: use_build_context_synchronously
               Navigator.of(context).popAndPushNamed(DashboardScreen.routeName);
             } else {
               showAlertBox(

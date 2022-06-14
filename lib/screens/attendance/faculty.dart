@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:higher/widgets/common/date_select.dart';
 import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import '../../widgets/attendance/view/faculty.dart';
 import '../../widgets/common/dropdowns/course_select.dart';
 import '../../widgets/common/dropdowns/class_select.dart';
 import '../../widgets/common/dropdowns/subject_select.dart';
@@ -165,7 +165,7 @@ class _AttendanceScreenFacultyModeState
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.95,
                       child: ExpansionTile(
-                        initiallyExpanded: true,
+                        initiallyExpanded: false,
                         title: Container(
                           alignment: Alignment.center,
                           child: const Text("Selection"),
@@ -450,9 +450,7 @@ class _AttendanceScreenFacultyModeState
               decoration: const BoxDecoration(),
               alignment: Alignment.center,
               height: MediaQuery.of(context).size.height * 0.60,
-              child: SfCalendar(
-                view: CalendarView.month,
-              ),
+              child: StudentAttendanceCalendarViewFacultyMode(),
             ),
           ],
         ),

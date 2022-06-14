@@ -511,6 +511,20 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
         });
   }
 
+  void showSuccessDialogFaculty() async {
+    showDialog(
+        context: context,
+        builder: (BuildContext _) {
+          return const AlertDialog(
+            title: Text("Application Saved Locally"),
+            content: SizedBox(
+              height: 0,
+              width: 0,
+            ),
+          );
+        });
+  }
+
   void showSuccessDialogStudent() async {
     var leaveDateDifference = dateDiffCalc();
     if (kDebugMode) {
@@ -587,7 +601,7 @@ class _ApplyForLeaveWidgetState extends State<ApplyForLeaveWidget> {
               showAlertDialog("Please select a leave session");
             }
           } else {
-            showAlertDialog("All entries acceptable");
+            showSuccessDialogFaculty();
           }
         } else {
           if (whichUserLoggedInCurrently == 6) {

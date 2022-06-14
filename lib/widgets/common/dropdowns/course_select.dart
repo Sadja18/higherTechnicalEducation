@@ -32,11 +32,9 @@ class _CourseSelectorState extends State<CourseSelector> {
       future: courseFuture,
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(
-              color: Colors.deepPurple,
-            ),
+          return const SizedBox(
+            // width: MediaQuery.of(context).size.width * 0.02,
+            child: CircularProgressIndicator.adaptive(),
           );
         } else if (snapshot.hasError) {
           return const Padding(

@@ -45,10 +45,10 @@ class _SubjectSelectorState extends State<SubjectSelector> {
       future: subjectFuture,
       builder: (BuildContext ctx, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(
-              color: Colors.deepPurple,
+          return const SizedBox(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator.adaptive(),
             ),
           );
         } else {

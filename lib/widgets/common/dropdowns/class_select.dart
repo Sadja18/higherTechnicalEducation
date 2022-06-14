@@ -39,9 +39,7 @@ class _ClassSelectorState extends State<ClassSelector> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Padding(
             padding: EdgeInsets.all(8.0),
-            child: CircularProgressIndicator(
-              color: Colors.deepPurple,
-            ),
+            child: CircularProgressIndicator.adaptive(),
           );
         } else {
           if (snapshot.connectionState == ConnectionState.done) {

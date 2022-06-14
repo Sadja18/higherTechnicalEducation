@@ -186,14 +186,19 @@ class DBProvider {
         "attendanceId INTEGER,"
         "attendanceDate TEXT NOT NULL,"
         "courseId TEXT NOT NULL,"
+        'courseName TEXT NOT NULL,'
         'collegeId INTEGER NOT NULL,'
         'teacherId INTEGER NOT NULL,'
         'numLectureHours TEXT,'
         'submissionDate TEXT NOT NULL,'
         "subjectId INTEGER NOT NULL,"
+        "subjectName TEXT,"
         'yearId INTEGER NOT NULL,'
+        "yearName TEXT,"
         'semId INTEGER NOT NULL,'
+        "semName TEXT,"
         'classId INTEGER,'
+        'className TEXT,'
         'deptId INTEGER,'
         "absentStudentList TEXT,"
         "isSynced TEXT DEFAULT 'no',"
