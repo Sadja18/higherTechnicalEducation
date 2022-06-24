@@ -22,6 +22,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   int currentRowIndex = 0;
   Map absenteeMemberData = {};
   List rowsTapped = [];
+  List absenteeEmpIds = [];
 
   /// since the database stores date in fullYear-fullMonth-fullDate format
   /// we need a formatter to enable it
@@ -55,13 +56,9 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
 
   Color getRowColor(rowIndex) {
     var empId = members[rowIndex]['employeeId'];
-    if (absenteeMemberData[empId] && rowsTapped.contains(rowIndex)) {
+    if (absenteeEmpIds.contains(empId)) {
       return Colors.red;
-    }
-    // else if (!absenteeMemberData[empId] && rowsTapped.contains(rowIndex)) {
-    //   return Colors.green;
-    // }
-    else {
+    } else {
       return Colors.green;
     }
   }
@@ -177,11 +174,23 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
           if (kDebugMode) {
             log('mark $currentEmpId as ${!absenteeMemberData[currentEmpId]}');
           }
-          setState(() {
-            absenteeMemberData[currentEmpId] =
-                !absenteeMemberData[currentEmpId];
-            rowsTapped.add(rowIndex);
-          });
+          var absenteeEmpIdsTmp = absenteeEmpIds;
+          if (!absenteeMemberData[currentEmpId]) {
+            absenteeEmpIdsTmp.add(currentEmpId);
+
+            setState(() {
+              absenteeMemberData[currentEmpId] = true;
+              rowsTapped.add(rowIndex);
+              absenteeEmpIds = absenteeEmpIdsTmp;
+            });
+          } else {
+            absenteeEmpIdsTmp.removeWhere((element) => element == currentEmpId);
+            setState(() {
+              absenteeMemberData[currentEmpId] = false;
+              rowsTapped.add(rowIndex);
+              absenteeEmpIds = absenteeEmpIdsTmp;
+            });
+          }
         },
         child: ClipRRect(
           borderRadius: BorderRadius.circular(
@@ -359,9 +368,17 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
               ),
               InkWell(
                 onTap: () {
+                  var d = absenteeMemberData;
+
+                  d.forEach(
+                    (key, value) => d[key] = false,
+                  );
+
                   setState(() {
                     absenteeList = [];
                     rowsTapped = [];
+                    absenteeMemberData = d;
+                    absenteeEmpIds = [];
                   });
                   Navigator.of(context).pop();
                 },
