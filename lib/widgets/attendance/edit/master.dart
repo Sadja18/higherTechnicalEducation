@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   }
 
   double verticalRowScrollOffset() {
-    double scrollOffset = 120.0;
+    double scrollOffset = 100.0;
     if (currentRowIndex == 0.0) {
       return 0.0;
     } else {
@@ -74,7 +75,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
     }
   }
 
-  Widget tableViewField(String fieldName, Widget fieldWidget) {
+  Widget tableViewField(String fieldName, Widget fieldWidget, bgColor) {
     return Container(
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.symmetric(
@@ -97,8 +98,8 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
                   // height: MediaQuery.of(context),
                   child: Text(
                     fieldName,
-                    style: const TextStyle(
-                      color: Colors.purple,
+                    style: TextStyle(
+                      color: bgColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -118,7 +119,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
     return Container(
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width,
-      // height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height * 0.120,
       child: Table(
         columnWidths: const <int, TableColumnWidth>{
           0: FractionColumnWidth(0.30),
@@ -129,8 +130,23 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
           TableRow(
             children: [
               TableCell(
-                child: AvatarGeneratorNew(
-                  base64Code: members[rowIndex]['profilePic'],
+                child: Container(
+                  decoration: const BoxDecoration(),
+                  alignment: Alignment.topCenter,
+                  // width: MediaQuery.of(context).size.width*0.0001,
+                  height: MediaQuery.of(context).size.height * 0.115,
+                  child: ClipOval(
+                    child: Image(
+                      image: Image.memory(
+                        Base64Decoder().convert(
+                          members[rowIndex]['profilePic'].toString(),
+                        ),
+                      ).image,
+                      fit: BoxFit.fill,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                    ),
+                  ),
                 ),
               ),
               TableCell(
@@ -151,53 +167,45 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
   }
 
   Widget rowsTitleBuilder(rowIndex) {
-    return InkWell(
-      // splashColor: Colors.purple,
-      onTap: () {
-        var currentEmpId = members[rowIndex]['employeeId'];
-        if (kDebugMode) {
-          log('mark $currentEmpId as ${!absenteeMemberData[currentEmpId]}');
-        }
-        setState(() {
-          absenteeMemberData[currentEmpId] = !absenteeMemberData[currentEmpId];
-          rowsTapped.add(rowIndex);
-        });
-      },
-      child: Card(
-        borderOnForeground: true,
-        color: getRowColor(rowIndex),
-        shape: RoundedRectangleBorder(
-          // side: Border.symmetric(vertical: BorderSide.none),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: InkWell(
+        // splashColor: Colors.purple,
+        onTap: () {
+          var currentEmpId = members[rowIndex]['employeeId'];
+          if (kDebugMode) {
+            log('mark $currentEmpId as ${!absenteeMemberData[currentEmpId]}');
+          }
+          setState(() {
+            absenteeMemberData[currentEmpId] =
+                !absenteeMemberData[currentEmpId];
+            rowsTapped.add(rowIndex);
+          });
+        },
+        child: ClipRRect(
           borderRadius: BorderRadius.circular(
-            10.0,
+            20.0,
           ),
-        ),
-        shadowColor: Colors.pinkAccent,
-        elevation: 16.0,
-        child: Container(
-          margin: const EdgeInsets.only(
-            top: 5.0,
-          ),
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
+          child: Card(
+            borderOnForeground: true,
             color: getRowColor(rowIndex),
-            // border: Border.all(
-            //   color: Colors.white,
-            //   width: 3.0,
-            // ),
-            // borderRadius: BorderRadius.circular(
-            //   10.0,
-            // ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              staffCellTopRow(
+            shadowColor: Colors.transparent,
+            elevation: 16.0,
+            child: Container(
+              // margin: const EdgeInsets.only(
+              //   top: 5.0,
+              // ),
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                color: getRowColor(rowIndex),
+              ),
+              child: staffCellTopRow(
                 rowIndex,
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -234,7 +242,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
         scrollControllers: scrollControllers(),
         cellDimensions: CellDimensions.variableColumnWidthAndRowHeight(
           columnWidths: [],
-          rowHeights: List<double>.generate(members.length, (int index) => 90),
+          rowHeights: List<double>.generate(members.length, (int index) => 100),
           stickyLegendWidth: MediaQuery.of(context).size.width * 0.99,
           stickyLegendHeight: 0,
         ),
@@ -606,6 +614,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
                                           ),
                                         ),
                                       ),
+                                      Colors.blue,
                                     ),
                                   ),
                                   TableCell(
@@ -625,6 +634,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
                                           ),
                                         ),
                                       ),
+                                      Colors.green,
                                     ),
                                   ),
                                   TableCell(
@@ -648,6 +658,7 @@ class _StaffAttendanceWidgetState extends State<StaffAttendanceWidget> {
                                             ),
                                           ),
                                         ),
+                                        Colors.red,
                                       ),
                                     ),
                                   ),

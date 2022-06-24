@@ -1,10 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 
 class MasterLeaveApproveTableWidget extends StatefulWidget {
-  final List leaveRequests;
+  final List<Map<String, Object?>> leaveRequests;
   const MasterLeaveApproveTableWidget({Key? key, required this.leaveRequests})
       : super(key: key);
 
@@ -29,7 +31,7 @@ class _MasterLeaveApproveTableWidgetState
 
   int currentRowIndex = 0;
 
-  List leaveRequests = [{}];
+  late List<Map<String, Object?>> leaveRequests;
 
   Widget columnsTitleBuilder(index) {
     return const SizedBox(
@@ -191,16 +193,18 @@ class _MasterLeaveApproveTableWidgetState
                     currentRowIndex = staffId;
                     leaveRequests[staffId]['leaveStatus'] = 'approve';
                   });
+                  Navigator.of(context).pop();
                 },
                 child: Card(
-                  elevation: 18.0,
+                  elevation: 16.0,
                   color: Colors.green,
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.30,
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(
-                      right: 5.0,
-                      left: 0,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
                     ),
                     child: const Text(
                       "Approve",
@@ -220,15 +224,18 @@ class _MasterLeaveApproveTableWidgetState
                     currentRowIndex = staffId;
                     leaveRequests[staffId]['leaveStatus'] = 'reject';
                   });
+                  Navigator.of(context).pop();
                 },
                 child: Card(
-                  elevation: 18.0,
+                  elevation: 16.0,
                   color: Colors.red,
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.30,
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(
-                      right: 5.0,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
                     ),
                     child: const Text(
                       "Reject",
@@ -583,8 +590,20 @@ class _MasterLeaveApproveTableWidgetState
 
   @override
   void initState() {
+    if (kDebugMode) {
+      log(widget.leaveRequests.runtimeType.toString());
+    }
+    List<Map<String, Object?>> tmpList = [];
+    for (var leaveRequest in widget.leaveRequests) {
+      Map<String, Object?> record = {};
+
+      leaveRequest.forEach((key, value) {
+        record[key] = value;
+      });
+      tmpList.add(record);
+    }
     setState(() {
-      leaveRequests = widget.leaveRequests;
+      leaveRequests = tmpList;
     });
     super.initState();
   }

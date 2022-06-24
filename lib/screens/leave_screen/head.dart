@@ -136,6 +136,17 @@ class HeadModeApproveStudentLeave extends StatefulWidget {
 
 class _HeadModeApproveStudentLeaveState
     extends State<HeadModeApproveStudentLeave> {
+  late Future _fetchFuture;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      _fetchFuture = getStudentLeaveRequestsFromServerHeadMode();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -158,20 +169,21 @@ class _HeadModeApproveStudentLeaveState
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(
-            color: Colors.blue.shade100,
+          decoration: const BoxDecoration(
+            color: Colors.white,
           ),
           child: FutureBuilder(
-            future: getStudentLeaveRequestsFromServerHeadMode(),
+            future: _fetchFuture,
             builder: (BuildContext ctx, AsyncSnapshot snapshot) {
               if (kDebugMode) {
                 log('fetch student leaves');
                 log(snapshot.hasData.toString());
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.10,
-                  child: const CircularProgressIndicator(),
+                return const Center(
+                  child: SizedBox(
+                    child: CircularProgressIndicator.adaptive(),
+                  ),
                 );
               } else {
                 if (snapshot.hasError ||
@@ -210,6 +222,17 @@ class HeadModeApproveFacultyLeave extends StatefulWidget {
 
 class _HeadModeApproveFacultyLeaveState
     extends State<HeadModeApproveFacultyLeave> {
+  late Future _fetchFacultyLeaveFuture;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      _fetchFacultyLeaveFuture = getFacultyLeaveRequestsFromServerHeadMode();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -237,7 +260,7 @@ class _HeadModeApproveFacultyLeaveState
               // color: Colors.green,
               ),
           child: FutureBuilder(
-            future: getFacultyLeaveRequestsFromServerHeadMode(),
+            future: _fetchFacultyLeaveFuture,
             builder: (BuildContext ctx, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(

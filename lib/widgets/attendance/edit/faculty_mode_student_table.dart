@@ -170,7 +170,7 @@ class _StudentAttendanceViewState extends State<StudentAttendanceView> {
   }
 
   double verticalRowScrollOffset() {
-    double scrollOffset = 75.0;
+    double scrollOffset = 90.0;
     if (currentRowIndex == 0.0) {
       return 0.0;
     } else {

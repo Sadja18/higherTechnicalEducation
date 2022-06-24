@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 
 class ApproveLeaveWidgetHead extends StatefulWidget {
-  final List leaveRequests;
+  final List<Map<String, Object?>> leaveRequests;
   const ApproveLeaveWidgetHead({Key? key, required this.leaveRequests})
       : super(key: key);
 
@@ -29,7 +29,9 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
 
   int currentRowIndex = 0;
 
-  List leaveRequests = [{}];
+  late List<Map<String, Object?>> leaveRequests = [{}];
+
+  // List updatedRequestStatus = [];
 
   Widget columnsTitleBuilder(index) {
     return const SizedBox(
@@ -203,25 +205,41 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
               ),
             ),
             actions: [
-              TextButton(
-                onPressed: () {
+              InkWell(
+                onTap: () {
                   if (kDebugMode) {
-                    print("Approve");
+                    log("Approve");
+                    log(leaveRequests[staffId].toString());
                   }
+
                   setState(() {
                     currentRowIndex = staffId;
                     leaveRequests[staffId]['leaveStatus'] = 'approve';
                   });
+                  Navigator.of(context).pop();
                 },
-                child: const Text(
-                  "Approve",
-                  style: TextStyle(
-                    color: Colors.green,
+                child: Card(
+                  elevation: 16.0,
+                  color: Colors.green,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                    ),
+                    child: const Text(
+                      "Approve",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
+              InkWell(
+                onTap: () {
                   if (kDebugMode) {
                     print("Reject");
                   }
@@ -229,11 +247,25 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
                     currentRowIndex = staffId;
                     leaveRequests[staffId]['leaveStatus'] = 'reject';
                   });
+                  Navigator.of(context).pop();
                 },
-                child: const Text(
-                  "Reject",
-                  style: TextStyle(
-                    color: Colors.red,
+                child: Card(
+                  elevation: 16.0,
+                  color: Colors.red,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                    ),
+                    child: const Text(
+                      "Reject",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -537,7 +569,7 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
         vertical: 3.0,
       ),
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.80,
+      height: MediaQuery.of(context).size.height * 0.70,
       decoration: const BoxDecoration(
           // border: Border.all(),
           ),
@@ -566,8 +598,20 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
 
   @override
   void initState() {
+    if (kDebugMode) {
+      log(widget.leaveRequests.runtimeType.toString());
+    }
+    List<Map<String, Object?>> tmpList = [];
+    for (var leaveRequest in widget.leaveRequests) {
+      Map<String, Object?> record = {};
+
+      leaveRequest.forEach((key, value) {
+        record[key] = value;
+      });
+      tmpList.add(record);
+    }
     setState(() {
-      leaveRequests = widget.leaveRequests;
+      leaveRequests = tmpList;
     });
     super.initState();
   }
@@ -582,28 +626,33 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           leaveStickyTable(),
-          InkWell(
-            onTap: () {
-              if (kDebugMode) {
-                log('sync to api');
-              }
-            },
-            child: Card(
-              elevation: 18.0,
-              borderOnForeground: true,
-              color: Colors.purple,
-              shadowColor: Colors.blueGrey,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.55,
-                alignment: Alignment.bottomCenter,
-                decoration: const BoxDecoration(
-                  color: Colors.purpleAccent,
-                ),
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.08,
+            width: MediaQuery.of(context).size.width * 0.40,
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: 6.0,
+              ),
+              child: InkWell(
+                onTap: () {
+                  if (kDebugMode) {
+                    log('sync to api');
+                  }
+                },
+                child: Card(
+                  elevation: 18.0,
+                  borderOnForeground: true,
+                  color: const Color.fromARGB(255, 241, 49, 228),
+                  shadowColor: Colors.blueGrey,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Text(
+                      "Submit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -616,7 +665,7 @@ class _ApproveLeaveWidgetHeadState extends State<ApproveLeaveWidgetHead> {
 }
 
 class ApproveStudentLeaveHeadWidget extends StatefulWidget {
-  final List leaveRequests;
+  final List<Map<String, Object?>> leaveRequests;
   const ApproveStudentLeaveHeadWidget({Key? key, required this.leaveRequests})
       : super(key: key);
 
@@ -627,7 +676,7 @@ class ApproveStudentLeaveHeadWidget extends StatefulWidget {
 
 class _ApproveStudentLeaveHeadWidgetState
     extends State<ApproveStudentLeaveHeadWidget> {
-  late List leaveRequests = [];
+  late List<Map<String, Object?>> leaveRequests;
   late int currentRowIndex = 0;
   ScrollController verticalBodyController =
       ScrollController(initialScrollOffset: 0.0);
@@ -639,7 +688,7 @@ class _ApproveStudentLeaveHeadWidgetState
       ScrollController(initialScrollOffset: 0.0);
 
   double verticalRowScrollOffset() {
-    double scrollOffset = 120.0;
+    double scrollOffset = 160.0;
     if (currentRowIndex == 0.0) {
       return 0.0;
     } else {
@@ -707,7 +756,7 @@ class _ApproveStudentLeaveHeadWidgetState
             title: Container(
               alignment: Alignment.topCenter,
               child: Text(
-                leaveRequests[rowIndex]['leaveStudentName'],
+                leaveRequests[rowIndex]['leaveStudentName'].toString(),
               ),
             ),
             content: Container(
@@ -720,8 +769,8 @@ class _ApproveStudentLeaveHeadWidgetState
                   Container(
                     alignment: Alignment.centerLeft,
                     decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 210, 98, 193),
-                    ),
+                        // color: Color.fromARGB(255, 210, 98, 193),
+                        ),
                     child: Table(
                       columnWidths: const {
                         0: FractionColumnWidth(0.50),
@@ -737,7 +786,7 @@ class _ApproveStudentLeaveHeadWidgetState
                                 child: const Text(
                                   "From: ",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -753,8 +802,8 @@ class _ApproveStudentLeaveHeadWidgetState
                                       : dateFormatter(leaveRequests[rowIndex]
                                           ['leaveFromDate']),
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    // fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
@@ -770,7 +819,7 @@ class _ApproveStudentLeaveHeadWidgetState
                                 child: const Text(
                                   "To: ",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -786,8 +835,8 @@ class _ApproveStudentLeaveHeadWidgetState
                                       : dateFormatter(leaveRequests[rowIndex]
                                           ['leaveToDate']),
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    // fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
@@ -803,7 +852,7 @@ class _ApproveStudentLeaveHeadWidgetState
                                 child: const Text(
                                   "Reason: ",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -819,8 +868,8 @@ class _ApproveStudentLeaveHeadWidgetState
                                       : leaveRequests[rowIndex]['leaveReason']
                                           .toString(),
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    // fontWeight: FontWeight.bold,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ),
@@ -838,16 +887,22 @@ class _ApproveStudentLeaveHeadWidgetState
                 onTap: () {
                   Navigator.of(context).pop();
                 },
-                child: Container(
-                  // decoration: BoxDecoration(c),
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 5.0,
-                    vertical: 8.0,
-                  ),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(
-                      backgroundColor: Colors.blue,
+                child: Card(
+                  elevation: 16.0,
+                  color: Colors.blue,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                    ),
+                    child: const Text(
+                      "Cancel",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -855,19 +910,27 @@ class _ApproveStudentLeaveHeadWidgetState
               InkWell(
                 onTap: () {
                   setState(() {
+                    currentRowIndex = rowIndex;
                     leaveRequests[rowIndex]['leaveStatus'] = 'approve';
                   });
                   Navigator.of(context).pop();
                 },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 5.0,
-                    vertical: 8.0,
-                  ),
-                  child: const Text(
-                    "Approve",
-                    style: TextStyle(
-                      backgroundColor: Colors.green,
+                child: Card(
+                  elevation: 16.0,
+                  color: Colors.green,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                    ),
+                    child: const Text(
+                      "Approve",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -875,19 +938,27 @@ class _ApproveStudentLeaveHeadWidgetState
               InkWell(
                 onTap: () {
                   setState(() {
+                    currentRowIndex = rowIndex;
                     leaveRequests[rowIndex]['leaveStatus'] = 'reject';
                   });
                   Navigator.of(context).pop();
                 },
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 5.0,
-                    vertical: 8.0,
-                  ),
-                  child: const Text(
-                    "Reject",
-                    style: TextStyle(
-                      backgroundColor: Colors.red,
+                child: Card(
+                  elevation: 16.0,
+                  color: Colors.red,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 5.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                    ),
+                    child: const Text(
+                      "Reject",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
@@ -1214,8 +1285,17 @@ class _ApproveStudentLeaveHeadWidgetState
 
   @override
   void initState() {
+    List<Map<String, Object?>> tmpList = [];
+    for (var leaveRequest in widget.leaveRequests) {
+      Map<String, Object?> record = {};
+
+      leaveRequest.forEach((key, value) {
+        record[key] = value;
+      });
+      tmpList.add(record);
+    }
     setState(() {
-      leaveRequests = widget.leaveRequests;
+      leaveRequests = tmpList;
     });
     super.initState();
   }
@@ -1251,7 +1331,7 @@ class _ApproveStudentLeaveHeadWidgetState
                   child: Card(
                     elevation: 18.0,
                     borderOnForeground: true,
-                    color: Colors.purple,
+                    color: const Color.fromARGB(255, 241, 49, 228),
                     shadowColor: Colors.blueGrey,
                     child: Container(
                       // height: MediaQuery.of(context).size.height * 0.08,
